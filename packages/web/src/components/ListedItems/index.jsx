@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import InfoComponent from "../InfoComponent";
 import ListedItemsItem from "../ListedItemsItem";
 import { ListedItemsData } from "../../data/data-components/data-ListedItems.js";
-// import ListedItemsData from './data.json'
 
 import "./listedItems.css";
 

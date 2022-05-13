@@ -16,7 +16,7 @@ const FeaturesList = () => {
         getBalance(res[0]);
       });
     } else {
-      alert("install metamask extension!!");
+      alert("Install metamask extension!!");
     }
   };
 
@@ -33,6 +33,8 @@ const FeaturesList = () => {
         });
       });
   };
+
+  console.log("data", data);
 
   return (
     <>

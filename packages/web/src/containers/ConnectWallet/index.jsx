@@ -15,10 +15,8 @@ const ConnectWalletContainer = () => {
             titleLg="Connect Wallet"
             text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo."
           />
-
           <div className="row">
             <FeaturesList />
-
             <ImageBox />
           </div>
         </div>
