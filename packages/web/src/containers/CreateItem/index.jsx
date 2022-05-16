@@ -6,15 +6,14 @@ import Breadcumb from "../../components/Breadcumb";
 import CollectionItem from "./CollectionItem";
 import CreatorSec from "./CreatorSec";
 
-import NFT from "../../contracts/NFT.localhost.abi";
-import Market from "../../contracts/NFTMarket.localhost.abi";
+import NFT from "../../contracts/NFT.abi";
+import Market from "../../contracts/NFTMarket.abi";
 
 import "../../assets/css/createItem.css";
+import NFTMarketAddress from "../../contracts/NFTMarket.address";
+import NFTAddress from "../../contracts/NFT.address";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
-
-const nftAddress = "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0";
-const nftMarketAddress = "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512";
 
 const CreateItemContainer = () => {
   const [fileUrl, setFileUrl] = useState(null);
@@ -62,7 +61,7 @@ const CreateItemContainer = () => {
     const signer = provider.getSigner();
 
     /* next, create the item */
-    let contract = new ethers.Contract(nftAddress, NFT.abi, signer);
+    let contract = new ethers.Contract(NFTAddress, NFT.abi, signer);
     let transaction = await contract.createToken(url);
     let tx = await transaction.wait();
     let tokenId = tx.events[0].args[2].toNumber();
@@ -70,11 +69,11 @@ const CreateItemContainer = () => {
     console.log("Item created!");
 
     /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(nftMarketAddress, Market.abi, signer);
+    contract = new ethers.Contract(NFTMarketAddress, Market.abi, signer);
     let listingPrice = await contract.getListingPrice();
     listingPrice = listingPrice.toString();
 
-    transaction = await contract.createMarketItem(nftAddress, tokenId, price, {
+    transaction = await contract.createMarketItem(NFTAddress, tokenId, price, {
       value: listingPrice,
     });
     console.log("Market Item created!");
