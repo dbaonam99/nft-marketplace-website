@@ -112,6 +112,30 @@
 .group textarea {
   height: 130px;
 }
+.group .bar-light {
+  position: relative;
+  display: block;
+  width: 100%;
+}
+.group .bar-light:before,
+.group .bar-light:after {
+  content: '';
+  height: 2px;
+  width: 0;
+  bottom: 0;
+  position: absolute;
+  background-color: #343a40;
+  -webkit-transition: 0.5s ease all;
+  transition: 0.5s ease all;
+}
+
+.group .bar-light:before {
+  left: 50%;
+}
+
+.group .bar-light:after {
+  right: 50%;
+}
 
 /* Form Active State */
 
@@ -130,6 +154,14 @@
 .group textarea:focus ~ .bar:after {
   width: 50%;
   background-color: #fff;
+}
+
+.group input:focus ~ .bar-light:before,
+.group textarea:focus ~ .bar-light:before,
+.group input:focus ~ .bar-light:after,
+.group textarea:focus ~ .bar-light:after {
+  width: 50%;
+  background-color: #343a40;
 }
 
 input:required,

@@ -2,17 +2,19 @@ import Breadcumb from '../../components/Breadcumb'
 import InfoComponent from '../../components/InfoComponent'
 import ContactForm from './ContactForm'
 import '../../assets/css/contact.css'
+import useThemeMode from '../../hooks/useThemeMode'
 
 const ContactContainer = () => {
+	const isLightMode = useThemeMode();
 
   return (
     <>
 		<Breadcumb  
-	              namePage='Contact Us'
-	              title='Contact Us'
-		          animNone={false}
+			namePage='Contact Us'
+			title='Contact Us'
+			animNone={false}
 		/>
-		<section className="section-padding-100 contact_us_area" id="contact">
+		<section className={isLightMode ? "section-padding-100 contact_us_area bg-light" : "section-padding-100 contact_us_area"} id="contact">
 		  <div className="container">
 		      <div className="row">
 		          <div className="col-12">

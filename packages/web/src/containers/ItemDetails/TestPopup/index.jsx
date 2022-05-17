@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 const TestPopup = () => {
-
+  
   return (
     <>
       <div id="test-popup" className="white-popup mfp-hide">

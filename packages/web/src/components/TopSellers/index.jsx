@@ -4,10 +4,21 @@ import {
   TopSellersData2,
   TopSellersData3,
 } from "../../data/data-components/data-TopSellers.js";
+import clsx from "clsx";
+import useThemeMode from "../../hooks/useThemeMode";
 
 function TopSellersContainer() {
+  const isLightMode = useThemeMode();
+
   return (
-    <section className="about-us-area section-padding-50 clearfix">
+    <section 
+      className={
+        clsx(
+          "about-us-area section-padding-50 clearfix",
+          isLightMode && "bg-light"
+        )
+      }
+    >
       <div className="container">
         <div className="row align-items-center">
           <div className="col-12 col-lg-12">
@@ -15,12 +26,12 @@ function TopSellersContainer() {
               <div className="dream-dots text-left">
                 <span className="gradient-text">Người sáng tạo</span>
               </div>
-              <h4>Top Sellers Trong Tháng</h4>
+              <h4 className={clsx(isLightMode && "text-dark")}>Top Sellers Trong Tháng</h4>
             </div>
           </div>
 
           <div className="col-12 col-lg-4">
-            <div className="creator-sec dd-bg">
+            <div className={clsx("creator-sec", isLightMode ? "ll-bg" : "dd-bg")}>
               {TopSellersData1 &&
                 TopSellersData1.map((item, i) => (
                   <TopSellersItem
@@ -35,7 +46,7 @@ function TopSellersContainer() {
           </div>
 
           <div className="col-12 col-lg-4 mt-s">
-            <div className="creator-sec dd-bg">
+            <div className={clsx("creator-sec", isLightMode ? "ll-bg" : "dd-bg")}>
               {TopSellersData2 &&
                 TopSellersData2.map((item, i) => (
                   <TopSellersItem
@@ -50,7 +61,7 @@ function TopSellersContainer() {
           </div>
 
           <div className="col-12 col-lg-4 mt-s">
-            <div className="creator-sec dd-bg">
+            <div className={clsx("creator-sec", isLightMode ? "ll-bg" : "dd-bg")}>
               {TopSellersData3 &&
                 TopSellersData3.map((item, i) => (
                   <TopSellersItem

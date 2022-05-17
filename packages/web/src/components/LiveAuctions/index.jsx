@@ -3,12 +3,23 @@ import InfoComponent from "../InfoComponent";
 import LiveAuctionsItem from "../LiveAuctionsItem";
 import { LiveAuctionsData } from "../../data/data-components/data-LiveAuctions.js";
 // import LiveAuctionsData from './data.json'
+import clsx from "clsx";
 
 import "./liveAuctions.css";
+import useThemeMode from "../../hooks/useThemeMode";
 
 function LiveAuctionsContainer() {
+  const isLightMode = useThemeMode();
+
   return (
-    <section className="features  section-padding-50 ">
+    <section 
+      className={
+        clsx(
+          "features section-padding-50 ",
+          isLightMode && "bg-light"
+        )
+      }
+    >
       <div className="container">
         <InfoComponent titleSm="Sàn đấu giá" titleLg="Sàn Đầu giá trực tuyến" />
         <div className="row align-items-center">

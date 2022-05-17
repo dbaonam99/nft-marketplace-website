@@ -12,6 +12,7 @@ import { NavbarLogo } from "../../utils/allImgs";
 import { Addshrink } from "../../utils";
 import Preloader from "../../components/Preloader";
 import data from "../../data/data-layouts/data-Head.json";
+import ModeSwitcher from "./ModeSwitcher";
 
 function Head({ Title }) {
   useEffect(() => {
@@ -117,6 +118,11 @@ function Head({ Title }) {
                 <NavLink to="/connectwallet" className="btn login-btn ml-50">
                   Connect Wallet
                 </NavLink>
+              </li>
+              <li className="lh-55px">
+                <div className="btn login-btn ml-50">
+                  <ModeSwitcher />
+                </div>
               </li>
             </ul>
           </div>

@@ -2,8 +2,10 @@ import Breadcumb from '../../components/Breadcumb'
 import TimelineBox from './TimelineBox'
 import SidebarAreaContainer from './SidebarArea'
 import '../../assets/css/activity.css'
+import useThemeMode from "../../hooks/useThemeMode";
 
 const ActivityContainer = () => {
+  const isLightMode = useThemeMode();
 
   return (
     <>
@@ -11,7 +13,7 @@ const ActivityContainer = () => {
                   namePage='Activity'
                   title='Activity'
       />
-      <section className="blog-area section-padding-100">
+      <section className={isLightMode ? "blog-area section-padding-100 bg-light" : "blog-area section-padding-100"}>
           <div className="container">
   		      <div className="row">
   		          <TimelineBox />

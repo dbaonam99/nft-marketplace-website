@@ -1,7 +1,9 @@
 import NameInput from './NameInput'
 import data from './data.json'
+import useThemeMode from '../../../hooks/useThemeMode';
 
 const ContactForm = () => {
+	const isLightMode = useThemeMode();
 
   return (
     <>
@@ -24,10 +26,10 @@ const ContactForm = () => {
 
                           <div className="col-12">
                               <div className="group" data-aos-delay='600' data-aos="fade-up">
-                                  <textarea name="message" id="message" required></textarea>
+                                  <textarea className={isLightMode ? "text-dark bt-border-color-muted" : ""} name="message" id="message" required></textarea>
                                   <span className="highlight"></span>
-                                  <span className="bar"></span>
-                                  <label>Message</label>
+                                  <span className={isLightMode ? "bar-light" : "bar"}></span>
+                                  <label className={isLightMode ? "text-dark" : ""}>Message</label>
                               </div>
                           </div>
                           <div className="col-12 text-center" data-aos-delay='700' data-aos="fade-in">

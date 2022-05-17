@@ -52,9 +52,6 @@ function loader() {
     window.onload = setTimeout(fadeOutEffect , 1000)
 }
 
-
-
-
 export {
     SortingCard,
     Addshrink,

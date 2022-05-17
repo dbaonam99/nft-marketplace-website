@@ -1,11 +1,22 @@
 import React from "react";
+import clsx from "clsx";
 import TopCollectionsItem from "../TopCollectionsItem";
 import InfoComponent from "../InfoComponent";
 import { TopCollectionsData } from "../../data/data-components/data-TopCollections.js";
+import useThemeMode from "../../hooks/useThemeMode";
 
 function TopCollectionsContainer() {
+  const isLightMode = useThemeMode();
+
   return (
-    <section className="section-padding-100 clearfix">
+    <section 
+      className={
+        clsx(
+          "section-padding-100 clearfix",
+          isLightMode && "bg-light"
+        )
+      }
+    >
       <div className="container">
         <InfoComponent
           titleSm="Những bộ sưu tập hàng đầu của chúng tôi"

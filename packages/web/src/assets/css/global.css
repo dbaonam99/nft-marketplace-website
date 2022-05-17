@@ -1,6 +1,7 @@
 * {
     margin: 0;
     padding: 0;
+    transition: all .3s;
 }
 
 body {
@@ -666,7 +667,6 @@ ol {
     color: #fff;
 }
 
-
 .b-text {
     color: #272e3a !important;
 }
@@ -775,6 +775,34 @@ ol {
     background: rgba(255,255,255,0.03);
     border-radius: 20px;
 }
+
+.ll-bg{
+    background: rgba(255,255,255, 1);
+    border-radius: 20px;
+}
+
+body .l-bg{
+    background-color: rgba(255,255,255, 1);
+}
+
+html body .bt-border {
+    border: 2px solid rgba(116, 80,254,0.7);
+}
+
+body .bt-bg {
+    background-color: rgba(116, 80,254,0.7)
+}
+
+body .bt-bg-light {
+    background-color: #e9ebed;
+}
+
+body .bt-border-color {
+    border-color: #343a40;
+}
+body .bt-border-color-muted {
+    border-color: #b4b7b9;
+}
 .author-rank {
     color: #797c88;
     font-weight: 600;
@@ -846,4 +874,11 @@ ol {
     background: rgba(255,255,255,0.03);
     border-radius: 10px;
     border: 2px dashed rgba(255, 255, 255, 0.2);
+}
+
+.light-detailed-img{
+    padding: 5px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 10px;
+    border: 2px dashed rgba(151, 151, 151, 0.8);
 }

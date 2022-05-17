@@ -1,6 +1,9 @@
 import { NavLink } from "react-router-dom";
+import useThemeMode from "../../../../hooks/useThemeMode";
 
 function ItemTimeline({FullTime , Time , title , text , addLink=false , name='' , bid=""}){
+  const isLightMode = useThemeMode();
+
   return(
       <li>
           <div className="timelineDot"></div>
@@ -9,8 +12,8 @@ function ItemTimeline({FullTime , Time , title , text , addLink=false , name='' 
               <p><i className="fa fa-clock-o mr-5p"></i>{Time} AM</p>
           </div>
           <div className="timelineWork">
-              <h6>{title}</h6>
-              <span>{text} {addLink && <NavLink to="/profile">{name}</NavLink>} {bid !== '' ? 'for' + <span className="w-text">{bid} ETH Each</span> : ''} </span>
+              <h6 className={isLightMode ? "text-dark" : ""}>{title}</h6>
+              <span className={isLightMode ? "text-muted" : ""}>{text} {addLink && <NavLink to="/profile">{name}</NavLink>} {bid !== '' ? <>for <span className={isLightMode ? "text-dark" : "w-text"}>{bid} ETH Each</span></> : ''} </span>
           </div>
       </li>
   )

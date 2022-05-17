@@ -1,15 +1,17 @@
 import ItemTimeline from './ItemTimeline'
 import timelineData from '../../../data/data-containers/data-Timeline.json'
+import useThemeMode from '../../../hooks/useThemeMode';
 
 const TimelineBox = () => {
+  const isLightMode = useThemeMode();
 
   return (
     <>
       <div className="col-12 col-md-9">
           <div className="timelineBox">
-              <div className="timelineHeader">
-                  <h3>Recent Activity</h3>
-                  <span>Business History</span>
+              <div className={isLightMode ? "timelineHeader bt-bg-light" : "timelineHeader"}>
+                  <h3 className={isLightMode ? "text-dark" : ""}>Recent Activity</h3>
+                  <span className={isLightMode ? "text-dark" : ""}>Business History</span>
               </div>
               <div className="timelineBody">
                   <ul className="timeline">

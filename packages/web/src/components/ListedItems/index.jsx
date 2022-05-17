@@ -1,6 +1,7 @@
 import { ethers } from "ethers";
 import Web3Modal from "web3modal";
 import axios from "axios";
+import clsx from "clsx";
 
 import { NavLink } from "react-router-dom";
 
@@ -16,12 +17,14 @@ import NFTMarketAddress from "../../contracts/NFTMarket.address";
 
 import NFT from "../../contracts/NFT.abi";
 import Market from "../../contracts/NFTMarket.abi";
+import useThemeMode from "../../hooks/useThemeMode";
 
 function ListedItemsContainer() {
   // console.log(ListedItemsData, ListedItemsData[0].imgSm);
 
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState();
+  const isLightMode = useThemeMode();
 
   useEffect(() => {
     loadNFTs();
@@ -83,7 +86,14 @@ function ListedItemsContainer() {
   }
 
   return (
-    <section className="features section-padding-0-100 ">
+    <section 
+      className={
+        clsx(
+          "features section-padding-0-100 ",
+          isLightMode && "bg-light"
+        )
+      }
+    >
       <div className="container">
         <InfoComponent
           titleSm="Khám phá các NFT mới"
