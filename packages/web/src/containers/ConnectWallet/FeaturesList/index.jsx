@@ -2,8 +2,10 @@ import { ethers } from "ethers";
 import { useState } from "react";
 import { ConnectWalletIconsw1 } from "../../../utils/allImgs";
 import ConnectWalletIconswallet from "../../../assets/img/icons/wallet.png";
+import { useAuth } from "../../../auth/account";
 
 const FeaturesList = () => {
+  const { getUserInfo } = useAuth();
   const [data, setData] = useState({
     address: "",
     balance: null,
@@ -13,8 +15,10 @@ const FeaturesList = () => {
     console.log("check");
     if (window.ethereum) {
       window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
+        console.log(res);
         getBalance(res[0]);
       });
+      // getUserInfo(res.data.privateKey);
     } else {
       alert("Install metamask extension!!");
     }
