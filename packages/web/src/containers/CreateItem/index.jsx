@@ -5,23 +5,32 @@ import Web3Modal from "web3modal";
 import Breadcumb from "../../components/Breadcumb";
 import CollectionItem from "./CollectionItem";
 import CreatorSec from "./CreatorSec";
+import {
+  useCreateNFTMarketItemMutation,
+  useCreateNFTMutation,
+  useGetListingPriceQuery,
+} from "../../queries/NFT";
 
 import NFT from "../../contracts/NFT.abi";
-import Market from "../../contracts/NFTMarket.abi";
+
+// import Market from "../../contracts/NFTMarket.abi";
 
 import "../../assets/css/createItem.css";
-import NFTMarketAddress from "../../contracts/NFTMarket.address";
-import NFTAddress from "../../contracts/NFT.address";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 const CreateItemContainer = () => {
+  const { data: listingPrice, refetch } = useGetListingPriceQuery();
+
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
     description: "",
   });
+
+  const createNFTMutation = useCreateNFTMutation();
+  const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
 
   async function onFileChange(e) {
     const file = e.target.files[0];
@@ -55,29 +64,23 @@ const CreateItemContainer = () => {
   }
 
   async function createSale(url) {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
-
-    /* next, create the item */
-    let contract = new ethers.Contract(NFTAddress, NFT.abi, signer);
-    let transaction = await contract.createToken(url);
-    let tx = await transaction.wait();
-    let tokenId = tx.events[0].args[2].toNumber();
     const price = ethers.utils.parseUnits(formInput.price, "ether");
-    console.log("Item created!");
 
-    /* then list the item for sale on the marketplace */
-    contract = new ethers.Contract(NFTMarketAddress, Market.abi, signer);
-    let listingPrice = await contract.getListingPrice();
-    listingPrice = listingPrice.toString();
-
-    transaction = await contract.createMarketItem(NFTAddress, tokenId, price, {
-      value: listingPrice,
-    });
-    console.log("Market Item created!");
-    await transaction.wait();
+    createNFTMutation.mutate(
+      { url },
+      {
+        onSuccess: (res) => {
+          createNFTMarketItemMutation.mutate(
+            { listingPrice: listingPrice.toString(), tokenId: res, price },
+            {
+              onSuccess: (res) => {
+                console.log(res);
+              },
+            }
+          );
+        },
+      }
+    );
   }
 
   return (

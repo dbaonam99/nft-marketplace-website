@@ -3,8 +3,16 @@ import InfoComponent from "../../components/InfoComponent";
 import FeaturesList from "./FeaturesList";
 import ImageBox from "./ImageBox";
 import CardSection from "./CardSection";
+import { useAuth } from "../../auth/account";
+import { useEffect } from "react";
 
 const ConnectWalletContainer = () => {
+  const { getUserAddress } = useAuth();
+
+  useEffect(() => {
+    getUserAddress("0x8C1bB3eb266b6416278a039de9b61b546093C437");
+  }, []);
+
   return (
     <>
       <Breadcumb namePage="Wallet Connect" title="Wallet Connect" />
