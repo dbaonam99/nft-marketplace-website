@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import useThemeMode from "../../../../hooks/useThemeMode";
 
 const ContactForm = ({
   updateFormInput,
@@ -8,6 +9,7 @@ const ContactForm = ({
   fileUrl,
 }) => {
   const inputFile = useRef();
+  const isLightMode = useThemeMode();
 
   const openFileUpload = () => {
     inputFile.current.click();
@@ -22,9 +24,9 @@ const ContactForm = ({
           </div>
 
           <div className="col-12 col-md-12">
-            <p className="w-text">Upload Item File</p>
-            <div className="group-file">
-              <p className="g-text">PNG, GIF, WEBP, MP4 or MP3. Max 100mb</p>
+            <p className={isLightMode ? "text-dark" : "w-text"}>Upload Item File</p>
+            <div className={isLightMode ? "bt-border-color group-file" : "group-file"}>
+              <p className={isLightMode ? "text-dark" : "g-text"}>PNG, GIF, WEBP, MP4 or MP3. Max 100mb</p>
               <div className="new_Btn more-btn" onClick={openFileUpload}>
                 Upload File
               </div>
@@ -42,6 +44,7 @@ const ContactForm = ({
           <div className="col-12 col-md-12">
             <div className="group">
               <input
+                className={isLightMode ? "text-dark bt-border-color-muted" : ""}
                 type="text"
                 name="name"
                 id="name"
@@ -51,13 +54,14 @@ const ContactForm = ({
                 }
               />
               <span className="highlight"></span>
-              <span className="bar"></span>
-              <label>Item name</label>
+              <span className={isLightMode ? "bar-light" : "bar"}></span>
+              <label className={isLightMode ? "text-dark" : ""}>Item name</label>
             </div>
           </div>
           <div className="col-12">
             <div className="group">
               <textarea
+                className={isLightMode ? "text-dark bt-border-color-muted" : ""}
                 name="Description"
                 id="Description"
                 required
@@ -69,14 +73,15 @@ const ContactForm = ({
                 }
               ></textarea>
               <span className="highlight"></span>
-              <span className="bar"></span>
-              <label>Item Description</label>
+              <span className={isLightMode ? "bar-light" : "bar"}></span>
+              <label className={isLightMode ? "text-dark" : ""}>Item Description</label>
             </div>
           </div>
 
           <div className="col-12 col-md-12">
             <div className="group">
               <input
+                className={isLightMode ? "text-dark bt-border-color-muted" : ""}
                 type="text"
                 name="price"
                 id="price"
@@ -85,9 +90,9 @@ const ContactForm = ({
                   updateFormInput({ ...formInput, price: e.target.value })
                 }
               />
-              <span className="highlight"></span>
-              <span className="bar"></span>
-              <label>Item Price in ETH</label>
+               <span className="highlight"></span>
+              <span className={isLightMode ? "bar-light" : "bar"}></span>
+              <label className={isLightMode ? "text-dark" : ""}>Item Price in ETH</label>
             </div>
           </div>
 

@@ -1,8 +1,10 @@
 import Breadcumb from '../../components/Breadcumb'
 import InfoComponent from '../../components/InfoComponent'
+import useThemeMode from '../../hooks/useThemeMode'
 import ContactForm from './ContactForm'
 
 const LoginContainer = () => {
+	const isLightMode = useThemeMode();
 
   return (
     <>
@@ -11,7 +13,10 @@ const LoginContainer = () => {
 		          title='Login'
 		          animNone={false}
 		/>
-	    <section className="section-padding-100 contact_us_area" id="contact">
+	    <section 
+				className={isLightMode ? "section-padding-100 contact_us_area bg-light" : "section-padding-100 contact_us_area"}
+				id="contact"
+			>
 	        <div className="container">
 	            <div className="row">
 	                <div className="col-12">

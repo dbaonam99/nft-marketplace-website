@@ -1,10 +1,13 @@
 import { NavLink } from "react-router-dom";
+import useThemeMode from "../../hooks/useThemeMode";
 
 function CardContainer({imgBig , imgSm ,name}){
+    const isLightMode = useThemeMode();
+
 	return(
         <div className="col-12 col-md-6 col-lg-3">
 
-            <div  className="service_single_content collection-item">
+            <div  className={isLightMode ? "service_single_content collection-item l-bg" : "service_single_content collection-item"}>
                 
                 <div className="collection_icon">
                     <img src={imgBig} alt="" />
@@ -13,8 +16,8 @@ function CardContainer({imgBig , imgSm ,name}){
                     <img src={imgSm} width="50" alt="" />
                 </span>
                 <div className="collection_info text-center">
-                    <h6>{name}</h6>
-                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                    <h6 className={isLightMode ? "text-dark" : ""}>{name}</h6>
+                    <p className={isLightMode ? "text-muted" : ""}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
                     <NavLink to="/profile" className="more-btn mt-15">Follow</NavLink>
                 </div>
                 

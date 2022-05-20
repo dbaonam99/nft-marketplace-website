@@ -1,6 +1,8 @@
 import EmailPassInput from '../../../components/EmailPassInput'
+import useThemeMode from '../../../hooks/useThemeMode';
 
 const ContactForm = () => {
+    const isLightMode = useThemeMode();
 
   return (
     <>
@@ -14,10 +16,10 @@ const ContactForm = () => {
                           </div>
                           <div className="col-12 col-md-12">
                               <div className="group" data-aos-delay='300' data-aos="fade-up">
-                                  <input type="text" name="name" id="name" required />
+                                  <input className={isLightMode ? "text-dark bt-border-color-muted" : ""} type="text" name="name" id="name" required />
                                   <span className="highlight"></span>
-                                  <span className="bar"></span>
-                                  <label>Name</label>
+                                  <span className={isLightMode ? "bar-light" : "bar"}></span>
+                                  <label className={isLightMode ? "text-dark" : ""}>Name</label>
                               </div>
                           </div>
                           <EmailPassInput
@@ -25,7 +27,7 @@ const ContactForm = () => {
                             delay2='300'
                           />
                           <div className="col-12 text-center" data-aos-delay='600' data-aos="fade-in">
-                              <button type="submit" className="more-btn">Login</button>
+                              <button type="submit" className="more-btn">Sign up</button>
                           </div>
                       </div>
                   </form>

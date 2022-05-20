@@ -5,9 +5,12 @@ import ImageBox from "./ImageBox";
 import CardSection from "./CardSection";
 import { useAuth } from "../../auth/account";
 import { useEffect } from "react";
+import clsx from "clsx";
+import useThemeMode from "../../hooks/useThemeMode";
 
 const ConnectWalletContainer = () => {
   const { getUserAddress } = useAuth();
+  const isLightMode = useThemeMode();
 
   useEffect(() => {
     getUserAddress("0x8C1bB3eb266b6416278a039de9b61b546093C437");
@@ -16,7 +19,14 @@ const ConnectWalletContainer = () => {
   return (
     <>
       <Breadcumb namePage="Wallet Connect" title="Wallet Connect" />
-      <section className="features section-padding-100 ">
+      <section 
+        className={
+          clsx(
+            "features section-padding-100 ",
+            isLightMode && "bg-light"
+          )
+        }
+      >
         <div className="container">
           <InfoComponent
             titleSm="Connect Your Wallet"

@@ -1,5 +1,6 @@
 import WhoWeContant from "./WhoWeContant";
 import ContactForm from "./ContactForm";
+import useThemeMode from "../../../hooks/useThemeMode";
 
 const CreatorSec = ({
   updateFormInput,
@@ -8,9 +9,11 @@ const CreatorSec = ({
   onFileChange,
   fileUrl,
 }) => {
+  const isLightMode = useThemeMode();
+
   return (
     <>
-      <div className="creator-sec dd-bg">
+      <div className={isLightMode ? "creator-sec l-bg" : "creator-sec dd-bg"}>
         <WhoWeContant />
         <ContactForm
           updateFormInput={updateFormInput}

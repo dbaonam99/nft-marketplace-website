@@ -794,7 +794,7 @@ body .bt-bg {
 }
 
 body .bt-bg-light {
-    background-color: #e9ebed;
+    background-color: #e9ebed !important;
 }
 
 body .bt-border-color {
@@ -802,6 +802,10 @@ body .bt-border-color {
 }
 body .bt-border-color-muted {
     border-color: #b4b7b9;
+}
+body .bt-tab-active {
+    borde-color: rgba(116, 80,254,0.7);
+    color: #343a40;
 }
 .author-rank {
     color: #797c88;

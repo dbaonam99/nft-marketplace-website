@@ -10,12 +10,14 @@ import {
   useCreateNFTMutation,
   useGetListingPriceQuery,
 } from "../../queries/NFT";
+import clsx from "clsx";
 
 import NFT from "../../contracts/NFT.abi";
 
 // import Market from "../../contracts/NFTMarket.abi";
 
 import "../../assets/css/createItem.css";
+import useThemeMode from "../../hooks/useThemeMode";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -31,6 +33,7 @@ const CreateItemContainer = () => {
 
   const createNFTMutation = useCreateNFTMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
+  const isLightMode = useThemeMode();
 
   async function onFileChange(e) {
     const file = e.target.files[0];
@@ -86,7 +89,14 @@ const CreateItemContainer = () => {
   return (
     <>
       <Breadcumb namePage="Create New Item" title="Create New Item" />
-      <section className="blog-area section-padding-100">
+      <section 
+        className={
+          clsx(
+            "blog-area section-padding-100",
+            isLightMode && "bg-light"
+          )
+        }
+      >
         <div className="container">
           <div className="row">
             <CollectionItem />
