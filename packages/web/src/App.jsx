@@ -17,7 +17,7 @@ import {
   Login,
   SignUp,
 } from "./pages";
-import { AuthProvider, useAuth } from "./auth/account";
+import { AuthProvider } from "./auth/account";
 
 import "aos/dist/aos.css";
 import "./assets/css/bootstrap.min.css";

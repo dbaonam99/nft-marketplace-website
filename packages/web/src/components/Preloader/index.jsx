@@ -1,35 +1,38 @@
-import {useEffect} from "react"
-import {loader} from '../../utils'
+import { useEffect } from "react";
+import { loader } from "../../utils";
 import { Helmet } from "react-helmet";
 
-function PreloaderContainer({Title}){
+function PreloaderContainer({ Title, history }) {
+  useEffect(() => {
+    loader();
+  }, []);
 
-	useEffect(() => {
-		loader()
-	},[])
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [history]);
 
-	return(
-		<>
-	        <Helmet>
-	            <meta charSet="utf-8" />
-	            <title>{Title}</title>
-	            <meta name="robots" content="noindex, follow" />
-	            <meta
-	                name="description"
-	                content="Hope – Health &amp; Medical React JS Template"
-	            />
-	            <meta
-	                name="viewport"
-	                content="width=device-width, initial-scale=1, shrink-to-fit=no"
-	            />
-	        </Helmet>
-		    <div id="preloader">
-		        <div className="preload-content">
-		            <div id="dream-load"></div>
-		        </div>
-		    </div>
-	    </>
-	)
+  return (
+    <>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{Title}</title>
+        <meta name="robots" content="noindex, follow" />
+        <meta
+          name="description"
+          content="Hope – Health &amp; Medical React JS Template"
+        />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+      </Helmet>
+      <div id="preloader">
+        <div className="preload-content">
+          <div id="dream-load"></div>
+        </div>
+      </div>
+    </>
+  );
 }
 
-export default PreloaderContainer
+export default PreloaderContainer;
