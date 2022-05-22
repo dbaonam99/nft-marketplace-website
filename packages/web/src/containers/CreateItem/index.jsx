@@ -13,8 +13,7 @@ import {
 import clsx from "clsx";
 
 import NFT from "../../contracts/NFT.abi";
-
-// import Market from "../../contracts/NFTMarket.abi";
+import NFTMarket from "../../contracts/NFTMarket.abi";
 
 import "../../assets/css/createItem.css";
 import useThemeMode from "../../hooks/useThemeMode";
@@ -73,14 +72,11 @@ const CreateItemContainer = () => {
       { url },
       {
         onSuccess: (res) => {
-          createNFTMarketItemMutation.mutate(
-            { listingPrice: listingPrice.toString(), tokenId: res, price },
-            {
-              onSuccess: (res) => {
-                console.log(res);
-              },
-            }
-          );
+          createNFTMarketItemMutation.mutate({
+            listingPrice: listingPrice.toString(),
+            tokenId: res,
+            price,
+          });
         },
       }
     );
@@ -89,13 +85,11 @@ const CreateItemContainer = () => {
   return (
     <>
       <Breadcumb namePage="Create New Item" title="Create New Item" />
-      <section 
-        className={
-          clsx(
-            "blog-area section-padding-100",
-            isLightMode && "bg-light"
-          )
-        }
+      <section
+        className={clsx(
+          "blog-area section-padding-100",
+          isLightMode && "bg-light"
+        )}
       >
         <div className="container">
           <div className="row">

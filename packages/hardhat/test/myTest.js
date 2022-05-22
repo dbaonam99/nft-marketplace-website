@@ -30,36 +30,39 @@ describe("NFTMarket", function () {
 
     console.log(tx.events[0].args[2].toNumber());
 
-    //   /* put both tokens for sale */
-    //   await market.createMarketItem(nftContractAddress, 1, auctionPrice, {
-    //     value: listingPrice,
-    //   });
-    //   await market.createMarketItem(nftContractAddress, 2, auctionPrice, {
-    //     value: listingPrice,
-    //   });
+    console.log(nftContractAddress, 1, auctionPrice, {
+      value: listingPrice,
+    });
+    /* put both tokens for sale */
+    await market.createMarketItem(nftContractAddress, 1, auctionPrice, {
+      value: listingPrice,
+    });
+    await market.createMarketItem(nftContractAddress, 2, auctionPrice, {
+      value: listingPrice,
+    });
 
-    //   const [_, buyerAddress] = await ethers.getSigners();
+    const [_, buyerAddress] = await ethers.getSigners();
 
-    //   /* execute sale of token to another user */
-    //   await market
-    //     .connect(buyerAddress)
-    //     .createMarketSale(nftContractAddress, 1, { value: auctionPrice });
+    /* execute sale of token to another user */
+    await market
+      .connect(buyerAddress)
+      .createMarketSale(nftContractAddress, 1, { value: auctionPrice });
 
-    //   /* query for and return the unsold items */
-    //   items = await market.fetchMarketItems();
-    //   items = await Promise.all(
-    //     items.map(async (i) => {
-    //       const tokenUri = await nft.tokenURI(i.tokenId);
-    //       let item = {
-    //         price: i.price.toString(),
-    //         tokenId: i.tokenId.toString(),
-    //         seller: i.seller,
-    //         owner: i.owner,
-    //         tokenUri,
-    //       };
-    //       return item;
-    //     })
-    //   );
-    //   console.log("items: ", items);
+    /* query for and return the unsold items */
+    items = await market.fetchMarketItems();
+    items = await Promise.all(
+      items.map(async (i) => {
+        const tokenUri = await nft.tokenURI(i.tokenId);
+        let item = {
+          price: i.price.toString(),
+          tokenId: i.tokenId.toString(),
+          seller: i.seller,
+          owner: i.owner,
+          tokenUri,
+        };
+        return item;
+      })
+    );
+    console.log("items: ", items);
   });
 });
