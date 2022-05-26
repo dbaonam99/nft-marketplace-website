@@ -10,7 +10,7 @@ function LiveAuctionsItem({ imgBig, imgSm, title, text }) {
       <div className={clsx(isLightMode && "l-bg bt-border", "pricing-item ")}>
         <div className="wraper">
           <div className="relative">
-            <NavLink to="/itemdetails">
+            <NavLink to="/item-details">
               <img src={imgBig} alt="" />
             </NavLink>{" "}
             <div className={clsx("owner-info", isLightMode && "bg-light")}>
@@ -20,7 +20,7 @@ function LiveAuctionsItem({ imgBig, imgSm, title, text }) {
               </NavLink>
             </div>
           </div>
-          <NavLink to="/itemdetails">
+          <NavLink to="/item-details">
             <h4 className={isLightMode ? "text-dark" : ""}>{text}</h4>
           </NavLink>
 
@@ -36,7 +36,7 @@ function LiveAuctionsItem({ imgBig, imgSm, title, text }) {
             <div className="admire">
               <NavLink
                 className="btn more-btn w-100 text-center my-0 mx-auto "
-                to="/itemdetails"
+                to="/item-details"
               >
                 Place Bid
               </NavLink>

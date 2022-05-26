@@ -14,27 +14,6 @@ function ListedItemsContainer() {
   const isLightMode = useThemeMode();
   const { data: NFTs } = useGetNFTsQuery();
 
-  console.log("data", NFTs);
-
-  async function buyNft(nft) {
-    /* needs the user to sign the transaction, so will use Web3Provider and sign it */
-    // const web3Modal = new Web3Modal();
-    // const connection = await web3Modal.connect();
-    // const provider = new ethers.providers.Web3Provider(connection);
-    // const signer = provider.getSigner();
-    // const contract = new ethers.Contract(NFTMarketAddress, Market.abi, signer);
-    // const price = ethers.utils.parseUnits(nft.price.toString(), "ether");
-    // const transaction = await contract.createMarketSale(
-    //   NFTAddress,
-    //   nft.tokenId,
-    //   {
-    //     value: price,
-    //   }
-    // );
-    // await transaction.wait();
-    // loadNFTs();
-  }
-
   return (
     <section
       className={clsx(
@@ -48,8 +27,10 @@ function ListedItemsContainer() {
           titleLg="Danh Sách NFT mới nhất"
         />
         <div className="row align-items-center">
-          {NFTs?.map((item, i) => (
+          {NFTs?.map((item) => (
             <ListedItemsItem
+              key={item.tokenId}
+              tokenId={item.tokenId}
               imgBig={item.image}
               imgSm={item.image}
               title={item.name}
@@ -57,15 +38,17 @@ function ListedItemsContainer() {
               bid={item.bid}
             />
           ))}
-          {ListedItemsData?.map((item, i) => (
+          {/* {ListedItemsData?.map((item) => (
             <ListedItemsItem
+              key={item.id}
+              tokenId={item.id}
               imgBig={item.imgBig}
               imgSm={item.imgSm}
               title={item.title}
               price={item.price}
               bid={item.bid}
             />
-          ))}
+          ))} */}
           <div className="col-12 col-lg-12 text-center">
             <NavLink className="btn more-btn" to="/discover">
               Xem Thêm

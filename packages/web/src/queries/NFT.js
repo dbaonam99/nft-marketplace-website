@@ -76,6 +76,45 @@ export const useCreateNFTMarketItemMutation = () => {
   );
 };
 
+export const useBuyNFTMutation = () => {
+  return useMutation(
+    async ({ tokenId }) => {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const marketContract = new ethers.Contract(
+        NFTMarket_ADDRESS,
+        NFTMarket_ABI,
+        signer
+      );
+
+      console.log("check", NFT_ADDRESS, tokenId);
+
+      const transaction = await marketContract.buyMarketItem(
+        NFT_ADDRESS,
+        tokenId,
+        {
+          value: 1,
+        }
+      );
+      // return await transaction.wait();
+    },
+    {
+      onError: (error) => {
+        if (error instanceof Error) {
+          toast.error(error.message);
+        }
+      },
+
+      onSuccess: (data) => {
+        toast.success(data);
+      },
+    }
+  );
+};
+
 export const useGetListingPriceQuery = () => {
   return useQuery("listingPrice", async () => {
     const web3Modal = new Web3Modal();

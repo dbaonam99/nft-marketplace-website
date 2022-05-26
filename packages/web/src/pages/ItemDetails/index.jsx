@@ -1,19 +1,15 @@
-import Head from '../../layouts/Head';
-import ItemDetailsContainer from '../../containers/ItemDetails';
-import Footer from '../../layouts/Footer';
-
-// import '../../assets/css/itemDetails.css'
+import Head from "../../layouts/Head";
+import ItemDetailsContainer from "../../containers/ItemDetails";
+import Footer from "../../layouts/Footer";
 
 const ItemDetails = () => {
-
   return (
     <>
-      <Head Title='Item Details' />
+      <Head Title="Item Details" />
       <ItemDetailsContainer />
       <Footer />
     </>
   );
-}
+};
 
 export default ItemDetails;
-

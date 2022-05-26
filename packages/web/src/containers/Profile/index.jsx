@@ -77,7 +77,7 @@ const ProfileContainer = () => {
                           >
                             <div className="wraper">
                               <div className="relative">
-                                <NavLink to="/itemDetails">
+                                <NavLink to="/item-details">
                                   <img src={item.imgBig} alt="" />
                                 </NavLink>
                                 <div
@@ -97,7 +97,7 @@ const ProfileContainer = () => {
                                   </a>
                                 </div>
                               </div>
-                              <NavLink to="/itemDetails">
+                              <NavLink to="/item-details">
                                 <h4 className={isLightMode ? "text-dark" : ""}>
                                   Scarecrow in daylight
                                 </h4>

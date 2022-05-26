@@ -17,7 +17,6 @@ const FeaturesList = () => {
     console.log("check");
     if (window.ethereum) {
       window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
-        console.log(res);
         getBalance(res[0]);
       });
       // getUserInfo(res.data.privateKey);
@@ -53,13 +52,18 @@ const FeaturesList = () => {
               width="90"
               alt=""
             />
-            <h4 className={isLightMode ? "text-dark mb-30" : "w-text mb-30"} data-wow-delay="0.3s">
+            <h4
+              className={isLightMode ? "text-dark mb-30" : "w-text mb-30"}
+              data-wow-delay="0.3s"
+            >
               Kết nối tới ví của bạn để bắt đầu sưu tầm, mua và bán các NFT.
             </h4>
-            <div 
-                className={isLightMode ? "pricing-item v2 bt-border" : "pricing-item v2"}
-                onClick={connectToMetaMask}
-              >
+            <div
+              className={
+                isLightMode ? "pricing-item v2 bt-border" : "pricing-item v2"
+              }
+              onClick={connectToMetaMask}
+            >
               <img
                 src={ConnectWalletIconsw1}
                 width="30"

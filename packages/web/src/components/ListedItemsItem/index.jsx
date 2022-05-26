@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 import useThemeMode from "../../hooks/useThemeMode";
 
-function ListedItemsItem({ imgBig, imgSm, title, price, bid }) {
+function ListedItemsItem({ tokenId, imgBig, imgSm, title, price, bid }) {
   const isLightMode = useThemeMode();
 
   return (
@@ -10,7 +10,7 @@ function ListedItemsItem({ imgBig, imgSm, title, price, bid }) {
       <div className={clsx(isLightMode && "l-bg bt-border", "pricing-item ")}>
         <div className="wraper">
           <div className="relative">
-            <NavLink to="/itemdetails">
+            <NavLink to={`/item-details/${tokenId}`}>
               <img src={imgBig} alt="" />
             </NavLink>
             <div className={clsx("owner-info", isLightMode && "bg-light")}>
@@ -20,7 +20,7 @@ function ListedItemsItem({ imgBig, imgSm, title, price, bid }) {
               </NavLink>
             </div>
           </div>
-          <NavLink to="/itemdetails">
+          <NavLink to={`/item-details/${tokenId}`}>
             <h4 className={isLightMode ? "text-dark" : ""}>{title}</h4>
           </NavLink>
           <span>

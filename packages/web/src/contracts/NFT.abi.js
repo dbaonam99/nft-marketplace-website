@@ -3,7 +3,7 @@ module.exports = [
     inputs: [
       {
         internalType: "address",
-        name: "marketplaceAddress",
+        name: "_marketplaceAddress",
         type: "address",
       },
     ],

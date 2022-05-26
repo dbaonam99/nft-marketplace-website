@@ -65,7 +65,7 @@ const App = () => {
             <Route path="/contact" component={Contact} />
             <Route path="/createitem" component={CreateItem} />
             <Route path="/discover" component={Discover} />
-            <Route path="/itemDetails" component={ItemDetails} />
+            <Route path="/item-details/:tokenId" component={ItemDetails} />
             <Route path="/profile" component={Profile} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={SignUp} />
