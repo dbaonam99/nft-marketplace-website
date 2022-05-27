@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import Web3Modal from "web3modal";
-import Breadcumb from "../../components/Breadcumb";
+import Breadcrumb from "../../components/Breadcrumb";
 import CollectionItem from "./CollectionItem";
 import CreatorSec from "./CreatorSec";
 import {
@@ -84,7 +84,7 @@ const CreateItemContainer = () => {
 
   return (
     <>
-      <Breadcumb namePage="Create New Item" title="Create New Item" />
+      <Breadcrumb namePage="Create New Item" title="Create New Item" />
       <section
         className={clsx(
           "blog-area section-padding-100",

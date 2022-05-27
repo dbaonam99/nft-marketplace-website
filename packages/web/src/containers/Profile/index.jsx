@@ -2,22 +2,24 @@ import { useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
-import Breadcumb from "../../components/Breadcumb";
-import { ProfileData } from "../../data/data-containers/data-Profile.js";
+import Breadcrumb from "../../components/Breadcrumb";
+import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
+  const { data, refetch } = useGetCreatedNFTsQuery();
 
   useEffect(() => {
     SortingCard();
+    refetch();
   }, []);
 
   return (
     <>
-      <Breadcumb namePage="Author Profile" title="Author Profile" />
+      <Breadcrumb namePage="Author Profile" title="Author Profile" />
       <section
         className={
           isLightMode
@@ -63,84 +65,84 @@ const ProfileContainer = () => {
               <div className="row">
                 <div className="container">
                   <div className="row dream-portfolio" data-aos="fade-up">
-                    {ProfileData &&
-                      ProfileData.map((item, i) => (
+                    {data?.map((item, i) => (
+                      <div
+                        className={`col-12 col-md-6 col-lg-4 single_gallery_item ${item.ClassChange}`}
+                        key={i}
+                      >
                         <div
-                          className={`col-12 col-md-6 col-lg-4 single_gallery_item ${item.ClassChange}`}
+                          className={
+                            isLightMode
+                              ? "l-bg bt-border pricing-item "
+                              : "pricing-item "
+                          }
                         >
-                          <div
-                            className={
-                              isLightMode
-                                ? "l-bg bt-border pricing-item "
-                                : "pricing-item "
-                            }
-                          >
-                            <div className="wraper">
-                              <div className="relative">
-                                <NavLink to="/item-details">
-                                  <img src={item.imgBig} alt="" />
-                                </NavLink>
-                                <div
-                                  className={
-                                    isLightMode
-                                      ? "owner-info bg-light"
-                                      : "owner-info"
-                                  }
-                                >
-                                  <img src={item.imgSm} width="40" alt="" />
-                                  <a href="/profile">
-                                    <h3
-                                      className={isLightMode ? "text-dark" : ""}
-                                    >
-                                      {item.title}
-                                    </h3>
-                                  </a>
-                                </div>
-                              </div>
+                          <div className="wraper">
+                            <div className="relative">
                               <NavLink to="/item-details">
-                                <h4 className={isLightMode ? "text-dark" : ""}>
-                                  Scarecrow in daylight
-                                </h4>
+                                <img src={item.image} alt="" />
                               </NavLink>
-                              <span>
-                                <span
-                                  className={
-                                    isLightMode ? "text-muted" : "g-text"
-                                  }
-                                >
-                                  Price
-                                </span>{" "}
-                                {item.price} ETH{" "}
-                                <span className="g-text ml-15">1 of 10</span>
-                              </span>
                               <div
                                 className={
-                                  isLightMode ? "text-dark pricing" : "pricing"
+                                  isLightMode
+                                    ? "owner-info bg-light"
+                                    : "owner-info"
                                 }
                               >
-                                Highest Bid :{" "}
-                                <span className="ml-15">{item.bid} ETH</span>{" "}
+                                <img src={item.imgSm} width="40" alt="" />
+                                <a href="/profile">
+                                  <h3
+                                    className={isLightMode ? "text-dark" : ""}
+                                  >
+                                    {item.name}
+                                  </h3>
+                                </a>
                               </div>
-                              <div className="admire">
-                                <div
-                                  className={
-                                    isLightMode ? "adm text-muted" : "adm"
-                                  }
-                                >
-                                  <i className="fa fa-clock-o"></i>6 Hours Ago
-                                </div>
-                                <div
-                                  className={
-                                    isLightMode ? "adm text-muted" : "adm"
-                                  }
-                                >
-                                  <i className="fa fa-heart-o"></i>134 Like
-                                </div>
+                            </div>
+                            <NavLink to="/item-details">
+                              <h4 className={isLightMode ? "text-dark" : ""}>
+                                Scarecrow in daylight
+                              </h4>
+                            </NavLink>
+                            <span>
+                              <span
+                                className={
+                                  isLightMode ? "text-muted" : "g-text"
+                                }
+                              >
+                                Price
+                              </span>{" "}
+                              {item.price} ETH{" "}
+                              <span className="g-text ml-15">1 of 10</span>
+                            </span>
+                            <div
+                              className={
+                                isLightMode ? "text-dark pricing" : "pricing"
+                              }
+                            >
+                              Highest Bid :{" "}
+                              <span className="ml-15">{item.bid} ETH</span>{" "}
+                            </div>
+                            <div className="admire">
+                              <div
+                                className={
+                                  isLightMode ? "adm text-muted" : "adm"
+                                }
+                              >
+                                <i className="fa fa-clock-o"></i>6 Hours Ago
+                              </div>
+                              <div
+                                className={
+                                  isLightMode ? "adm text-muted" : "adm"
+                                }
+                              >
+                                <i className="fa fa-heart-o"></i>134 Like
                               </div>
                             </div>
                           </div>
                         </div>
-                      ))}
+                      </div>
+                    ))}
                   </div>
                 </div>
 

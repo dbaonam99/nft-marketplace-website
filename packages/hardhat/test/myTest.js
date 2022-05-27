@@ -20,21 +20,29 @@ describe("NFT Market", function () {
     await nft.deployed();
   });
 
-  const getMyItems = async (sender) => {
-    const items = await market.fetchMyNFTs();
-    return items.map(async (i) => i.tokenId.toString());
-  };
-
   it("Should create tokens", async function () {
     await nft.connect(owner).createToken("https://www.mytokenlocation.com");
     await nft.connect(owner).createToken("https://www.mytokenlocation.com2");
   });
 
+  const getMyItems = async (sender) => {
+    const items = await market.connect(sender).fetchItemsCreated();
+    return items.map(async (i) => {
+      const item = {
+        tokenId: i.tokenId.toNumber(),
+        seller: i.seller,
+        owner: i.owner,
+      };
+      return item;
+    });
+  };
+
   it("Should put both tokens for sale", async function () {
     let listingPrice = await market.getListingPrice();
     listingPrice = listingPrice.toString();
-    const price = ethers.utils.parseUnits("1", "ether");
+    const price = ethers.utils.parseUnits("10", "ether");
 
+    console.log("owner", owner.address);
     await market.connect(owner).createMarketItem(nft.address, 1, price, {
       value: listingPrice,
     });
@@ -42,20 +50,20 @@ describe("NFT Market", function () {
     console.log("Owner's items: ", await getMyItems(owner));
     // console.log("Owner's balance: ", await nft.balanceOf(owner.address));
 
-    console.log("Addr1's item: ", await getMyItems(addr1));
+    // console.log("Addr1's item: ", await getMyItems(addr1));
     // console.log("Addr1's balance: ", await nft.balanceOf(addr1.address));
 
-    const transaction = await market
-      .connect(addr1)
-      .buyMarketItem(nft.address, 1, {
-        value: price,
-      });
-    await transaction.wait();
+    // const transaction = await market
+    //   .connect(addr1)
+    //   .buyMarketItem(nft.address, 1, {
+    //     value: price,
+    //   });
+    // await transaction.wait();
 
-    console.log("Owner's items: ", await getMyItems(owner));
+    // console.log("Owner's items: ", await getMyItems(owner));
     // console.log("Owner's balance: ", await nft.balanceOf(owner.address));
 
-    console.log("Addr1's item: ", await getMyItems(addr1));
+    // console.log("Addr1's item: ", await getMyItems(addr1));
     // console.log("Addr1's balance: ", await nft.balanceOf(addr1.address));
   });
 });

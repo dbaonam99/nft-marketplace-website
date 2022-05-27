@@ -12,13 +12,11 @@ function LiveAuctionsContainer() {
   const isLightMode = useThemeMode();
 
   return (
-    <section 
-      className={
-        clsx(
-          "features section-padding-50 ",
-          isLightMode && "bg-light"
-        )
-      }
+    <section
+      className={clsx(
+        "features section-padding-50 ",
+        isLightMode && "bg-light"
+      )}
     >
       <div className="container">
         <InfoComponent titleSm="Sàn đấu giá" titleLg="Sàn Đầu giá trực tuyến" />
@@ -26,6 +24,7 @@ function LiveAuctionsContainer() {
           {LiveAuctionsData &&
             LiveAuctionsData.map((item, i) => (
               <LiveAuctionsItem
+                key={i}
                 imgBig={item.imgBig}
                 imgSm={item.imgSm}
                 title={item.title}

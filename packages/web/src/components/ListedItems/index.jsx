@@ -3,7 +3,6 @@ import clsx from "clsx";
 import { NavLink } from "react-router-dom";
 import InfoComponent from "../InfoComponent";
 import ListedItemsItem from "../ListedItemsItem";
-import { ListedItemsData } from "../../data/data-components/data-ListedItems.js";
 
 import "./listedItems.css";
 
@@ -38,17 +37,6 @@ function ListedItemsContainer() {
               bid={item.bid}
             />
           ))}
-          {/* {ListedItemsData?.map((item) => (
-            <ListedItemsItem
-              key={item.id}
-              tokenId={item.id}
-              imgBig={item.imgBig}
-              imgSm={item.imgSm}
-              title={item.title}
-              price={item.price}
-              bid={item.bid}
-            />
-          ))} */}
           <div className="col-12 col-lg-12 text-center">
             <NavLink className="btn more-btn" to="/discover">
               Xem Thêm

@@ -1,4 +1,4 @@
-import Breadcumb from "../../components/Breadcumb";
+import Breadcrumb from "../../components/Breadcrumb";
 import InfoComponent from "../../components/InfoComponent";
 import FeaturesList from "./FeaturesList";
 import ImageBox from "./ImageBox";
@@ -11,7 +11,7 @@ const ConnectWalletContainer = () => {
 
   return (
     <>
-      <Breadcumb namePage="Wallet Connect" title="Wallet Connect" />
+      <Breadcrumb namePage="Wallet Connect" title="Wallet Connect" />
       <section
         className={clsx(
           "features section-padding-100 ",

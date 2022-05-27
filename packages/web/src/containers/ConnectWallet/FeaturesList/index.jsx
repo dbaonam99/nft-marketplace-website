@@ -6,20 +6,27 @@ import { useAuth } from "../../../auth/account";
 import useThemeMode from "../../../hooks/useThemeMode";
 
 const FeaturesList = () => {
-  const { getUserInfo } = useAuth();
-  const [data, setData] = useState({
-    address: "",
-    balance: null,
-  });
   const isLightMode = useThemeMode();
+  const { getUserInfo, userInfo } = useAuth();
 
   const connectToMetaMask = () => {
-    console.log("check");
     if (window.ethereum) {
-      window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
-        getBalance(res[0]);
-      });
-      // getUserInfo(res.data.privateKey);
+      window.ethereum
+        .request({ method: "eth_requestAccounts" })
+        .then((accounts) => {
+          if (accounts.length === 0) {
+            console.log("Please connect to MetaMask.");
+          } else if (accounts[0] !== userInfo) {
+            getBalance(accounts[0]);
+          }
+        })
+        .catch((err) => {
+          if (err.code === 4001) {
+            console.log("Please connect to MetaMask.");
+          } else {
+            console.error(err);
+          }
+        });
     } else {
       alert("Install metamask extension!!");
     }
@@ -32,14 +39,12 @@ const FeaturesList = () => {
         params: [address, "latest"],
       })
       .then((balance) => {
-        setData({
+        getUserInfo({
           address: address,
           balance: ethers.utils.formatEther(balance),
         });
       });
   };
-
-  console.log("data", data);
 
   return (
     <>
@@ -70,7 +75,7 @@ const FeaturesList = () => {
                 className="wal-icon"
                 alt=""
               />
-              Kết nối ví MetaMask
+              {userInfo?.address ? "Đã kết nối " : "Kết nối ví MetaMask"}
             </div>
           </div>
         </div>

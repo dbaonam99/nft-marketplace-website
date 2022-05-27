@@ -24,7 +24,7 @@ function Footer() {
                   <ul className="social-links">
                     {data[0].iconsData &&
                       data[0].iconsData.map((item, i) => (
-                        <li>
+                        <li key={i}>
                           <a href="#">
                             <span key={i} className={item.icoClass}></span>
                           </a>
@@ -67,9 +67,7 @@ function Footer() {
                         <input
                           type="email"
                           name="field-name"
-                          value=""
                           placeholder="Email của bạn"
-                          required=""
                         />
                         <button type="submit" className="send-btn">
                           <span className="fa fa-paper-plane-o"></span>
