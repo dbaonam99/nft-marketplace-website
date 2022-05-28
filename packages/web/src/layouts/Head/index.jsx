@@ -13,8 +13,12 @@ import { Addshrink } from "../../utils";
 import Preloader from "../../components/Preloader";
 import data from "../../data/data-layouts/data-Head.json";
 import ModeSwitcher from "./ModeSwitcher";
+import LanguageSwitcher from "./LanguageSwitcher";
+import { useTranslation } from "react-i18next";
 
 function Head({ Title }) {
+  const { t } = useTranslation();
+
   useEffect(() => {
     Addshrink();
   }, [window.pageYOffset]);
@@ -66,7 +70,7 @@ function Head({ Title }) {
             <ul className="navbar-nav ml-auto">
               <li className="nav-item">
                 <NavLink className="nav-link" to="/">
-                  Home
+                  {t("header.home")}
                 </NavLink>
               </li>
               <li className="nav-item dropdown">
@@ -75,20 +79,20 @@ function Head({ Title }) {
                   to="#"
                   data-toggle="dropdown"
                 >
-                  Discover
+                  {t("header.discover")}
                 </NavLink>
                 <div className="dropdown-menu">
                   {data[0].dataUp &&
                     data[0].dataUp.map((item, i) => (
                       <NavLink key={i} className="dropdown-item" to={item.path}>
-                        {item.title}
+                        {t(item.title)}
                       </NavLink>
                     ))}
                 </div>
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/activity">
-                  Activity
+                  {t("header.activity")}
                 </NavLink>
               </li>
 
@@ -98,30 +102,35 @@ function Head({ Title }) {
                   to="#"
                   data-toggle="dropdown"
                 >
-                  Pages
+                  {t("header.pages")}
                 </NavLink>
                 <div className="dropdown-menu">
                   {data[1].dataDown &&
                     data[1].dataDown.map((item, i) => (
                       <NavLink key={i} className="dropdown-item" to={item.path}>
-                        {item.title}
+                        {t(item.title)}
                       </NavLink>
                     ))}
                 </div>
               </li>
               <li className="nav-item">
                 <NavLink className="nav-link" to="/contact">
-                  Contact
+                  {t("header.contact")}
                 </NavLink>
               </li>
               <li className="lh-55px">
                 <NavLink to="/connectwallet" className="btn login-btn ml-50">
-                  Connect Wallet
+                  {t("header.connectWallet")}
                 </NavLink>
               </li>
               <li className="lh-55px">
-                <div className="btn login-btn ml-50">
+                <div className="btn login-btn ml-30">
                   <ModeSwitcher />
+                </div>
+              </li>
+              <li className="lh-55px">
+                <div className="btn login-btn ml-30">
+                  <LanguageSwitcher />
                 </div>
               </li>
             </ul>

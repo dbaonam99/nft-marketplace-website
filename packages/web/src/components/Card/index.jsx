@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import useThemeMode from "../../hooks/useThemeMode";
 
 function CardContainer({imgBig , imgSm ,name}){
     const isLightMode = useThemeMode();
+    const { t } = useTranslation();
 
 	return(
         <div className="col-12 col-md-6 col-lg-3">
@@ -18,7 +20,7 @@ function CardContainer({imgBig , imgSm ,name}){
                 <div className="collection_info text-center">
                     <h6 className={isLightMode ? "text-dark" : ""}>{name}</h6>
                     <p className={isLightMode ? "text-muted" : ""}>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                    <NavLink to="/profile" className="more-btn mt-15">Follow</NavLink>
+                    <NavLink to="/profile" className="more-btn mt-15">{t("common.follow")}</NavLink>
                 </div>
                 
             </div>

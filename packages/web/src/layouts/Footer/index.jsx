@@ -3,8 +3,11 @@ import React from "react";
 import "./footer.css";
 
 import data from "../../data/data-layouts/data-Footer.json";
+import { useTranslation } from "react-i18next";
 
 function Footer() {
+  const { t } = useTranslation();
+
   return (
     <footer className="main-footer text-center">
       <div className="widgets-section padding-top-small padding-bottom-small">
@@ -12,14 +15,10 @@ function Footer() {
           <div className="row clearfix">
             <div className="footer-column col-md-4 col-sm-6 col-xs-12">
               <div className="footer-widget about-widget">
-                <h3 className="has-line-center">Về Chúng Tôi</h3>
+                <h3 className="has-line-center">{t("footer.aboutUs")}</h3>
                 <div className="widget-content">
                   <div className="text">
-                    Website đầu tiên và duy nhất tại Việt Nam giúp bạn trao đổi,
-                    mua bán NFT, với những NFT vô cùng có giá trị. Mang các nghệ
-                    sĩ và nhà sáng tạo lại với nhau trên một nền tảng duy nhất.
-                    Mua những NFT cao cấp và độc quyền được tạo bởi các nghệ sĩ
-                    hàng đầu thế giới.
+                    {t("footer.aboutUsContent")}
                   </div>
                   <ul className="social-links">
                     {data[0].iconsData &&
@@ -37,7 +36,7 @@ function Footer() {
 
             <div className="footer-column col-md-4 col-sm-6 col-xs-12">
               <div className="footer-widget contact-widget">
-                <h3 className="has-line-center">Liên Hệ Chúng Tôi</h3>
+                <h3 className="has-line-center">{t("footer.contactUs")}</h3>
                 <div className="widget-content">
                   <ul className="contact-info">
                     <li>
@@ -47,7 +46,7 @@ function Footer() {
                     </li>
                     {data[1].infoData &&
                       data[1].infoData.map((item, i) => (
-                        <li key={i}>{item.text}</li>
+                        <li key={i}>{t(item.text)}</li>
                       ))}
                   </ul>
                 </div>
@@ -56,10 +55,10 @@ function Footer() {
 
             <div className="footer-column col-md-4 col-sm-12 col-xs-12">
               <div className="footer-widget newsletter-widget">
-                <h3 className="has-line-center">Nhận Tin Mới</h3>
+                <h3 className="has-line-center">{t("footer.newsletter")}</h3>
                 <div className="widget-content">
                   <div className="text">
-                    Giúp bạn cập nhật những thông tin mới nhất.
+                    {t("footer.newsletterContent")}
                   </div>
                   <div className="newsletter-form">
                     <form method="post">
@@ -68,7 +67,7 @@ function Footer() {
                           type="email"
                           name="field-name"
                           value=""
-                          placeholder="Email của bạn"
+                          placeholder={t("footer.yourEmail")}
                           required=""
                         />
                         <button type="submit" className="send-btn">
@@ -85,7 +84,7 @@ function Footer() {
       </div>
       <div className="footer-bottom">
         <div className="auto-container">
-          <div className="copyright-text">Copyright ©. All Rights Reserved</div>
+          <div className="copyright-text">{t("footer.copyright")}</div>
         </div>
       </div>
     </footer>

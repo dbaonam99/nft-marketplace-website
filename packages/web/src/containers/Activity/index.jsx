@@ -3,15 +3,17 @@ import TimelineBox from './TimelineBox'
 import SidebarAreaContainer from './SidebarArea'
 import '../../assets/css/activity.css'
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from 'react-i18next';
 
 const ActivityContainer = () => {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <>
       <Breadcumb  
-                  namePage='Activity'
-                  title='Activity'
+        namePage={t("header.activity")}
+        title={t("header.activity")}
       />
       <section className={isLightMode ? "blog-area section-padding-100 bg-light" : "blog-area section-padding-100"}>
           <div className="container">

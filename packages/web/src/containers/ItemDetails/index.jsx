@@ -7,15 +7,17 @@ import clsx from "clsx";
 
 import '../../assets/css/itemDetails.css'
 import useThemeMode from '../../hooks/useThemeMode'
+import { useTranslation } from 'react-i18next'
 
 const ItemDetailsContainer = () => {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <>
       <Breadcumb  
-        namePage='Item Details'
-        title='Item Details'
+        namePage={t("header.itemDetails")}
+        title={t("header.itemDetails")}
       />
       <section 
         className={

@@ -18,6 +18,7 @@ import NFT from "../../contracts/NFT.abi";
 
 import "../../assets/css/createItem.css";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -34,6 +35,7 @@ const CreateItemContainer = () => {
   const createNFTMutation = useCreateNFTMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
   const isLightMode = useThemeMode();
+	const { t } = useTranslation();
 
   async function onFileChange(e) {
     const file = e.target.files[0];
@@ -88,7 +90,10 @@ const CreateItemContainer = () => {
 
   return (
     <>
-      <Breadcumb namePage="Create New Item" title="Create New Item" />
+      <Breadcumb 
+        namePage={t("header.createItem")}
+        title={t("header.createItem")}
+      />
       <section 
         className={
           clsx(

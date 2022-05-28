@@ -14,6 +14,7 @@
     text-align: left;
     padding: 10px 10px 20px;
     margin: 0 0 30px;
+    height: calc(100% - 30px);
 }
 .pricing-item:before{
     content: "";
@@ -89,7 +90,14 @@
     background-position: left;
     /*background-image: url(../img/svg/discount-bg-1.svg);*/
 }
-
+.pricing-item .wraper {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+.pricing-item .info-wrapper {
+    margin-top: auto;
+}
 .white-popup {
     position: relative;
     background: rgb(11 17 38);

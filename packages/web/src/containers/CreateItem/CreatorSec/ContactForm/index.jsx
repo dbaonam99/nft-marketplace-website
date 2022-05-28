@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import { useTranslation } from "react-i18next";
 import useThemeMode from "../../../../hooks/useThemeMode";
 
 const ContactForm = ({
@@ -10,6 +11,7 @@ const ContactForm = ({
 }) => {
   const inputFile = useRef();
   const isLightMode = useThemeMode();
+	const { t } = useTranslation();
 
   const openFileUpload = () => {
     inputFile.current.click();
@@ -24,11 +26,11 @@ const ContactForm = ({
           </div>
 
           <div className="col-12 col-md-12">
-            <p className={isLightMode ? "text-dark" : "w-text"}>Upload Item File</p>
+            <p className={isLightMode ? "text-dark" : "w-text"}>{t("common.uploadItemFile")}</p>
             <div className={isLightMode ? "bt-border-color group-file" : "group-file"}>
               <p className={isLightMode ? "text-dark" : "g-text"}>PNG, GIF, WEBP, MP4 or MP3. Max 100mb</p>
               <div className="new_Btn more-btn" onClick={openFileUpload}>
-                Upload File
+                {t("common.uploadFile")}
               </div>
               <br />
               {fileUrl && <img className="rounded mt-4" src={fileUrl} alt="" />}
@@ -55,7 +57,7 @@ const ContactForm = ({
               />
               <span className="highlight"></span>
               <span className={isLightMode ? "bar-light" : "bar"}></span>
-              <label className={isLightMode ? "text-dark" : ""}>Item name</label>
+              <label className={isLightMode ? "text-dark" : ""}>{t("common.itemName")}</label>
             </div>
           </div>
           <div className="col-12">
@@ -74,7 +76,7 @@ const ContactForm = ({
               ></textarea>
               <span className="highlight"></span>
               <span className={isLightMode ? "bar-light" : "bar"}></span>
-              <label className={isLightMode ? "text-dark" : ""}>Item Description</label>
+              <label className={isLightMode ? "text-dark" : ""}>{t("common.itemDescription")}</label>
             </div>
           </div>
 
@@ -92,7 +94,7 @@ const ContactForm = ({
               />
                <span className="highlight"></span>
               <span className={isLightMode ? "bar-light" : "bar"}></span>
-              <label className={isLightMode ? "text-dark" : ""}>Item Price in ETH</label>
+              <label className={isLightMode ? "text-dark" : ""}>{t("common.itemPrice")}</label>
             </div>
           </div>
 
@@ -102,7 +104,7 @@ const ContactForm = ({
               className="more-btn mb-15"
               onClick={createMarket}
             >
-              Create Item
+              {t("header.createItem")}
             </button>
           </div>
         </div>

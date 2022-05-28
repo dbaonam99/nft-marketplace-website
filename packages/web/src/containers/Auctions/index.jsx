@@ -1,13 +1,15 @@
+import { useTranslation } from 'react-i18next';
 import Breadcumb from '../../components/Breadcumb'
 import LiveAuctions from '../../components/LiveAuctions'
 
 const AuctionsContainer = () => {
+  const { t } = useTranslation();
 
   return (
   	<>
       <Breadcumb  
-                  namePage='Auctions'
-                  title='Auctions'
+        namePage={t("common.auctions")}
+        title={t("common.auctions")}
       />
       <LiveAuctions />
 

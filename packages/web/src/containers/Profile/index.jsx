@@ -7,9 +7,11 @@ import {ProfileData} from '../../data/data-containers/data-Profile.js'
 
 import '../../assets/css/profile.css'
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 const ProfileContainer = () => {
 	const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 	
     useEffect(() => {
       SortingCard()
@@ -18,8 +20,8 @@ const ProfileContainer = () => {
   return (
     <>
 		<Breadcumb  
-		          namePage='Author Profile'
-		          title='Author Profile'
+			namePage={t("header.authorProfile")}
+			title={t("header.authorProfile")}
 		/>
 		<section className={isLightMode ? "blog-area section-padding-100 bg-light" : "blog-area section-padding-100"}>
 		    <div className="container">
@@ -72,7 +74,7 @@ const ProfileContainer = () => {
 		                    </div>
 
 	                        <div className="col-12 col-lg-12 text-center">
-	                            <a className="btn more-btn" href="/discover">Load More</a>
+	                            <a className="btn more-btn" href="/discover">{t("common.loadmore")}</a>
 	                        </div>
 		                </div>
 		            </div>

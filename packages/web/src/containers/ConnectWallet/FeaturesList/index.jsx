@@ -4,6 +4,7 @@ import { ConnectWalletIconsw1 } from "../../../utils/allImgs";
 import ConnectWalletIconswallet from "../../../assets/img/icons/wallet.png";
 import { useAuth } from "../../../auth/account";
 import useThemeMode from "../../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 const FeaturesList = () => {
   const { getUserInfo } = useAuth();
@@ -12,6 +13,7 @@ const FeaturesList = () => {
     balance: null,
   });
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   const connectToMetaMask = () => {
     console.log("check");
@@ -54,10 +56,10 @@ const FeaturesList = () => {
               alt=""
             />
             <h4 className={isLightMode ? "text-dark mb-30" : "w-text mb-30"} data-wow-delay="0.3s">
-              Kết nối tới ví của bạn để bắt đầu sưu tầm, mua và bán các NFT.
+              {t("connectWallet.connectYourWalletDescription")}
             </h4>
             <div 
-                className={isLightMode ? "pricing-item v2 bt-border" : "pricing-item v2"}
+                className={isLightMode ? "pricing-item v2 bt-border bt-bg-light text-dark" : "pricing-item v2"}
                 onClick={connectToMetaMask}
               >
               <img
@@ -66,7 +68,7 @@ const FeaturesList = () => {
                 className="wal-icon"
                 alt=""
               />
-              Kết nối ví MetaMask
+              {t("connectWallet.connectMetaMask")}
             </div>
           </div>
         </div>

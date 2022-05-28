@@ -3,15 +3,15 @@
         "dataUp" :[
             {
                 "path":"/auctions",
-                "title":"Live Auctions"
+                "title": "common.liveAuctions"
             },
             {
                 "path":"/discover",
-                "title":"Discover"
+                "title": "header.discover"
             },
             {
                 "path":"/itemdetails",
-                "title":"Item Details"
+                "title": "header.itemDetails"
             }
         ]
     },
@@ -19,27 +19,27 @@
         "dataDown" : [
             {
                 "path":"/connectwallet",
-                "title":"Wallet Connec"
+                "title": "header.connectWallet"
             },
             {
                 "path":"/createitem",
-                "title":"Create Item"
+                "title": "header.createItem"
             },
             {
                 "path":"/authors",
-                "title":"Authors"
+                "title": "header.authors"
             },
             {
                 "path":"/profile",
-                "title":"Author Profile"
+                "title": "header.authorProfile"
             },
             {
                 "path":"/login",
-                "title":"Login"
+                "title": "common.login"
             },
             {
                 "path":"/signup",
-                "title":"Sign Up"
+                "title": "common.signUp"
             }
         ]
 

@@ -4,9 +4,11 @@ import TopCollectionsItem from "../TopCollectionsItem";
 import InfoComponent from "../InfoComponent";
 import { TopCollectionsData } from "../../data/data-components/data-TopCollections.js";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 function TopCollectionsContainer() {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <section 
@@ -19,8 +21,8 @@ function TopCollectionsContainer() {
     >
       <div className="container">
         <InfoComponent
-          titleSm="Những bộ sưu tập hàng đầu của chúng tôi"
-          titleLg="Những Bộ Sưu Tập Nổi Tiếng"
+          titleSm={t("common.topCollections")}
+          titleLg={t("common.popularCollections")}
         />
         <div className="row">
           {TopCollectionsData &&

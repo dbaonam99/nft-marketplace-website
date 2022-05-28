@@ -1,7 +1,9 @@
+import { useTranslation } from "react-i18next";
 import useThemeMode from "../../hooks/useThemeMode"
 
 function PartProfile({img1 , img2 , img3 , data}){
     const isLightMode = useThemeMode();
+    const { t } = useTranslation();
 
 	return(
       <div className="col-12 col-lg-3">
@@ -37,7 +39,7 @@ function PartProfile({img1 , img2 , img3 , data}){
                       <li key={i}><a href="#" className={isLightMode ? "bt-bg-light" : ""}><span className={item.classIcon}></span></a></li>  
                     ))}
                  </ul>
-                  <a href="profile.html" className="more-btn">Follow</a>
+                  <a href="profile.html" className="more-btn">{t("common.follow")}</a>
               </div>
               
           </div>

@@ -18,6 +18,7 @@ import { useEffect, useState } from "react";
 import NFT from "../../contracts/NFT.abi";
 import Market from "../../contracts/NFTMarket.abi";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 function ListedItemsContainer() {
   // console.log(ListedItemsData, ListedItemsData[0].imgSm);
@@ -25,6 +26,7 @@ function ListedItemsContainer() {
   const [nfts, setNfts] = useState([]);
   const [loading, setLoading] = useState();
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   useEffect(() => {
     loadNFTs();
@@ -93,10 +95,10 @@ function ListedItemsContainer() {
     >
       <div className="container">
         <InfoComponent
-          titleSm="Khám phá các NFT mới"
-          titleLg="Danh Sách NFT mới nhất"
+          titleSm={t("common.discoverNewItems")}
+          titleLg={t("common.newNFTList")}
         />
-        <div className="row align-items-center">
+        <div className="row">
           {ListedItemsData &&
             ListedItemsData.map((item, i) => (
               <ListedItemsItem
@@ -109,7 +111,7 @@ function ListedItemsContainer() {
             ))}
           <div className="col-12 col-lg-12 text-center">
             <NavLink className="btn more-btn" to="/discover">
-              Xem Thêm
+              {t("common.loadmore")}
             </NavLink>
           </div>
         </div>

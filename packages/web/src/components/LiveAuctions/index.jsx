@@ -7,9 +7,11 @@ import clsx from "clsx";
 
 import "./liveAuctions.css";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 function LiveAuctionsContainer() {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <section 
@@ -21,7 +23,10 @@ function LiveAuctionsContainer() {
       }
     >
       <div className="container">
-        <InfoComponent titleSm="Sàn đấu giá" titleLg="Sàn Đầu giá trực tuyến" />
+        <InfoComponent 
+          titleSm={t("common.auctions")}
+          titleLg={t("common.liveAuctions")}
+        />
         <div className="row align-items-center">
           {LiveAuctionsData &&
             LiveAuctionsData.map((item, i) => (
