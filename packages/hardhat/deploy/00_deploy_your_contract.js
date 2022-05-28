@@ -13,5 +13,11 @@ module.exports = async () => {
 
   await nft.deployed();
   console.log("NFT deployed to:", nft.address);
+
+  const Auction = await hre.ethers.getContractFactory("Auction");
+  const auction = await Auction.deploy();
+
+  await auction.deployed();
+  console.log("Auction deployed to:", auction.address);
 };
 module.exports.tags = ["NFT"];

@@ -11,13 +11,11 @@ function TopCollectionsContainer() {
   const { t } = useTranslation();
 
   return (
-    <section 
-      className={
-        clsx(
-          "section-padding-100 clearfix",
-          isLightMode && "bg-light"
-        )
-      }
+    <section
+      className={clsx(
+        "section-padding-100 clearfix",
+        isLightMode && "bg-light"
+      )}
     >
       <div className="container">
         <InfoComponent
@@ -28,6 +26,7 @@ function TopCollectionsContainer() {
           {TopCollectionsData &&
             TopCollectionsData.map((item, i) => (
               <TopCollectionsItem
+                key={i}
                 img={item.img}
                 title={item.title}
                 text={item.text}

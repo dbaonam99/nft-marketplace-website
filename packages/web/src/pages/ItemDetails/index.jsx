@@ -1,9 +1,7 @@
-import Head from '../../layouts/Head';
-import ItemDetailsContainer from '../../containers/ItemDetails';
-import Footer from '../../layouts/Footer';
-import { useTranslation } from 'react-i18next';
-
-// import '../../assets/css/itemDetails.css'
+import Head from "../../layouts/Head";
+import ItemDetailsContainer from "../../containers/ItemDetails";
+import Footer from "../../layouts/Footer";
+import { useTranslation } from "react-i18next";
 
 const ItemDetails = () => {
   const { t } = useTranslation();
@@ -15,7 +13,6 @@ const ItemDetails = () => {
       <Footer />
     </>
   );
-}
+};
 
 export default ItemDetails;
-

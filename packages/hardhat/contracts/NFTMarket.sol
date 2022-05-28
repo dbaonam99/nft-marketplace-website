@@ -13,6 +13,8 @@ contract NFTMarket is ReentrancyGuard {
   address payable owner;
   uint256 listingPrice = 0.025 ether;
 
+  mapping(uint256 => MarketItem) public idToNFT;
+
   constructor() {
     owner = payable(msg.sender);
   }
@@ -75,10 +77,9 @@ contract NFTMarket is ReentrancyGuard {
       price,
       false
     );
-  
   }
 
-  function createMarketSale(
+  function buyMarketItem(
     address nftContract,
     uint256 itemId
   ) public payable nonReentrant {

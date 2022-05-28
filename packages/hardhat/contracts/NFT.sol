@@ -8,10 +8,10 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 contract NFT is ERC721URIStorage {
   using Counters for Counters.Counter;
   Counters.Counter private _tokenIds;
-  address contractAddress;
-
-  constructor(address marketplaceAddress) ERC721("Metaverse Tokens", "METT") {
-    contractAddress = marketplaceAddress;
+  address marketplaceAdrress;
+  
+  constructor(address _marketplaceAddress) ERC721("UIT Tokens", "UIT") {
+    marketplaceAdrress = _marketplaceAddress;
   }
   
   function createToken(string memory tokenURI) public returns (uint) {
@@ -19,8 +19,7 @@ contract NFT is ERC721URIStorage {
     uint256 newItemId = _tokenIds.current();
     _mint(msg.sender, newItemId);
     _setTokenURI(newItemId, tokenURI);
-    setApprovalForAll(contractAddress, true);
+    setApprovalForAll(marketplaceAdrress, true);
     return newItemId;
   }
-
 }

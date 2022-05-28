@@ -7,22 +7,28 @@ import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 
 const FeaturesList = () => {
-  const { getUserInfo } = useAuth();
-  const [data, setData] = useState({
-    address: "",
-    balance: null,
-  });
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const { getUserInfo, userInfo } = useAuth();
 
   const connectToMetaMask = () => {
-    console.log("check");
     if (window.ethereum) {
-      window.ethereum.request({ method: "eth_requestAccounts" }).then((res) => {
-        console.log(res);
-        getBalance(res[0]);
-      });
-      // getUserInfo(res.data.privateKey);
+      window.ethereum
+        .request({ method: "eth_requestAccounts" })
+        .then((accounts) => {
+          if (accounts.length === 0) {
+            console.log("Please connect to MetaMask.");
+          } else if (accounts[0] !== userInfo) {
+            getBalance(accounts[0]);
+          }
+        })
+        .catch((err) => {
+          if (err.code === 4001) {
+            console.log("Please connect to MetaMask.");
+          } else {
+            console.error(err);
+          }
+        });
     } else {
       alert("Install metamask extension!!");
     }
@@ -35,14 +41,12 @@ const FeaturesList = () => {
         params: [address, "latest"],
       })
       .then((balance) => {
-        setData({
+        getUserInfo({
           address: address,
           balance: ethers.utils.formatEther(balance),
         });
       });
   };
-
-  console.log("data", data);
 
   return (
     <>
@@ -55,20 +59,26 @@ const FeaturesList = () => {
               width="90"
               alt=""
             />
-            <h4 className={isLightMode ? "text-dark mb-30" : "w-text mb-30"} data-wow-delay="0.3s">
+            <h4
+              className={isLightMode ? "text-dark mb-30" : "w-text mb-30"}
+              data-wow-delay="0.3s"
+            >
+              Kết nối tới ví của bạn để bắt đầu sưu tầm, mua và bán các NFT.
               {t("connectWallet.connectYourWalletDescription")}
             </h4>
-            <div 
-                className={isLightMode ? "pricing-item v2 bt-border bt-bg-light text-dark" : "pricing-item v2"}
-                onClick={connectToMetaMask}
-              >
+            <div
+              className={
+                isLightMode ? "pricing-item v2 bt-border" : "pricing-item v2"
+              }
+              onClick={connectToMetaMask}
+            >
               <img
                 src={ConnectWalletIconsw1}
                 width="30"
                 className="wal-icon"
                 alt=""
               />
-              {t("connectWallet.connectMetaMask")}
+              {userInfo?.address ? t("connectWallet.connected") : t("connectWallet.connectMetaMask")}
             </div>
           </div>
         </div>

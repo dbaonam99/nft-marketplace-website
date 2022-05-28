@@ -1,13 +1,13 @@
-import Breadcumb from '../../components/Breadcumb'
-import Detailed from './Detailed'
-import SidebarArea from './SidebarArea'
-import HighestBid from './HighestBid'
-import TestPopup from './TestPopup'
+import Breadcrumb from "../../components/Breadcrumb";
+import Detailed from "./Detailed";
+import SidebarArea from "./SidebarArea";
+import HighestBid from "./HighestBid";
+import TestPopup from "./TestPopup";
 import clsx from "clsx";
 
-import '../../assets/css/itemDetails.css'
-import useThemeMode from '../../hooks/useThemeMode'
-import { useTranslation } from 'react-i18next'
+import "../../assets/css/itemDetails.css"
+import useThemeMode from "../../hooks/useThemeMode"
+import { useTranslation } from "react-i18next"
 
 const ItemDetailsContainer = () => {
   const isLightMode = useThemeMode();
@@ -15,11 +15,11 @@ const ItemDetailsContainer = () => {
 
   return (
     <>
-      <Breadcumb  
+      <Breadcrumb
         namePage={t("header.itemDetails")}
         title={t("header.itemDetails")}
       />
-      <section 
+      <section
         className={
           clsx(
             "section-padding-100",
@@ -27,20 +27,19 @@ const ItemDetailsContainer = () => {
           )
         }
       >
-          <div className="container">
+        <div className="container">
+          <div className="row">
+            <Detailed />
 
-              <div className="row">
-                  <Detailed />
+            <SidebarArea />
 
-                  <SidebarArea />
-
-                  <HighestBid />
-              </div>
+            <HighestBid />
           </div>
+        </div>
       </section>
       <TestPopup />
     </>
   );
-}
+};
 
 export default ItemDetailsContainer;

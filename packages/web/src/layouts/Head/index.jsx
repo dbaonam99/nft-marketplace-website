@@ -1,54 +1,39 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { NavLink } from "react-router-dom";
-import $ from "jquery";
-// import "jquery-syotimer";
-
-import jQueryBridget from "jquery-bridget";
-import jQuery from "jquery";
-
-// import './script.js'
-import "./navbar.css";
 import { NavbarLogo } from "../../utils/allImgs";
-import { Addshrink } from "../../utils";
 import Preloader from "../../components/Preloader";
 import data from "../../data/data-layouts/data-Head.json";
 import ModeSwitcher from "./ModeSwitcher";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useTranslation } from "react-i18next";
+import useThemeMode from "../../hooks/useThemeMode";
+import "./navbar.css";
 
 function Head({ Title }) {
+  const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const navbarRef = useRef();
 
   useEffect(() => {
-    Addshrink();
-  }, [window.pageYOffset]);
-
-  useEffect(() => {
-    // jQueryBridget( 'jquery-syotimer', 'jquery' , $ );
-    // if ($('.simple_timer').length) {
-    //     $('.simple_timer').syotimer({
-    //         year: 2025,
-    //         month: 3,
-    //         day: 9,
-    //         hour: 20,
-    //         minute: 30
-    //     })
-    // }
-    // $(".simple_timer").syotimer({
-    //   year: 2025,
-    //   month: 3,
-    //   day: 9,
-    //   hour: 20,
-    //   minute: 30,
-    // });
-  }, []);
+    window.addEventListener("scroll", (e) => {
+      if (window.pageYOffset > 20) {
+        navbarRef?.current?.classList.add(
+          isLightMode ? "shrink" : "shrink-dark"
+        );
+      } else {
+        navbarRef?.current?.classList.remove(
+          isLightMode ? "shrink" : "shrink-dark"
+        );
+      }
+    });
+  }, [isLightMode]);
 
   return (
     <>
       <Preloader Title={Title} />
       <nav
         className="navbar navbar-expand-lg navbar-white fixed-top"
-        id="banner"
+        ref={navbarRef}
       >
         <div className="container">
           <NavLink className="navbar-brand" to="/">

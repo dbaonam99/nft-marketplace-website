@@ -95,7 +95,8 @@
   "connectWallet": {
     "connectYourWallet": "Kết nối đến ví của bạn",
     "connectYourWalletDescription": "Kết nối tới ví của bạn để bắt đầu sưu tầm, mua và bán các NFT.",
-    "connectMetaMask": "Kết nối ví MetaMask"
+    "connectMetaMask": "Kết nối ví MetaMask",
+    "connected": "Đã kết nối"
   },
   "login": {
     "loginNow": "Đăng nhập ngay!",

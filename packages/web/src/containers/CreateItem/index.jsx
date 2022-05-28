@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import Web3Modal from "web3modal";
-import Breadcumb from "../../components/Breadcumb";
+import Breadcrumb from "../../components/Breadcrumb";
 import CollectionItem from "./CollectionItem";
 import CreatorSec from "./CreatorSec";
 import {
@@ -13,8 +13,7 @@ import {
 import clsx from "clsx";
 
 import NFT from "../../contracts/NFT.abi";
-
-// import Market from "../../contracts/NFTMarket.abi";
+import NFTMarket from "../../contracts/NFTMarket.abi";
 
 import "../../assets/css/createItem.css";
 import useThemeMode from "../../hooks/useThemeMode";
@@ -35,7 +34,7 @@ const CreateItemContainer = () => {
   const createNFTMutation = useCreateNFTMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
   const isLightMode = useThemeMode();
-	const { t } = useTranslation();
+  const { t } = useTranslation();
 
   async function onFileChange(e) {
     const file = e.target.files[0];
@@ -75,14 +74,11 @@ const CreateItemContainer = () => {
       { url },
       {
         onSuccess: (res) => {
-          createNFTMarketItemMutation.mutate(
-            { listingPrice: listingPrice.toString(), tokenId: res, price },
-            {
-              onSuccess: (res) => {
-                console.log(res);
-              },
-            }
-          );
+          createNFTMarketItemMutation.mutate({
+            listingPrice: listingPrice.toString(),
+            tokenId: res,
+            price,
+          });
         },
       }
     );
@@ -90,17 +86,15 @@ const CreateItemContainer = () => {
 
   return (
     <>
-      <Breadcumb 
+      <Breadcrumb
         namePage={t("header.createItem")}
         title={t("header.createItem")}
       />
-      <section 
-        className={
-          clsx(
-            "blog-area section-padding-100",
-            isLightMode && "bg-light"
-          )
-        }
+      <section
+        className={clsx(
+          "blog-area section-padding-100",
+          isLightMode && "bg-light"
+        )}
       >
         <div className="container">
           <div className="row">

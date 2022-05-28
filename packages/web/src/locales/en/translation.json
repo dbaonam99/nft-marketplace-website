@@ -95,7 +95,8 @@
   "connectWallet": {
     "connectYourWallet": "Connect Your Wallet",
     "connectYourWalletDescription": "Connect to your wallet to start collecting, buying and selling NFTs.",
-    "connectMetaMask": "Connect MetaMask Wallet"
+    "connectMetaMask": "Connect MetaMask Wallet",
+    "connected": "Connected"
   },
   "login": {
     "loginNow": "Login Now!",
