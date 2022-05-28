@@ -19,7 +19,7 @@ export default function LanguageSwitcher() {
   return (
     <div className="language-switcher">
       <div className="current-language" onClick={toggleDropdown}>
-        Tiếng Việt
+        { i18n.language === "vi" ? "Tiếng Việt" : "English" }
       </div>
       <div className={clsx("language-list", active && "active")}>
         <div 
