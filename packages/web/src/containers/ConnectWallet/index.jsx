@@ -5,24 +5,31 @@ import ImageBox from "./ImageBox";
 import CardSection from "./CardSection";
 import clsx from "clsx";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 const ConnectWalletContainer = () => {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <>
-      <Breadcrumb namePage="Wallet Connect" title="Wallet Connect" />
+      <Breadcrumb
+        namePage={t("header.connectWallet")}
+        title={t("header.connectWallet")}
+      />
       <section
-        className={clsx(
-          "features section-padding-100 ",
-          isLightMode && "bg-light"
-        )}
+        className={
+          clsx(
+            "features section-padding-100 ",
+            isLightMode && "bg-light"
+          )
+        }
       >
         <div className="container">
           <InfoComponent
-            titleSm="Connect Your Wallet"
-            titleLg="Connect Wallet"
-            text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo."
+            titleSm={t("connectWallet.connectYourWallet")}
+            titleLg={t("header.connectWallet")}
+            text={t("connectWallet.connectYourWalletDescription")}
           />
           <div className="row">
             <FeaturesList />

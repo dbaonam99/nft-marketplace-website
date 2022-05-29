@@ -4,9 +4,11 @@ import Card from '../../../components/Card'
 import clsx from "clsx";
 import {Authors} from '../../../data/data-containers/data-ConnectWallet'
 import useThemeMode from '../../../hooks/useThemeMode';
+import { useTranslation } from 'react-i18next';
 
 const CardSection = () => {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -21,9 +23,8 @@ const CardSection = () => {
 	        <div className="container">
 	            
 				<InfoComponent
-				  	titleSm='Explore Authors'
-				  	titleLg='Our Authors'
-				  	text='Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo.'
+				  	titleSm={t("common.exploreAuthors")}
+				  	titleLg={t("common.ourAuthors")}
 				/>
 	                
 

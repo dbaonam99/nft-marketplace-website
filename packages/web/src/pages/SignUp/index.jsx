@@ -1,13 +1,14 @@
 import Head from '../../layouts/Head';
 import SignUpContainer from '../../containers/SignUp';
 import Footer from '../../layouts/Footer';
+import { useTranslation } from 'react-i18next';
 
 const SignUp = () => {
-
+	const { t } = useTranslation();
 
   return (
 	<>
-		<Head Title='Signup' />
+		<Head Title={t("common.signUp")} />
 		<SignUpContainer />
 		<Footer />
 	</>

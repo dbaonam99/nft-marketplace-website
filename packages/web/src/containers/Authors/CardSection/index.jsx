@@ -3,11 +3,13 @@ import Card from '../../../components/Card'
 // import AuthorsData from './data.json'
 import {AuthorsData} from '../../../data/data-containers/data-Authors.js'
 import useThemeMode from "../../../hooks/useThemeMode";
+import { useTranslation } from 'react-i18next';
 
 const CardSection = () => {
 	const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
-  return (
+	return (
     <>
 		<section 
 			className={isLightMode ? "section-padding-0-70 clearfix bg-light" : "section-padding-0-70 clearfix"}
@@ -15,9 +17,8 @@ const CardSection = () => {
 		    <div className="container">
 		        
 				<InfoComponent
-							titleSm="Explore Authors"
-							titleLg="Our Authors"
-							text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo."
+					titleSm={t("common.exploreAuthors")}
+					titleLg={t("common.ourAuthors")}
 				/>
 		            
 

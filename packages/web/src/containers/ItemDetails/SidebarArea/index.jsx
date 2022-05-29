@@ -5,12 +5,14 @@ import authors2 from "../../../assets/img/authors/2.png";
 import artworkfire from "../../../assets/img/art-work/fire.png";
 import details from "../../../data/data-containers/data-ItemDetails-SidebarArea.json";
 import useThemeMode from "../../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 import TestPopup from "../TestPopup";
 import { useBuyNFTMutation } from "../../../queries/NFT";
 
 const SidebarArea = ({ location }) => {
   let { tokenId } = useParams();
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   const buyNFTMutation = useBuyNFTMutation();
 
@@ -36,12 +38,12 @@ const SidebarArea = ({ location }) => {
                   {isLightMode ? (
                     <div className="d-flex align-items-center">
                       <i className="fa fa-list mr-2" aria-hidden="true"></i>
-                      Crypto Art
+                      {t("itemDetails.cryptoArt")}
                     </div>
                   ) : (
                     <>
                       <img src={iconsf1} alt="" />
-                      Crypto Art
+                      {t("itemDetails.cryptoArt")}
                     </>
                   )}
                 </NavLink>
@@ -56,7 +58,7 @@ const SidebarArea = ({ location }) => {
               <span
                 className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
               >
-                Current Price 0.34 ETH{" "}
+                {t("common.currentPrice")} 0.34 ETH{" "}
               </span>
               <span
                 className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
@@ -69,7 +71,7 @@ const SidebarArea = ({ location }) => {
               {details &&
                 details.map((item, i) => (
                   <p className={isLightMode ? "text-muted" : ""} key={i}>
-                    {item.text1}:{" "}
+                    {t(item.text1)}:{" "}
                     <span className={isLightMode ? "text-dark" : ""}>
                       {item.text2}
                     </span>
@@ -97,7 +99,7 @@ const SidebarArea = ({ location }) => {
                       : "author-earn mb-0"
                   }
                 >
-                  Item Owner
+                  {t("common.itemOwner")}
                 </p>
               </div>
             </div>
@@ -107,7 +109,7 @@ const SidebarArea = ({ location }) => {
               }
             >
               <h5 className={isLightMode ? "text-dark mb-15" : "w-text mb-15"}>
-                Highest Bid
+                {t("common.highestBid")}
               </h5>
               <div className="admire">
                 <div className={isLightMode ? "adm text-dark" : "adm w-text"}>
@@ -134,7 +136,8 @@ const SidebarArea = ({ location }) => {
               className="open-popup-link more-btn width-100 mt-30"
               onClick={buyNft}
             >
-              Purchase Now
+
+              {t("common.purchaseNow")}
             </div>
           </div>
         </div>

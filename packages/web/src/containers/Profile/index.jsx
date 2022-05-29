@@ -7,9 +7,11 @@ import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
   const { data, refetch } = useGetCreatedNFTsQuery();
 
   useEffect(() => {
@@ -19,7 +21,10 @@ const ProfileContainer = () => {
 
   return (
     <>
-      <Breadcrumb namePage="Author Profile" title="Author Profile" />
+      <Breadcrumb
+        namePage={t("header.authorProfile")}
+        title={t("header.authorProfile")}
+      />
       <section
         className={
           isLightMode
@@ -148,7 +153,7 @@ const ProfileContainer = () => {
 
                 <div className="col-12 col-lg-12 text-center">
                   <a className="btn more-btn" href="/discover">
-                    Load More
+                    {t("common.loadmore")}
                   </a>
                 </div>
               </div>

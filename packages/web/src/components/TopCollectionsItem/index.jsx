@@ -1,8 +1,10 @@
+import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
 import useThemeMode from "../../hooks/useThemeMode";
 
 function TopCollectionsItem({img , title , text , Delay}){
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return(
     <div className="col-12 col-md-6 col-lg-3">
@@ -18,7 +20,7 @@ function TopCollectionsItem({img , title , text , Delay}){
             <div className="collection_info">
                 <h6 className={isLightMode ? "text-dark" : ""}>{title}</h6>
                 <p>
-                  <span className={`${isLightMode ? "text-muted" : ""}`}>Owner: </span><span className={`${isLightMode ? "text-dark" : "w-text"}`}>{text}</span>
+                  <span className={`${isLightMode ? "text-muted" : ""}`}>{t("common.owner")}: </span><span className={`${isLightMode ? "text-dark" : "w-text"}`}>{text}</span>
                 </p>
             </div>
             

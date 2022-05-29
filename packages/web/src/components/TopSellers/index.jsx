@@ -6,9 +6,11 @@ import {
 } from "../../data/data-components/data-TopSellers.js";
 import clsx from "clsx";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 function TopSellersContainer() {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <section 
@@ -24,9 +26,9 @@ function TopSellersContainer() {
           <div className="col-12 col-lg-12">
             <div className="who-we-contant">
               <div className="dream-dots text-left">
-                <span className="gradient-text">Người sáng tạo</span>
+                <span className="gradient-text">{t("common.creativeCreators")}</span>
               </div>
-              <h4 className={clsx(isLightMode && "text-dark")}>Top Sellers Trong Tháng</h4>
+              <h4 className={clsx(isLightMode && "text-dark")}>{t("common.topMonthSellers")}</h4>
             </div>
           </div>
 

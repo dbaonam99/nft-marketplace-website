@@ -1,9 +1,11 @@
 import NameInput from "./NameInput";
 import data from "./data.json";
 import useThemeMode from "../../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 const ContactForm = () => {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <>
@@ -43,7 +45,7 @@ const ContactForm = () => {
                     <span className="highlight"></span>
                     <span className={isLightMode ? "bar-light" : "bar"}></span>
                     <label className={isLightMode ? "text-dark" : ""}>
-                      Message
+                      {t("common.message")}
                     </label>
                   </div>
                 </div>
@@ -53,7 +55,7 @@ const ContactForm = () => {
                   data-aos="fade-in"
                 >
                   <button type="submit" className="more-btn">
-                    Send Message
+                    {t("common.sendMessage")}
                   </button>
                 </div>
               </div>

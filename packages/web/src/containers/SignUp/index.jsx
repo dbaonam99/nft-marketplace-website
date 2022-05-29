@@ -1,38 +1,43 @@
-import Breadcrumb from "../../components/Breadcrumb";
-import InfoComponent from "../../components/InfoComponent";
-import ContactForm from "./ContactForm";
-import useThemeMode from "../../hooks/useThemeMode";
+import Breadcrumb from "../../components/Breadcrumb"
+import InfoComponent from "../../components/InfoComponent"
+import ContactForm from "./ContactForm"
+import useThemeMode from "../../hooks/useThemeMode"
+import { useTranslation } from "react-i18next"
 
 const SignUpContainer = () => {
-  const isLightMode = useThemeMode();
+	const isLightMode = useThemeMode();
+	const { t } = useTranslation();
 
-  return (
-    <>
-      <Breadcrumb namePage="Signup" title="Signup" animNone={false} />
-      <section
-        className={
-          isLightMode
-            ? "section-padding-100 contact_us_area bg-light"
-            : "section-padding-100 contact_us_area"
-        }
-        id="contact"
-      >
-        <div className="container">
-          <div className="row">
-            <div className="col-12">
-              <InfoComponent
-                titleSm="Signup Now!"
-                titleLg="Create New Account"
-                text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed quis accumsan nisi Ut ut felis congue nisl hendrerit commodo."
-              />
-            </div>
-          </div>
+	return (
+		<>
+			<Breadcrumb
+				namePage={t("common.signUp")}
+				title={t("common.signUp")}
+				animNone={false}
+			/>
+			<section
+				className={
+					isLightMode
+						? "section-padding-100 contact_us_area bg-light"
+						: "section-padding-100 contact_us_area"
+				}
+				id="contact"
+			>
+				<div className="container">
+					<div className="row">
+						<div className="col-12">
+							<InfoComponent
+								titleSm={t("signup.signupNow")}
+								titleLg={t("signup.signupToAccount")}
+							/>
+						</div>
+					</div>
 
-          <ContactForm />
-        </div>
-      </section>
-    </>
-  );
+					<ContactForm />
+				</div>
+			</section>
+		</>
+	);
 };
 
 export default SignUpContainer;

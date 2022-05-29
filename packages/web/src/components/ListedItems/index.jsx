@@ -8,10 +8,12 @@ import "./listedItems.css";
 
 import useThemeMode from "../../hooks/useThemeMode";
 import { useGetNFTsQuery } from "../../queries/NFT";
+import { useTranslation } from "react-i18next";
 
 function ListedItemsContainer() {
   const isLightMode = useThemeMode();
   const { data: NFTs } = useGetNFTsQuery();
+  const { t } = useTranslation();
 
   return (
     <section
@@ -22,8 +24,8 @@ function ListedItemsContainer() {
     >
       <div className="container">
         <InfoComponent
-          titleSm="Khám phá các NFT mới"
-          titleLg="Danh Sách NFT mới nhất"
+          titleSm={t("common.discoverNewItems")}
+          titleLg={t("common.newNFTList")}
         />
         <div className="row align-items-center">
           {NFTs?.map((item) => (
@@ -39,7 +41,7 @@ function ListedItemsContainer() {
           ))}
           <div className="col-12 col-lg-12 text-center">
             <NavLink className="btn more-btn" to="/discover">
-              Xem Thêm
+              {t("common.loadmore")}
             </NavLink>
           </div>
         </div>

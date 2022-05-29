@@ -1,6 +1,8 @@
+import { useTranslation } from 'react-i18next';
 import EmailPassInput from '../../../components/EmailPassInput'
 
 const ContactForm = () => {
+	const { t } = useTranslation();
 
   return (
     <>
@@ -18,7 +20,7 @@ const ContactForm = () => {
 								delay2='500'
 							/>
 	                        <div className="col-12 text-center" data-aos-delay='600' data-aos="fade-in">
-	                            <button type="submit" className="more-btn">Login</button>
+	                            <button type="submit" className="more-btn">{t("common.login")}</button>
 	                        </div>
 	                    </div>
 	                </form>

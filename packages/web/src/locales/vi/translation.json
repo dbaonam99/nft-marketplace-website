@@ -1,0 +1,113 @@
+{
+  "common": {
+    "loadmore": "Xem Thêm",
+    "findMore": "Tìm hiểu thêm",
+    "collectNFT": "Sưu tầm NFT",
+    "creativeCreators": "Người sáng tạo",
+    "topMonthSellers": "Top Sellers Trong Tháng",
+    "topCollections": "Những bộ sưu tập hàng đầu của chúng tôi",
+    "popularCollections": "Những Bộ Sưu Tập Nổi Tiếng",
+    "discoverNewItems": "Khám phá các NFT mới",
+    "newNFTList": "Danh Sách NFT Mới Nhất",
+    "auctions": "Sàn đấu giá",
+    "liveAuctions": "Sàn Đầu Giá Trực Tuyến",
+    "placeBid": "Đấu giá",
+    "owner": "Người sở hữu",
+    "price": "Giá",
+    "of": "trên",
+    "highestBid": "Giá cao nhất",
+    "like": "lượt thích",
+    "login": "Đăng nhập",
+    "signUp": "Đăng ký",
+    "currentPrice": "Giá hiện tại",
+    "artist": "Tác giả",
+    "size": "Kích thước",
+    "createdAt": "Ngày tạo",
+    "collection": "Bộ sưu tập",
+    "itemOwner": "Chủ sở hữu",
+    "purchaseNow": "Mua ngay",
+    "latestBids": "Đấu giá mới nhất",
+    "by": "bởi",
+    "bidAt": "đấu giá",
+    "history": "Lịch sử",
+    "listedBy": "Liệt kê bởi",
+    "biddingEndIn": "Đấu giá kết thúc:",
+    "days": "ngày",
+    "hours": "giờ",
+    "minutes": "phút",
+    "seconds": "giây",
+    "yourBidAmount": "Số tiền đấu giá của bạn",
+    "search": "Tìm kiếm",
+    "filters": "Lọc",
+    "subscribe": "Đặt mua",
+    "exploreAuthors": "Khám phá tác giả",
+    "ourAuthors": "Các tác giả của chúng tôi",
+    "follow": "Theo dõi",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "name": "Họ và tên",
+    "subject": "Chủ đề",
+    "message": "Tin nhắn",
+    "sendMessage": "Gửi tin nhắn",
+    "uploadItemFile": "Tải lên tệp NFT",
+    "uploadFile": "Tải tệp lên",
+    "itemName": "Tên NFT",
+    "itemDescription": "Mô tả NFT",
+    "itemPrice": "Giá NFT bằng ETH"
+  },
+  "header": {
+    "home": "Trang chủ",
+    "discover": "Khám phá",
+    "activity": "Hoạt động",
+    "pages": "Trang",
+    "contact": "Liên hệ",
+    "connectWallet": "Kết nối ví",
+    "itemDetails": "Chi tiết NFT",
+    "createItem": "Tạo NFT",
+    "authors": "Tác giả",
+    "authorProfile": "Thông tin tác giả"
+  },
+  "footer": {
+    "aboutUs": "Về Chúng Tôi",
+    "aboutUsContent": "Website đầu tiên và duy nhất tại Việt Nam giúp bạn trao đổi, mua bán NFT, với những NFT vô cùng có giá trị. Mang các nghệ sĩ và nhà sáng tạo lại với nhau trên một nền tảng duy nhất. Mua những NFT cao cấp và độc quyền được tạo bởi các nghệ sĩ hàng đầu thế giới.",
+    "contactUs": "Liên Hệ Chúng Tôi",
+    "address": "Linh Trung, Thủ Đức, TP Hồ Chí Minh",
+    "phoneNumber": "+99 999 9999",
+    "email": "info@uit.com",
+    "newsletter": "Nhận Tin Mới",
+    "newsletterContent": "Giúp bạn cập nhật những thông tin mới nhất.",
+    "yourEmail": "Email của bạn",
+    "copyright": "Bản quyền ©. Đã đăng ký Bản quyền"
+  },
+  "home": {
+    "bannerTitle": "Tất cả NFT bạn cần đều có tại đây",
+    "bannerSloganFirst": "Nơi bạn có thể sưu tầm, mua và bán",
+    "bannerSloganLast": "những NFT tuyệt nhất",
+    "bannerDescription": "Website đầu tiên và duy nhất tại Việt Nam giúp bạn trao đổi, mua bán NFT, với những NFT vô cùng có giá trị. Mang các nghệ sĩ và nhà sáng tạo lại với nhau trên một nền tảng duy nhất. Mua những NFT cao cấp và độc quyền được tạo bởi các nghệ sĩ hàng đầu thế giới."
+  },
+  "itemDetails": {
+    "cryptoArt": "Nghệ thuật tiền điện tử"
+  },
+  "activity": {
+    "recentActivity": "Hoạt động gần đây",
+    "businessHistory": "Lịch sử kinh doanh"
+  },
+  "connectWallet": {
+    "connectYourWallet": "Kết nối đến ví của bạn",
+    "connectYourWalletDescription": "Kết nối tới ví của bạn để bắt đầu sưu tầm, mua và bán các NFT.",
+    "connectMetaMask": "Kết nối ví MetaMask",
+    "connected": "Đã kết nối"
+  },
+  "login": {
+    "loginNow": "Đăng nhập ngay!",
+    "loginToAccount": "Đăng nhập vào tài khoản của bạn"
+  },
+  "signup": {
+    "signupNow": "Đăng ký ngay!",
+    "signupToAccount": "Đăng ký tài khoản mới"
+  },
+  "contact": {
+    "getInTouch": "Liên hệ",
+    "contactWithUs": "Liên hệ với chúng tôi"
+  }
+}

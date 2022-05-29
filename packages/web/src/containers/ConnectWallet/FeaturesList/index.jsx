@@ -4,9 +4,11 @@ import { ConnectWalletIconsw1 } from "../../../utils/allImgs";
 import ConnectWalletIconswallet from "../../../assets/img/icons/wallet.png";
 import { useAuth } from "../../../auth/account";
 import useThemeMode from "../../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 
 const FeaturesList = () => {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
   const { getUserInfo, userInfo } = useAuth();
 
   const connectToMetaMask = () => {
@@ -62,6 +64,7 @@ const FeaturesList = () => {
               data-wow-delay="0.3s"
             >
               Kết nối tới ví của bạn để bắt đầu sưu tầm, mua và bán các NFT.
+              {t("connectWallet.connectYourWalletDescription")}
             </h4>
             <div
               className={
@@ -75,7 +78,7 @@ const FeaturesList = () => {
                 className="wal-icon"
                 alt=""
               />
-              {userInfo?.address ? "Đã kết nối " : "Kết nối ví MetaMask"}
+              {userInfo?.address ? t("connectWallet.connected") : t("connectWallet.connectMetaMask")}
             </div>
           </div>
         </div>

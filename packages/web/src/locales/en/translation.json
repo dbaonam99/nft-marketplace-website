@@ -1,0 +1,113 @@
+{
+  "common": {
+    "loadmore": "Load More",
+    "findMore": "Find More",
+    "collectNFT": "Collect NFT",
+    "creativeCreators": "Creative Creators",
+    "topMonthSellers": "Top Month Sellers",
+    "topCollections": "Top Collections",
+    "popularCollections": "Popular Collections",
+    "discoverNewItems": "Discover New Items",
+    "newNFTList": "New NFT List",
+    "auctions": "Auctions",
+    "liveAuctions": "Live Auctions",
+    "placeBid": "Place Bid",
+    "owner": "Owner",
+    "price": "Price",
+    "of": "of",
+    "highestBid": "Highest Bid",
+    "like": "like",
+    "login": "Login",
+    "signUp": "Signup",
+    "currentPrice": "Current Price",
+    "artist": "Artist",
+    "size": "Size",
+    "createdAt": "Created",
+    "collection": "Collection",
+    "itemOwner": "Item Owner",
+    "purchaseNow": "Purchase Now",
+    "latestBids": "Latest Bids",
+    "by": "by",
+    "bidAt": "Bid At",
+    "history": "History",
+    "listedBy": "listed by",
+    "biddingEndIn": "Bidding End In: ",
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "yourBidAmount": "Your Bid Amount",
+    "search": "Search",
+    "filters": "Filters",
+    "subscribe": "Subscribe",
+    "exploreAuthors": "Explore Authors",
+    "ourAuthors": "Our Authors",
+    "follow": "Follow",
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "subject": "Subject",
+    "message": "Message",
+    "sendMessage": "Send Message",
+    "uploadItemFile": "Upload Item File",
+    "uploadFile": "Upload File",
+    "itemName": "Item Name",
+    "itemDescription": "Item Description",
+    "itemPrice": "Item Price in NFT"
+  },
+  "header": {
+    "home": "Home",
+    "discover": "Discover",
+    "activity": "Activity",
+    "pages": "Pages",
+    "contact": "Contact",
+    "connectWallet": "Connect Wallet",
+    "itemDetails": "Item Details",
+    "createItem": "Create Item",
+    "authors": "Authors",
+    "authorProfile": "Author Profile"
+  },
+  "footer": {
+    "aboutUs": "About Us",
+    "aboutUsContent": "The first and only website in Vietnam to help you exchange, buy and sell NFTs, with extremely valuable NFTs. Bringing artists and creators together on a single platform. Buy exclusive and premium NFTs created by the world's top artists.",
+    "contactUs": "Contact Us",
+    "address": "Linh Trung, Thu Duc, Ho Chi Minh City",
+    "phoneNumber": "+99 999 9999",
+    "email": "info@uit.com",
+    "newsletter": "Newsletter",
+    "newsletterContent": "Keeps you up to date with the latest information.",
+    "yourEmail": "Your Email",
+    "copyright": "Copyright ©. All Rights Reserved"
+  },
+  "home": {
+    "bannerTitle": "All NFTs You need in One Marketplace",
+    "bannerSloganFirst": "The Best Place to Collect , Buy and Sell",
+    "bannerSloganLast": "Awesome NFTs",
+    "bannerDescription": "The first and only website in Vietnam to help you exchange, buy and sell NFTs, with extremely valuable NFTs. Bringing artists and creators together on a single platform. Buy exclusive and premium NFTs created by the world's top artists."
+  },
+  "itemDetails": {
+    "cryptoArt": "Crypto Art"
+  },
+  "activity": {
+    "recentActivity": "Recent Activity",
+    "businessHistory": "Business History"
+  },
+  "connectWallet": {
+    "connectYourWallet": "Connect Your Wallet",
+    "connectYourWalletDescription": "Connect to your wallet to start collecting, buying and selling NFTs.",
+    "connectMetaMask": "Connect MetaMask Wallet",
+    "connected": "Connected"
+  },
+  "login": {
+    "loginNow": "Login Now!",
+    "loginToAccount": "Login To Account"
+  },
+  "signup": {
+    "signupNow": "Signup Now!",
+    "signupToAccount": "Signup To Account"
+  },
+  "contact": {
+    "getInTouch": "Get In Touch",
+    "contactWithUs": "Contact With Us"
+  }
+}

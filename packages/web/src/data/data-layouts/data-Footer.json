@@ -10,9 +10,9 @@
   },
   {
     "infoData": [
-      { "text": "Linh Trung, Thủ Đức, TP Hồ Chí Minh" },
-      { "text": "+99 999 9999" },
-      { "text": "info@uit.com" }
+      { "text": "footer.address" },
+      { "text": "footer.phoneNumber" },
+      { "text": "footer.email" }
     ]
   }
 ]

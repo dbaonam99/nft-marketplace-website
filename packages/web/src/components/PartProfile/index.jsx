@@ -1,7 +1,10 @@
+
+import { useTranslation } from "react-i18next";
 import useThemeMode from "../../hooks/useThemeMode";
 
 function PartProfile({ img1, img2, img3, data }) {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
 
   return (
     <div className="col-12 col-lg-3">
@@ -35,7 +38,7 @@ function PartProfile({ img1, img2, img3, data }) {
                 type="text"
                 name="wallet"
                 id="wallet"
-                // value="Xjo03s-osi6732..."
+              // value="Xjo03s-osi6732..."
               />
               <button className={isLightMode ? "btn text-dark" : "btn"}>
                 <i className="fa fa-copy"></i>
@@ -54,7 +57,7 @@ function PartProfile({ img1, img2, img3, data }) {
               ))}
           </ul>
           <a href="profile.html" className="more-btn">
-            Follow
+            {t("common.follow")}
           </a>
         </div>
       </div>
