@@ -67,12 +67,11 @@ function Head({ Title }) {
                   {t("header.discover")}
                 </NavLink>
                 <div className="dropdown-menu">
-                  {data[0].dataUp &&
-                    data[0].dataUp.map((item, i) => (
-                      <NavLink key={i} className="dropdown-item" to={item.path}>
-                        {t(item.title)}
-                      </NavLink>
-                    ))}
+                  {data[0]?.dataUp?.map((item, i) => (
+                    <NavLink key={i} className="dropdown-item" to={item.path}>
+                      {item.title}
+                    </NavLink>
+                  ))}
                 </div>
               </li>
               <li className="nav-item">
