@@ -40,14 +40,14 @@ nav {
 .shrink {
   animation: 0.3s ease-in-out;
   animation-name: fadeInDown;
-  /* backdrop-filter: blur(20px); */
+  backdrop-filter: blur(20px);
 }
 
 .shrink-dark {
   animation: 0.3s ease-in-out;
   animation-name: fadeInDown;
   background-color: linear-gradient(to right, #4834d4, #341f97);
-  /* backdrop-filter: blur(20px); */
+  backdrop-filter: blur(20px);
 }
 
 @-webkit-keyframes fadeInDown {
@@ -129,4 +129,124 @@ nav {
 .navbar-cyan .navbar-brand,
 .navbar-cyan .navbar-nav .nav-item .nav-link {
   color: #04d0ff;
+}
+
+.navbarV2 .menu-button {
+  font-size: 24px;
+  letter-spacing: 2px;
+  width: 56px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  color: #fff;
+  background: rgba(116, 80, 254, 0.7);
+  border-color: #333;
+  border-radius: 14px;
+  font-weight: 900;
+  position: relative;
+}
+
+.navbarV2 .menu-button span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -60%);
+}
+
+.navbarV2 .menu-actions {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+.navbarV2 .connect-wallet-button {
+  margin: 0 20px 0 0 !important;
+  height: 40px;
+  line-height: 40px;
+}
+
+.drawer-main {
+  position: fixed;
+  right: -20%;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  max-width: 408px;
+  min-height: 100vh;
+  z-index: 1032;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.drawer-main .drawer-main-container {
+  backdrop-filter: blur(20px);
+  background: rgba(25, 28, 31, 0.7);
+  margin: 24px;
+  border-radius: 16px;
+  box-shadow: rgba(27, 32, 50, .1) 0px 10px 60px;
+  color: rgb(255, 255, 255);
+  height: calc(100% - 48px);
+  padding: 30px;
+}
+
+.drawer-main .drawer-main-container-light {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.drawer-main .drawer-main-container ul li a {
+  font-size: 24px;
+  line-height: 32px;
+  color: #fff;
+  padding-bottom: 12px;
+  display: block;
+}
+
+.drawer-main .drawer-main-container ul li a.small-li {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.drawer-main .drawer-main-container .actions {
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  display: flex;
+  align-items: center;
+}
+
+.drawer-main .drawer-main-container .actions .close-menu {
+  font-size: 24px;
+  cursor: pointer;
+  margin-left: 20px;  
+}
+
+.drawer-overlay {
+  backdrop-filter: blur(20px);
+  background: rgba(48, 54, 59, 0.5);
+  position: fixed;
+  inset: 0px;
+  z-index: 1031;
+  height: 100vh;
+  opacity: 0;
+  pointer-events: none;
+  right: -20%;
+}
+
+.drawer-overlay-light {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.5);
+  position: fixed;
+  inset: 0px;
+  z-index: 1031;
+  height: 100vh;
+  opacity: 0;
+  pointer-events: none;
+  right: -20%;
+}
+
+.drawer-active {
+  opacity: 1;
+  pointer-events: all;
+  right: 0;
 }

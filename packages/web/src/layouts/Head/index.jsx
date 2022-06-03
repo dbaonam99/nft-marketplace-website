@@ -69,7 +69,7 @@ function Head({ Title }) {
                 <div className="dropdown-menu">
                   {data[0]?.dataUp?.map((item, i) => (
                     <NavLink key={i} className="dropdown-item" to={item.path}>
-                      {item.title}
+                      {t(item.title)}
                     </NavLink>
                   ))}
                 </div>

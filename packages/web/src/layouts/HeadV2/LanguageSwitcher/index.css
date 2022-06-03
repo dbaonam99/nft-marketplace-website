@@ -1,0 +1,13 @@
+.language-switcher {
+  position: absolute;
+  bottom: 30px;
+  font-size: 20px;
+}
+
+.language-switcher .language-item {
+  cursor: pointer;
+}
+.language-switcher .disabled {
+  opacity: .5;
+  pointer-events: none;
+}

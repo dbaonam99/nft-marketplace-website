@@ -97,7 +97,7 @@ export const useBuyNFTMutation = () => {
         NFT_ADDRESS,
         tokenId,
         {
-          value: 1,
+          value: 500,
         }
       );
       // return await transaction.wait();

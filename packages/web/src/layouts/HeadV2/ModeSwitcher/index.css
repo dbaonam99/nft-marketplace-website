@@ -1,0 +1,32 @@
+.mode-switcher {
+  width: 48px;
+  height: 24px;
+  background: #fff;
+  color: #343a40;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  transition: all .3s;
+  cursor: pointer;
+}
+
+.mode-switcher.light {
+  background: #343a40;
+}
+.mode-switcher .circle {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  position: absolute;
+  background: #343a40;
+  transition: all .3s;
+}
+.mode-switcher .circle.left {
+  transform: translateX(3px);
+}
+.mode-switcher .circle.right {
+  transform: translateX(27px);
+  background: #fff;
+}
