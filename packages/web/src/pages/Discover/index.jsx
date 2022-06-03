@@ -1,4 +1,4 @@
-import Head from '../../layouts/Head';
+import Head from '../../layouts/HeadV2';
 import DiscoverContainer from '../../containers/Discover';
 import Footer from '../../layouts/Footer';
 import { useTranslation } from 'react-i18next';

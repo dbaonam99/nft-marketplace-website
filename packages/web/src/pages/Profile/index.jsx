@@ -1,4 +1,4 @@
-import Head from "../../layouts/Head";
+import Head from "../../layouts/HeadV2";
 import ProfileContainer from "../../containers/Profile";
 import Footer from "../../layouts/Footer";
 import { useTranslation } from "react-i18next";
@@ -8,9 +8,9 @@ const Profile = () => {
 
   return (
     <>
-		<Head Title={t("header.authorProfile")} />
-		<ProfileContainer />
-		<Footer />
+      <Head Title={t("header.authorProfile")} />
+      <ProfileContainer />
+      <Footer />
     </>
   );
 };
