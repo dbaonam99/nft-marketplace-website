@@ -1,35 +1,45 @@
 //"SPDX-License-Identifier: UNLICENSED"
 pragma solidity ^0.8.4;
 
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract Auction {
-    event Start();
-    event End(address highestBidder, uint highestBid);
-    event Bid(address indexed sender, uint amount);
+contract NFTAuction is ReentrancyGuard {
+    bytes32 public constant CREATED = keccak256("CREATED");
+    bytes32 public constant BIDDING = keccak256("BIDDING");
+    bytes32 public constant FINISHED = keccak256("FINISHED");
+
+    using Counters for Counters.Counter;
+    Counters.Counter private _auctionIds;
+
+    IERC20 ngl;
+    constructor(address _ngl) {
+        ngl = IERC20(_ngl);
+    }
+
+    event AuctionCreated(
+        uint256 auctionId,
+        address nftContract,
+        uint256 tokenId,
+        address owner,
+        uint256 startingPrice,
+        uint256 startTime,
+        uint256 duration,
+        uint256 biddingStep
+    );
+    event AuctionBid(uint256 auctionId, address bidder, uint256 price);
     event Withdraw(address indexed bidder, uint amount);
 
-    address payable public seller;
-
-    bool public started;
-    bool public ended;
-    uint public endAt;
-
-    address public nftContract;
-    uint public tokenId;
-
-    uint public highestBid;
-    address public highestBidder;
+    mapping(uint256 => Auction) public idToAuction;
     mapping(address => uint) public bids;
-
-    constructor () {
-        seller = payable(msg.sender);
-    }
 
     struct Auction {
         uint256 auctionId;
         address nftContract;
-        uint256 nftId;
+        uint256 tokenId;
         address owner;
         uint256 startTime;
         uint256 startingPrice;
@@ -38,39 +48,105 @@ contract Auction {
         uint256 highestBidAmount;
         address highestBidder;
         bytes32 status;
-        uint256 limitType;
-        uint256 generalLimitType;
     }
 
-    function startAuction(address _nftContract, uint _tokenId, uint startingBid) external {
-        require(!started, "Already started!");
-        require(msg.sender == seller, "You did not start the auction!");
-        highestBid = startingBid;
+    function startAuction(
+        address nftContract,
+        uint256 tokenId,
+        uint256 startingPrice,
+        uint256 startTime,
+        uint256 duration,
+        uint256 biddingStep
+    ) public nonReentrant returns (uint256) {
+        require(
+            biddingStep > 0,
+            "Bidding step must be at least 1 wei"
+        );
 
-        nftContract = _nftContract;
-        tokenId = _tokenId;
+        _auctionIds.increment();
+        uint256 auctionId = _auctionIds.current();
 
-        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+        idToAuction[auctionId] = Auction(
+            auctionId,
+            nftContract,
+            tokenId,
+            msg.sender,
+            startTime,
+            startingPrice,
+            biddingStep,
+            duration,
+            startingPrice,
+            address(0),
+            CREATED
+        );
 
-        started = true;
-        endAt = block.timestamp + 2 days;
+        ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+        
+        emit AuctionCreated(
+            auctionId,
+            nftContract,
+            tokenId,
+            msg.sender,
+            startingPrice,
+            startTime,
+            duration,
+            biddingStep
+        );
 
-        emit Start();
+        return auctionId;
     }
 
-    function bid() external payable {
-        require(started, "Not started.");
-        require(block.timestamp < endAt, "Ended!");
-        require(msg.value > highestBid);
+    function bid(uint256 auctionId) public payable nonReentrant returns (bool) {
+        uint256 startDate = idToAuction[auctionId].startTime;
+        uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
+        uint256 price = msg.value;
 
-        if (highestBidder != address(0)) {
-            bids[highestBidder] += highestBid;
+        require(block.timestamp >= startDate && block.timestamp < endDate,  
+            "Auction is finished or not started yet"
+        );
+
+        if (idToAuction[auctionId].status == CREATED) {
+            require(price >= idToAuction[auctionId].startingPrice, 
+                "Must bid equal or higher than current starting price"
+            );
+            require((price - idToAuction[auctionId].startingPrice) % idToAuction[auctionId].biddingStep == 0, 
+                "Bid price must be divisible by bidding step"
+            );
+
+            payable(address(0)).transfer(price);
+            if (idToAuction[auctionId].highestBidder != address(0)) {
+                bids[idToAuction[auctionId].highestBidder] += price;
+            }
+
+            idToAuction[auctionId].highestBidAmount = price;
+            idToAuction[auctionId].highestBidder = msg.sender;
+            idToAuction[auctionId].status = BIDDING;
+            emit AuctionBid(auctionId, msg.sender, price);
+            return true;
         }
 
-        highestBid = msg.value;
-        highestBidder = msg.sender;
+        if (idToAuction[auctionId].status == BIDDING) {
+            require(price >= idToAuction[auctionId].highestBidAmount + idToAuction[auctionId].biddingStep,
+                "Must bid higher than current highest bid"
+            );
+            require(
+                (price - idToAuction[auctionId].highestBidAmount) % idToAuction[auctionId].biddingStep == 0,
+                "Bid price must be divisible by bidding step"
+            );
 
-        emit Bid(highestBidder, highestBid);
+            payable(address(0)).transfer(price);
+            if (idToAuction[auctionId].highestBidder != address(0)) {
+                bids[idToAuction[auctionId].highestBidder] += idToAuction[auctionId].highestBidAmount;
+            }
+
+            // register new bidder
+            idToAuction[auctionId].highestBidAmount = price;
+            idToAuction[auctionId].highestBidder = msg.sender;
+
+            emit AuctionBid(auctionId, msg.sender, bids[idToAuction[auctionId].highestBidder]);
+            return true;
+        }
+        return false;
     }
 
     function withdraw() external payable {
@@ -81,21 +157,5 @@ contract Auction {
 
         emit Withdraw(msg.sender, bal);
     }
-
-    function endAuction() external {
-        // require(started, "You need to start first!");
-        // require(block.timestamp >= endAt, "Auction is still ongoing!");
-        // require(!ended, "Auction already ended!");
-
-        // if (highestBidder != address(0)) {
-        //     nftContract.transfer(highestBidder, tokenId);
-        //     (bool sent, bytes memory data) = seller.call{value: highestBid}("");
-        //     require(sent, "Could not pay seller!");
-        // } else {
-        //     nftContract.transfer(seller, tokenId);
-        // }
-
-        // ended = true;
-        // emit End(highestBidder, highestBid);
-    }
 }
+
