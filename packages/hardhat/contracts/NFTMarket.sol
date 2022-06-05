@@ -4,19 +4,20 @@ pragma solidity ^0.8.4;
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 
 contract NFTMarket is ReentrancyGuard {
   using Counters for Counters.Counter;
   Counters.Counter private _itemIds;
   Counters.Counter private _itemsSold;
 
-  address payable owner;
-  uint256 listingPrice = 0.025 ether;
+  IERC20 uit;
+  address contractOwner;
+  uint256 listingPrice = 100;
 
-  mapping(uint256 => MarketItem) public idToNFT;
-
-  constructor() {
-    owner = payable(msg.sender);
+  constructor(address _uit, address _contractOwner) {
+      uit = IERC20(_uit);
+      contractOwner = _contractOwner;
   }
 
   struct MarketItem {
@@ -29,6 +30,7 @@ contract NFTMarket is ReentrancyGuard {
     bool sold;
   }
 
+  mapping(uint256 => MarketItem) public idToNFT;
   mapping (uint256 => MarketItem) public idToMarketItem;
 
   event MarketItemCreated (
@@ -87,12 +89,23 @@ contract NFTMarket is ReentrancyGuard {
     uint tokenId = idToMarketItem[itemId].tokenId;
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
-    idToMarketItem[itemId].seller.transfer(msg.value);
+    // idToMarketItem[itemId].seller.transfer(msg.value);
+    uit.transferFrom(
+      msg.sender,
+      idToMarketItem[itemId].seller,
+      msg.value
+    );
+
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
-    payable(owner).transfer(listingPrice);
+    
+    uit.transferFrom(
+      msg.sender,
+      contractOwner,
+      listingPrice
+    );
   }
 
   function fetchMarketItems() public view returns (MarketItem[] memory) {

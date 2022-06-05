@@ -1,80 +1,91 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
-// describe("NFT Market", function () {
-//   const provider = waffle.provider;
-//   let market;
-//   let nft;
-//   let owner;
-//   let addr1;
+describe("NFT Market", function () {
+  let market;
+  let nft;
+  let token;
+  let owner;
+  let addr1;
+  let addr2;
 
-//   beforeEach(async function () {
-//     [owner, addr1] = await ethers.getSigners();
-//   });
+  beforeEach(async function () {
+    [owner, addr1, addr2] = await ethers.getSigners();
+  });
 
-//   it("Should deploy contracts", async function () {
-//     const Market = await ethers.getContractFactory("NFTMarket");
-//     market = await Market.deploy();
-//     await market.deployed();
+  it("Should deploy contracts", async function () {
+    const Token = await ethers.getContractFactory("Token");
+    token = await Token.deploy();
+    await token.deployed();
 
-//     const NFT = await ethers.getContractFactory("NFT");
-//     nft = await NFT.deploy(market.address);
-//     await nft.deployed();
-//   });
+    const NFT = await ethers.getContractFactory("NFT");
+    nft = await NFT.deploy();
+    await nft.deployed();
 
-//   it("Should create tokens", async function () {
-//     await nft.connect(owner).createToken("https://www.mytokenlocation.com");
-//     await nft.connect(owner).createToken("https://www.mytokenlocation.com2");
-//   });
+    const Market = await ethers.getContractFactory("NFTMarket");
+    market = await Market.deploy(token.address, owner.address);
+    await market.deployed();
+  });
 
-//   const getMyItems = async (sender) => {
-//     const items = await market.connect(sender).fetchMyNFTs();
-//     return items.map(async (i) => {
-//       const item = {
-//         seller: i.seller,
-//         owner: i.owner,
-//       };
-//       return item;
-//     });
-//   };
+  const getBalance = async (address) => {
+    const balance = await token.balanceOf(address);
+    return balance.toString();
+  };
 
-//   it("Should put both tokens for sale", async function () {
-//     let listingPrice = await market.getListingPrice();
-//     listingPrice = listingPrice.toString();
-//     const price = ethers.utils.parseUnits("1000", "ether");
+  it("Should create tokens", async function () {
+    await nft.connect(addr1).createToken("https://www.mytokenlocation.com");
+  });
 
-//     await market.connect(owner).createMarketItem(nft.address, 1, price, {
-//       value: listingPrice,
-//     });
+  it("Should transfer Tokens to Bidders", async function () {
+    await token.approve(owner.address, 1000000);
 
-//     // console.log("Owner's items: ", await getMyItems(owner));
-//     let balance = await provider.getBalance(owner.address);
-//     console.log("Owner's balance: ", balance.toString());
+    await token.transferFrom(owner.address, addr1.address, 10000);
+    await token.transferFrom(owner.address, addr2.address, 10000);
 
-//     // console.log("Addr1's item: ", await getMyItems(addr1));
-//     // balance = await provider.getBalance(addr1.address);
-//     console.log("Addr1's balance: ", balance.toString());
+    expect(await getBalance(addr1.address)).to.equal("10000");
+    expect(await getBalance(addr2.address)).to.equal("10000");
+  });
 
-//     const transaction = await market
-//       .connect(addr1)
-//       .buyMarketItem(nft.address, 1, {
-//         value: price,
-//       });
-//     await transaction.wait();
-//     console.log("Buying............");
+  it("Should put a Token for sale", async function () {
+    let listingPrice = await market.getListingPrice();
+    listingPrice = listingPrice.toString();
 
-//     // console.log("Owner's items: ", await getMyItems(owner));
-//     balance = await provider.getBalance(owner.address);
-//     console.log("Owner's balance: ", balance.toString());
+    await nft.connect(addr1).setApprovalForAll(market.address, true);
+    await market.connect(addr1).createMarketItem(nft.address, 1, 1000, {
+      value: listingPrice,
+    });
+  });
 
-//     // console.log("Addr1's item: ", await getMyItems(addr1));
-//     balance = await provider.getBalance(addr1.address);
-//     console.log("Addr1's balance: ", balance.toString());
-//   });
-// });
+  it("Should buy a Token", async function () {
+    expect(await getBalance(addr1.address)).to.equal("10000");
+    expect(await getBalance(addr2.address)).to.equal("10000");
+
+    await token.connect(addr2).approve(market.address, 1000);
+    const transaction = await market
+      .connect(addr2)
+      .buyMarketItem(nft.address, 1, {
+        value: 1000,
+      });
+    await transaction.wait();
+
+    expect(await getBalance(addr1.address)).to.equal("11000");
+    expect(await getBalance(addr2.address)).to.equal("8900"); // 100 is listing price
+  });
+
+  it("Should addr2 own a Token", async function () {
+    const items = await market.connect(addr2.address).fetchMyNFTs();
+    return items.map(async (i) => {
+      const item = {
+        seller: i.seller,
+        owner: i.owner,
+        tokenId: i.tokenId.toString(),
+      };
+      return item;
+    });
+  });
+});
 
 describe("NFT Auction", function () {
-  let market;
   let nft;
   let token;
   let auction;
@@ -98,10 +109,6 @@ describe("NFT Auction", function () {
     const NFT = await ethers.getContractFactory("NFT");
     nft = await NFT.deploy();
     await nft.deployed();
-
-    const Market = await ethers.getContractFactory("NFTMarket");
-    market = await Market.deploy();
-    await market.deployed();
 
     const Auction = await ethers.getContractFactory("NFTAuction");
     auction = await Auction.deploy(token.address, owner.address);
