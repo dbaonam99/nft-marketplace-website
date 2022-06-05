@@ -2,10 +2,11 @@ import Web3Modal from "web3modal";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "react-query";
-import { NFTMarket_ADDRESS, NFT_ADDRESS } from "./contracts";
+import { NFTMarket_ADDRESS, NFT_ADDRESS, TOKEN_ADDRESS } from "./contracts";
 import { toast } from "react-toastify";
 import NFT_ABI from "../contracts/NFT.abi";
 import NFTMarket_ABI from "../contracts/NFTMarket.abi";
+import Token_ABI from "../contracts/Token.abi";
 import { useAuth } from "../auth/account";
 
 export const useCreateNFTMutation = () => {
@@ -46,13 +47,15 @@ export const useCreateNFTMarketItemMutation = () => {
       const provider = new ethers.providers.Web3Provider(connection);
       const signer = provider.getSigner();
 
-      const contract = new ethers.Contract(
+      const marketContract = new ethers.Contract(
         NFTMarket_ADDRESS,
         NFTMarket_ABI,
         signer
       );
 
-      const transaction = await contract.createMarketItem(
+      const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
+      await nftContract.setApprovalForAll(NFTMarket_ADDRESS, true);
+      const transaction = await marketContract.createMarketItem(
         NFT_ADDRESS,
         tokenId,
         price,
