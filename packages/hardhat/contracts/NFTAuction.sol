@@ -7,6 +7,12 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
+
+import "@openzeppelin/contracts/metatx/ERC2771Context.sol";
+
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+
 contract NFTAuction is ReentrancyGuard {
     bytes32 public constant CREATED = keccak256("CREATED");
     bytes32 public constant BIDDING = keccak256("BIDDING");
@@ -15,9 +21,17 @@ contract NFTAuction is ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private _auctionIds;
 
-    IERC20 ngl;
-    constructor(address _ngl) {
-        ngl = IERC20(_ngl);
+    IERC20 uit;
+    address contractOwner;
+    
+    constructor(address _uit, address _contractOwner) {
+        uit = IERC20(_uit);
+        contractOwner = _contractOwner;
+    }
+
+    enum Status {
+        active,
+        finished
     }
 
     event AuctionCreated(
@@ -32,6 +46,8 @@ contract NFTAuction is ReentrancyGuard {
     );
     event AuctionBid(uint256 auctionId, address bidder, uint256 price);
     event Withdraw(address indexed bidder, uint amount);
+    event GetBanlance(address caller, uint amout);
+    event Claim(uint256 auctionId, address winner);
 
     mapping(uint256 => Auction) public idToAuction;
     mapping(address => uint) public bids;
@@ -80,7 +96,7 @@ contract NFTAuction is ReentrancyGuard {
             CREATED
         );
 
-        ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+        ERC721(nftContract).transferFrom(msg.sender, contractOwner, tokenId);
         
         emit AuctionCreated(
             auctionId,
@@ -101,9 +117,9 @@ contract NFTAuction is ReentrancyGuard {
         uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
         uint256 price = msg.value;
 
-        require(block.timestamp >= startDate && block.timestamp < endDate,  
-            "Auction is finished or not started yet"
-        );
+        // require(block.timestamp >= startDate && block.timestamp < endDate,  
+        //     "Auction is finished or not started yet"
+        // );
 
         if (idToAuction[auctionId].status == CREATED) {
             require(price >= idToAuction[auctionId].startingPrice, 
@@ -113,11 +129,7 @@ contract NFTAuction is ReentrancyGuard {
                 "Bid price must be divisible by bidding step"
             );
 
-            payable(address(0)).transfer(price);
-            if (idToAuction[auctionId].highestBidder != address(0)) {
-                bids[idToAuction[auctionId].highestBidder] += price;
-            }
-
+            uit.transferFrom(msg.sender, contractOwner, price);
             idToAuction[auctionId].highestBidAmount = price;
             idToAuction[auctionId].highestBidder = msg.sender;
             idToAuction[auctionId].status = BIDDING;
@@ -134,28 +146,97 @@ contract NFTAuction is ReentrancyGuard {
                 "Bid price must be divisible by bidding step"
             );
 
-            payable(address(0)).transfer(price);
+            uit.transferFrom(msg.sender, contractOwner, price);
             if (idToAuction[auctionId].highestBidder != address(0)) {
-                bids[idToAuction[auctionId].highestBidder] += idToAuction[auctionId].highestBidAmount;
-            }
+                // return uit to the previuos bidder
+                uit.approve(contractOwner, idToAuction[auctionId].highestBidAmount);
+                uit.transferFrom(
+                    contractOwner, 
+                    idToAuction[auctionId].highestBidder, 
+                    idToAuction[auctionId].highestBidAmount
+                );
+            } 
 
             // register new bidder
-            idToAuction[auctionId].highestBidAmount = price;
             idToAuction[auctionId].highestBidder = msg.sender;
+            idToAuction[auctionId].highestBidAmount = price;
 
-            emit AuctionBid(auctionId, msg.sender, bids[idToAuction[auctionId].highestBidder]);
+            emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
         return false;
     }
 
-    function withdraw() external payable {
-        uint bal = bids[msg.sender];
-        bids[msg.sender] = 0;
-        (bool sent, bytes memory data) = payable(msg.sender).call{value: bal}("");
-        require(sent, "Could not withdraw");
+    function getCurrentBidOwner(uint256 auctionId) public view returns (address) {
+        return idToAuction[auctionId].highestBidder;
+    }
 
-        emit Withdraw(msg.sender, bal);
+    function getCurrentBidAmount(uint256 auctionId)
+        public
+        view
+        returns (uint256)
+    {
+        return idToAuction[auctionId].highestBidAmount;
+    }
+
+    function isFinished(uint256 auctionId) public view returns (bool) {
+        return getStatus(auctionId) == Status.finished;
+    }
+
+    function getWinner(uint256 auctionId) public view returns (address) {
+        require(isFinished(auctionId), "Auction is not finished");
+        return idToAuction[auctionId].highestBidder;
+    }
+
+    function getStatus(uint256 auctionId) public view returns (Status) {
+        uint256 expiry = idToAuction[auctionId].startTime +
+            idToAuction[auctionId].duration;
+        if (block.timestamp >= expiry) {
+            return Status.finished;
+        } else {
+            return Status.active;
+        }
+    }
+
+    function claimItem(uint256 auctionId) private {
+        address winner = getWinner(auctionId);
+        require(winner != address(0), "There is no winner");
+        address nftContract = idToAuction[auctionId].nftContract;
+
+        IERC721(nftContract).safeTransferFrom(
+            contractOwner,
+            winner,
+            idToAuction[auctionId].tokenId
+        );
+        emit Claim(auctionId, winner);
+    }
+
+    function endAuction(uint256 auctionId) public nonReentrant {
+        require(isFinished(auctionId),
+            "Auction is not finished"
+        );
+        require(idToAuction[auctionId].status != FINISHED,
+            "Auction is already finalized"
+        );
+
+        address owner = idToAuction[auctionId].owner;
+
+        if (idToAuction[auctionId].highestBidder == address(0)) {
+            IERC721(idToAuction[auctionId].nftContract).safeTransferFrom(
+                contractOwner,
+                owner,
+                idToAuction[auctionId].tokenId
+            );
+            idToAuction[auctionId].status == FINISHED;
+        } else {
+            uit.transferFrom(
+                contractOwner, 
+                owner, 
+                idToAuction[auctionId].highestBidAmount
+            );
+            claimItem(auctionId);
+            idToAuction[auctionId].status == FINISHED;
+        }
     }
 }
 
