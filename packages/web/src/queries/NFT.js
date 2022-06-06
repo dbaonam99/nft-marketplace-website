@@ -3,10 +3,12 @@ import axios from "axios";
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "react-query";
 import { toast } from "react-toastify";
-import NFT_ABI from "../contracts/NFT.abi";
-import NFTMarket_ABI from "../contracts/NFTMarket.abi";
-import Token_ABI from "../contracts/Token.abi";
 import { useAuth } from "../auth/account";
+
+import NFT_ABI from "../contracts/contracts/NFT.sol/NFT.json";
+import NFTMarket_ABI from "../contracts/contracts/NFTMarket.sol/NFTMarket.json";
+import Token_ABI from "../contracts/contracts/Token.sol/Token.json";
+
 import { TOKEN_ADDRESS } from "../contracts/Token.address";
 import { NFT_ADDRESS } from "../contracts/NFT.address";
 import { MARKET_ADDRESS } from "../contracts/NFTMarket.address";

@@ -11,6 +11,7 @@ require("hardhat-gas-reporter");
 
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-etherscan");
+require("hardhat-abi-exporter");
 
 const { isAddress, getAddress, formatUnits, parseUnits } = utils;
 
@@ -44,6 +45,12 @@ function mnemonic() {
 }
 
 module.exports = {
+  abiExporter: [
+    {
+      path: "../web/src/contracts",
+      pretty: false,
+    },
+  ],
   defaultNetwork,
 
   /**
