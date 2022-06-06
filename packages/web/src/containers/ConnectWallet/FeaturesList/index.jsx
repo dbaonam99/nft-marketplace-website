@@ -1,5 +1,4 @@
-import { ethers } from "ethers";
-import { useState } from "react";
+import { useMoralis } from "react-moralis";
 import { ConnectWalletIconsw1 } from "../../../utils/allImgs";
 import ConnectWalletIconswallet from "../../../assets/img/icons/wallet.png";
 import { useAuth } from "../../../auth/account";
@@ -9,44 +8,15 @@ import { useTranslation } from "react-i18next";
 const FeaturesList = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-  const { getUserInfo, userInfo } = useAuth();
+  const { userInfo } = useAuth();
+  const { authenticate, isAuthenticated, user, account } = useMoralis();
 
-  const connectToMetaMask = () => {
-    if (window.ethereum) {
-      window.ethereum
-        .request({ method: "eth_requestAccounts" })
-        .then((accounts) => {
-          if (accounts.length === 0) {
-            console.log("Please connect to MetaMask.");
-          } else if (accounts[0] !== userInfo) {
-            getBalance(accounts[0]);
-          }
-        })
-        .catch((err) => {
-          if (err.code === 4001) {
-            console.log("Please connect to MetaMask.");
-          } else {
-            console.error(err);
-          }
-        });
-    } else {
-      alert("Install metamask extension!!");
-    }
+  const connectToMetaMask = async () => {
+    if (isAuthenticated) return;
+    authenticate();
   };
 
-  const getBalance = (address) => {
-    window.ethereum
-      .request({
-        method: "eth_getBalance",
-        params: [address, "latest"],
-      })
-      .then((balance) => {
-        getUserInfo({
-          address: address,
-          balance: ethers.utils.formatEther(balance),
-        });
-      });
-  };
+  console.log("user", account, user);
 
   return (
     <>
@@ -78,7 +48,9 @@ const FeaturesList = () => {
                 className="wal-icon"
                 alt=""
               />
-              {userInfo?.address ? t("connectWallet.connected") : t("connectWallet.connectMetaMask")}
+              {userInfo?.address
+                ? t("connectWallet.connected")
+                : t("connectWallet.connectMetaMask")}
             </div>
           </div>
         </div>

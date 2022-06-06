@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
-import Web3Modal from "web3modal";
 import Breadcrumb from "../../components/Breadcrumb";
 import CollectionItem from "./CollectionItem";
 import CreatorSec from "./CreatorSec";
@@ -12,9 +11,6 @@ import {
 } from "../../queries/NFT";
 import clsx from "clsx";
 
-import NFT from "../../contracts/NFT.abi";
-import NFTMarket from "../../contracts/NFTMarket.abi";
-
 import "../../assets/css/createItem.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
@@ -22,7 +18,7 @@ import { useTranslation } from "react-i18next";
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
 const CreateItemContainer = () => {
-  const { data: listingPrice, refetch } = useGetListingPriceQuery();
+  const { data: listingPrice } = useGetListingPriceQuery();
 
   const [fileUrl, setFileUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
