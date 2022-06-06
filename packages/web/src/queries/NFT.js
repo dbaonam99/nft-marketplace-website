@@ -2,12 +2,14 @@ import Web3Modal from "web3modal";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "react-query";
-import { NFTMarket_ADDRESS, NFT_ADDRESS, TOKEN_ADDRESS } from "./contracts";
 import { toast } from "react-toastify";
 import NFT_ABI from "../contracts/NFT.abi";
 import NFTMarket_ABI from "../contracts/NFTMarket.abi";
 import Token_ABI from "../contracts/Token.abi";
 import { useAuth } from "../auth/account";
+import { TOKEN_ADDRESS } from "../contracts/Token.address";
+import { NFT_ADDRESS } from "../contracts/NFT.address";
+import { MARKET_ADDRESS } from "../contracts/NFTMarket.address";
 
 export const useCreateNFTMutation = () => {
   return useMutation(
@@ -21,9 +23,10 @@ export const useCreateNFTMutation = () => {
 
       let transaction = await contract.createToken(url);
       let tx = await transaction.wait();
-      let tokenId = tx.events[0].args[2].toNumber();
+      console.log("tx", tx);
+      // let tokenId = tx.events[0].args[2].toNumber();
 
-      return tokenId;
+      return "tokenId";
     },
     {
       onError: (error) => {
@@ -48,13 +51,13 @@ export const useCreateNFTMarketItemMutation = () => {
       const signer = provider.getSigner();
 
       const marketContract = new ethers.Contract(
-        NFTMarket_ADDRESS,
+        MARKET_ADDRESS,
         NFTMarket_ABI,
         signer
       );
 
       const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
-      await nftContract.setApprovalForAll(NFTMarket_ADDRESS, true);
+      await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
       const transaction = await marketContract.createMarketItem(
         NFT_ADDRESS,
         tokenId,
@@ -89,7 +92,7 @@ export const useBuyNFTMutation = () => {
       const signer = provider.getSigner();
 
       const marketContract = new ethers.Contract(
-        NFTMarket_ADDRESS,
+        MARKET_ADDRESS,
         NFTMarket_ABI,
         signer
       );
@@ -126,11 +129,7 @@ export const useGetListingPriceQuery = () => {
     const provider = new ethers.providers.Web3Provider(connection);
     const signer = provider.getSigner();
 
-    const contract = new ethers.Contract(
-      NFTMarket_ADDRESS,
-      NFTMarket_ABI,
-      signer
-    );
+    const contract = new ethers.Contract(MARKET_ADDRESS, NFTMarket_ABI, signer);
 
     let listingPrice = await contract.getListingPrice();
     listingPrice = listingPrice.toString();
@@ -147,7 +146,7 @@ export const useGetNFTsQuery = () => {
 
     const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
     const marketContract = new ethers.Contract(
-      NFTMarket_ADDRESS,
+      MARKET_ADDRESS,
       NFTMarket_ABI,
       provider
     );
@@ -184,7 +183,7 @@ export const useGetCreatedNFTsQuery = () => {
 
     const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
     const marketContract = new ethers.Contract(
-      NFTMarket_ADDRESS,
+      MARKET_ADDRESS,
       NFTMarket_ABI,
       provider
     );
