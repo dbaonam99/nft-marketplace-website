@@ -134,14 +134,14 @@ nav {
 .navbarV2 .menu-button {
   font-size: 24px;
   letter-spacing: 2px;
-  width: 56px;
+  width: 50px;
   height: 40px;
   line-height: 40px;
   text-align: center;
   color: #fff;
   background: rgba(116, 80, 254, 0.7);
   border-color: #333;
-  border-radius: 14px;
+  border-radius: 50px;
   font-weight: 900;
   position: relative;
 }
@@ -162,6 +162,8 @@ nav {
   margin: 0 20px 0 0 !important;
   height: 40px;
   line-height: 40px;
+  font-size: 14px;
+  font-weight: bold;
 }
 
 .drawer-main {
@@ -182,7 +184,7 @@ nav {
   background: rgba(25, 28, 31, 0.7);
   margin: 24px;
   border-radius: 16px;
-  box-shadow: rgba(27, 32, 50, .1) 0px 10px 60px;
+  box-shadow: rgba(27, 32, 50, 0.1) 0px 10px 60px;
   color: rgb(255, 255, 255);
   height: calc(100% - 48px);
   padding: 30px;
@@ -218,7 +220,7 @@ nav {
 .drawer-main .drawer-main-container .actions .close-menu {
   font-size: 24px;
   cursor: pointer;
-  margin-left: 20px;  
+  margin-left: 20px;
 }
 
 .drawer-overlay {

@@ -36,7 +36,7 @@ function Head({ Title }) {
     } else {
       document.body.style.overflow = "unset";
     }
-  }, [active])
+  }, [active]);
 
   const toggleMenu = () => setActive(!active);
 
@@ -51,7 +51,13 @@ function Head({ Title }) {
         onClick={toggleMenu}
       ></div>
       <div className={active ? "drawer-main drawer-active" : "drawer-main"}>
-        <div className={isLightMode ? "drawer-main-container drawer-main-container-light" : "drawer-main-container"}>
+        <div
+          className={
+            isLightMode
+              ? "drawer-main-container drawer-main-container-light"
+              : "drawer-main-container"
+          }
+        >
           <ul>
             <li className="mb-1">
               <NavLink className={isLightMode ? "text-dark" : "w-text"} to="/">
@@ -64,14 +70,21 @@ function Head({ Title }) {
               </NavLink>
               <div>
                 {data[0]?.dataUp?.map((item, i) => (
-                  <NavLink key={i} className={isLightMode ? "small-li text-muted" : "small-li"} to={item.path}>
+                  <NavLink
+                    key={i}
+                    className={isLightMode ? "small-li text-muted" : "small-li"}
+                    to={item.path}
+                  >
                     {t(item.title)}
                   </NavLink>
                 ))}
               </div>
             </li>
             <li className="mb-1">
-              <NavLink className={isLightMode ? "text-dark" : "w-text"} to="/activity">
+              <NavLink
+                className={isLightMode ? "text-dark" : "w-text"}
+                to="/activity"
+              >
                 {t("header.activity")}
               </NavLink>
             </li>
@@ -82,14 +95,23 @@ function Head({ Title }) {
               <div>
                 {data[1].dataDown &&
                   data[1].dataDown.map((item, i) => (
-                    <NavLink key={i} className={isLightMode ? "small-li text-muted" : "small-li"} to={item.path}>
+                    <NavLink
+                      key={i}
+                      className={
+                        isLightMode ? "small-li text-muted" : "small-li"
+                      }
+                      to={item.path}
+                    >
                       {t(item.title)}
                     </NavLink>
                   ))}
               </div>
             </li>
             <li>
-              <NavLink to="/contact" className={isLightMode ? "text-dark" : "w-text"}>
+              <NavLink
+                to="/contact"
+                className={isLightMode ? "text-dark" : "w-text"}
+              >
                 {t("header.contact")}
               </NavLink>
             </li>
@@ -97,11 +119,7 @@ function Head({ Title }) {
           <div className="actions">
             <ModeSwitcher />
             <div
-              className={
-                isLightMode
-                  ? "close-menu text-dark"
-                  : "close-menu"
-              }
+              className={isLightMode ? "close-menu text-dark" : "close-menu"}
               onClick={toggleMenu}
             >
               x
@@ -123,12 +141,15 @@ function Head({ Title }) {
           </NavLink>
 
           <div className="menu-actions">
-            <NavLink to="/connectwallet" className="btn login-btn connect-wallet-button">
+            <NavLink
+              to="/connectwallet"
+              className="btn login-btn connect-wallet-button"
+            >
               {t("header.connectWallet")}
             </NavLink>
 
             <div className="menu-button" onClick={toggleMenu}>
-              <span>...</span>
+              <i className="fa fa-bars"></i>
             </div>
           </div>
         </div>
