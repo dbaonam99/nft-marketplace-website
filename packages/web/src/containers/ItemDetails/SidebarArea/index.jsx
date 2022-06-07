@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import TestPopup from "../TestPopup";
 import { useBuyNFTMutation } from "../../../queries/NFT";
 
-const SidebarArea = ({ location }) => {
+const SidebarArea = ({ name, price, owner, seller }) => {
   let { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -19,6 +19,7 @@ const SidebarArea = ({ location }) => {
   const buyNft = () => {
     buyNFTMutation.mutate({
       tokenId: tokenId,
+      price
     });
   };
 
@@ -49,7 +50,7 @@ const SidebarArea = ({ location }) => {
                 </NavLink>
               </div>
               <h4 className={isLightMode ? "text-dark" : ""}>
-                Floyd Mayweather Jr.
+                {name}
               </h4>
             </div>
             <div
@@ -58,7 +59,7 @@ const SidebarArea = ({ location }) => {
               <span
                 className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
               >
-                {t("common.currentPrice")} 0.34 ETH{" "}
+                {/* {t("common.currentPrice")} {price} ETH{" "} */}
               </span>
               <span
                 className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
@@ -68,6 +69,12 @@ const SidebarArea = ({ location }) => {
               1/10
             </div>
             <div className="details-list">
+              <p className={isLightMode ? "text-muted" : ""}>
+                {t("common.artist")}:{" "}
+                <span className={isLightMode ? "text-dark" : ""}>
+                  {seller}
+                </span>
+              </p>
               {details &&
                 details.map((item, i) => (
                   <p className={isLightMode ? "text-muted" : ""} key={i}>
@@ -88,8 +95,9 @@ const SidebarArea = ({ location }) => {
                     className={
                       isLightMode ? "author-name text-dark" : "author-name"
                     }
+                    style={{ wordBreak: "break-all" }}
                   >
-                    LarySmith-30
+                    {owner}
                   </h5>
                 </NavLink>
                 <p

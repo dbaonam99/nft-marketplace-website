@@ -34,13 +34,15 @@ const ItemDetailsContainer = () => {
         }
       >
         <div className="container">
-          <div className="row">
-            <Detailed />
+          {NFTDetail &&
+            <div className="row">
+              <Detailed imageUrl={NFTDetail?.image} />
 
-            <SidebarArea />
+              <SidebarArea {...NFTDetail} />
 
-            <HighestBid />
-          </div>
+              <HighestBid />
+            </div>
+          }
         </div>
       </section>
       <TestPopup />

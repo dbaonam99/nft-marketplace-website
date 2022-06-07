@@ -59,10 +59,11 @@ export const useCreateNFTMarketItemMutation = () => {
 
       const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
       await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
+      console.log("create price", price.toString());
       const transaction = await marketContract.createMarketItem(
         NFT_ADDRESS,
         tokenId,
-        price,
+        price.toString(),
         {
           value: listingPrice,
         }
@@ -86,7 +87,7 @@ export const useCreateNFTMarketItemMutation = () => {
 
 export const useBuyNFTMutation = () => {
   return useMutation(
-    async ({ tokenId }) => {
+    async ({ tokenId, price }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
@@ -104,7 +105,7 @@ export const useBuyNFTMutation = () => {
         NFT_ADDRESS,
         tokenId,
         {
-          value: 500,
+          value: price,
         }
       );
       // return await transaction.wait();
@@ -187,15 +188,12 @@ export const useGetNFTDetailQuery = (tokenId) => {
       NFTMarket_ABI,
       provider
     );
-    console.log("===marketContract", marketContract);
 
     const data = await marketContract.getTokenDetail(tokenId);
-    console.log("data ne", data);
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
     const meta = await axios.get(tokenUri);
-    const price = ethers.utils.formatUnits(data.price.toString(), "ether");
     const item = {
-      price,
+      price: data.price,
       tokenId: data.tokenId.toNumber(),
       seller: data.seller,
       owner: data.owner,
