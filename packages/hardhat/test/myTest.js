@@ -34,6 +34,11 @@ describe("NFT Market", function () {
 
   it("Should create tokens", async function () {
     await nft.connect(addr1).createToken("https://www.mytokenlocation.com");
+    await nft.connect(addr1).createToken("https://www.mytokenlocation.com2");
+    await nft.connect(addr1).createToken("https://www.mytokenlocation.com3");
+    await nft.connect(addr1).createToken("https://www.mytokenlocation.com4");
+    await nft.connect(addr2).createToken("https://www.mytokenlocation.com5");
+    await nft.connect(addr2).createToken("https://www.mytokenlocation.com6");
   });
 
   it("Should transfer Tokens to Bidders", async function () {
@@ -52,6 +57,23 @@ describe("NFT Market", function () {
 
     await nft.connect(addr1).setApprovalForAll(market.address, true);
     await market.connect(addr1).createMarketItem(nft.address, 1, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr1).createMarketItem(nft.address, 2, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr1).createMarketItem(nft.address, 3, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr1).createMarketItem(nft.address, 4, 1000, {
+      value: listingPrice,
+    });
+
+    await nft.connect(addr2).setApprovalForAll(market.address, true);
+    await market.connect(addr2).createMarketItem(nft.address, 5, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr2).createMarketItem(nft.address, 6, 1000, {
       value: listingPrice,
     });
   });
@@ -85,7 +107,15 @@ describe("NFT Market", function () {
   });
 
   it("Should get Token detail", async function () {
-    console.log(await market.getTokenDetail(1));
+    await market.getTokenDetail(1);
+  });
+
+  it("Should get top seller", async function () {
+    await market.getTopSeller();
+  });
+
+  it("Should get top buyer", async function () {
+    await market.getTopBuyer();
   });
 });
 
