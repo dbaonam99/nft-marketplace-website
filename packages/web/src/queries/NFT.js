@@ -25,10 +25,9 @@ export const useCreateNFTMutation = () => {
 
       let transaction = await contract.createToken(url);
       let tx = await transaction.wait();
-      console.log("tx", tx);
-      // let tokenId = tx.events[0].args[2].toNumber();
+      let tokenId = tx.events[0].args[2].toNumber();
 
-      return "tokenId";
+      return tokenId;
     },
     {
       onError: (error) => {
