@@ -30,8 +30,10 @@ contract NFTMarket is ReentrancyGuard {
     bool sold;
   }
 
-  mapping(uint256 => MarketItem) public idToNFT;
+  mapping (uint256 => MarketItem) public idToNFT;
   mapping (uint256 => MarketItem) public idToMarketItem;
+  mapping (uint256 => address) public sellCount;
+  mapping (uint256 => address) public boughtCount;
 
   event MarketItemCreated (
     uint indexed itemId,
@@ -69,6 +71,8 @@ contract NFTMarket is ReentrancyGuard {
     );
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+
+    sellCount[itemId] = msg.sender;
     
     emit MarketItemCreated(
       itemId,
@@ -99,6 +103,8 @@ contract NFTMarket is ReentrancyGuard {
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
+
+    boughtCount[itemId] = msg.sender;
     
     uit.transferFrom(
       msg.sender,
@@ -109,6 +115,32 @@ contract NFTMarket is ReentrancyGuard {
 
   function getTokenDetail(uint256 tokenId) public view returns (MarketItem memory) { 
     return idToMarketItem[tokenId];
+  }
+
+  function getTopSeller() public view returns (address[] memory) {
+    uint currentIndex = 0;
+    uint256 sellAmount = _itemIds.current();
+
+    address[] memory addresses = new address[](sellAmount);
+    for (uint i = 0; i < sellAmount; i++) {
+      uint currentId = i + 1;
+      addresses[currentIndex] = sellCount[currentId];
+      currentIndex += 1;
+    }
+    return addresses;
+  }
+
+  function getTopBuyer() public view returns (address[] memory) {
+    uint currentIndex = 0;
+    uint256 soldAmount = _itemsSold.current();
+
+    address[] memory addresses = new address[](soldAmount);
+    for (uint i = 0; i < soldAmount; i++) {
+      uint currentId = i + 1;
+      addresses[currentIndex] = boughtCount[currentId];
+      currentIndex += 1;
+    }
+    return addresses;
   }
 
   function fetchMarketItems() public view returns (MarketItem[] memory) {
