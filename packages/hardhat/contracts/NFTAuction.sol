@@ -20,6 +20,7 @@ contract NFTAuction is ReentrancyGuard {
 
     IERC20 uit;
     address contractOwner;
+    uint256 listingPrice = 100;
     
     constructor(address _uit, address _contractOwner) {
         uit = IERC20(_uit);
@@ -63,6 +64,10 @@ contract NFTAuction is ReentrancyGuard {
         bytes32 status;
     }
 
+    function getListingPrice() public view returns (uint256) {
+        return listingPrice;
+    }
+
     function startAuction(
         address nftContract,
         uint256 tokenId,
@@ -70,11 +75,12 @@ contract NFTAuction is ReentrancyGuard {
         uint256 startTime,
         uint256 duration,
         uint256 biddingStep
-    ) public nonReentrant returns (uint256) {
+    ) public payable nonReentrant returns (uint256) {
         require(
             biddingStep > 0,
             "Bidding step must be at least 1 wei"
         );
+        require(msg.value == listingPrice, "Price must be equal to listing price");
 
         _auctionIds.increment();
         uint256 auctionId = _auctionIds.current();
@@ -110,8 +116,8 @@ contract NFTAuction is ReentrancyGuard {
     }
 
     function bid(uint256 auctionId) public payable nonReentrant returns (bool) {
-        uint256 startDate = idToAuction[auctionId].startTime;
-        uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
+        // uint256 startDate = idToAuction[auctionId].startTime;
+        // uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
         uint256 price = msg.value;
 
         // require(block.timestamp >= startDate && block.timestamp < endDate,  
@@ -232,6 +238,11 @@ contract NFTAuction is ReentrancyGuard {
                 idToAuction[auctionId].highestBidAmount
             );
             claimItem(auctionId);
+            uit.transferFrom(
+                msg.sender,
+                contractOwner,
+                listingPrice
+            );
             idToAuction[auctionId].status == FINISHED;
         }
     }

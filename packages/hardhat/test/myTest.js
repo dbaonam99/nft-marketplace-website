@@ -8,9 +8,10 @@ describe("NFT Market", function () {
   let owner;
   let addr1;
   let addr2;
+  let addr3;
 
   beforeEach(async function () {
-    [owner, addr1, addr2] = await ethers.getSigners();
+    [owner, addr1, addr2, addr3] = await ethers.getSigners();
   });
 
   it("Should deploy contracts", async function () {
@@ -46,9 +47,11 @@ describe("NFT Market", function () {
 
     await token.transferFrom(owner.address, addr1.address, 10000);
     await token.transferFrom(owner.address, addr2.address, 10000);
+    await token.transferFrom(owner.address, addr3.address, 10000);
 
     expect(await getBalance(addr1.address)).to.equal("10000");
     expect(await getBalance(addr2.address)).to.equal("10000");
+    expect(await getBalance(addr3.address)).to.equal("10000");
   });
 
   it("Should put a Token for sale", async function () {
@@ -83,15 +86,18 @@ describe("NFT Market", function () {
     expect(await getBalance(addr2.address)).to.equal("10000");
 
     await token.connect(addr2).approve(market.address, 1000);
-    const transaction = await market
-      .connect(addr2)
-      .buyMarketItem(nft.address, 1, {
-        value: 1000,
-      });
-    await transaction.wait();
+    await market.connect(addr2).buyMarketItem(nft.address, 1, {
+      value: 1000,
+    });
 
-    expect(await getBalance(addr1.address)).to.equal("11000");
+    await token.connect(addr3).approve(market.address, 1000);
+    await market.connect(addr3).buyMarketItem(nft.address, 2, {
+      value: 1000,
+    });
+
+    expect(await getBalance(addr1.address)).to.equal("12000");
     expect(await getBalance(addr2.address)).to.equal("8900"); // 100 is listing price
+    expect(await getBalance(addr3.address)).to.equal("8900"); // 100 is listing price
   });
 
   it("Should addr2 own a Token", async function () {
@@ -175,6 +181,9 @@ describe("NFT Auction", function () {
     date.setDate(date.getDate());
     const startDate = Math.floor(date.getTime() / 1000);
 
+    let listingPrice = await auction.getListingPrice();
+    listingPrice = listingPrice.toString();
+
     await nft.connect(addr1).setApprovalForAll(auction.address, true);
     trans = await auction.connect(addr1).startAuction(
       nft.address,
@@ -182,7 +191,10 @@ describe("NFT Auction", function () {
       1, // starting price
       startDate,
       10,
-      1
+      1,
+      {
+        value: listingPrice,
+      }
     );
     result = await trans.wait();
     auctionId = result.events[2].args.auctionId;
