@@ -1,9 +1,11 @@
 const hre = require("hardhat");
 const fs = require("fs");
 
-const ADMIN_ADDRESS = "0x8C1bB3eb266b6416278a039de9b61b546093C437";
+const ADMIN_ADDRESS = "0x9e7AFA4D5599c09887D05181C87bCf762D034a23";
 
 module.exports = async () => {
+  /* ----------------- Token Contract ----------------- */
+
   const Token = await hre.ethers.getContractFactory("Token");
   const token = await Token.deploy();
   await token.deployed();
@@ -12,6 +14,8 @@ module.exports = async () => {
     "../web/src/contracts/Token.address.js",
     `export const TOKEN_ADDRESS = "${token.address}";`
   );
+
+  /* ----------------- NFT Contract ----------------- */
 
   const NFT = await hre.ethers.getContractFactory("NFT");
   const nft = await NFT.deploy();
@@ -22,6 +26,8 @@ module.exports = async () => {
     `export const NFT_ADDRESS = "${nft.address}";`
   );
 
+  /* ----------------- Auction Contract ----------------- */
+
   const Auction = await hre.ethers.getContractFactory("NFTAuction");
   const auction = await Auction.deploy(token.address, ADMIN_ADDRESS);
   await auction.deployed();
@@ -31,11 +37,12 @@ module.exports = async () => {
     `export const AUCTION_ADDRESS = "${auction.address}";`
   );
 
+  /* ----------------- Market Contract ----------------- */
+
   const NFTMarket = await hre.ethers.getContractFactory("NFTMarket");
   const nftMarket = await NFTMarket.deploy(token.address, ADMIN_ADDRESS);
   await nftMarket.deployed();
   console.log("NFTMarket deployed to:", nftMarket.address);
-
   fs.writeFileSync(
     "../web/src/contracts/NFTMarket.address.js",
     `export const MARKET_ADDRESS = "${nftMarket.address}";`

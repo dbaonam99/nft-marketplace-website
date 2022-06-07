@@ -83,6 +83,10 @@ describe("NFT Market", function () {
       return item;
     });
   });
+
+  it("Should get Token detail", async function () {
+    console.log(await market.getTokenDetail(1));
+  });
 });
 
 describe("NFT Auction", function () {
