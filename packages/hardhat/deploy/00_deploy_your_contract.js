@@ -7,7 +7,7 @@ module.exports = async () => {
   /* ----------------- Token Contract ----------------- */
 
   const Token = await hre.ethers.getContractFactory("Token");
-  const token = await Token.deploy();
+  const token = await Token.deploy(ADMIN_ADDRESS);
   await token.deployed();
   console.log("Token deployed to:", token.address);
   fs.writeFileSync(

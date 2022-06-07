@@ -1,4 +1,5 @@
 import Web3Modal from "web3modal";
+import { useMoralis } from "react-moralis";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "react-query";
@@ -86,6 +87,7 @@ export const useCreateNFTMarketItemMutation = () => {
 };
 
 export const useBuyNFTMutation = () => {
+  const { user, account } = useMoralis();
   return useMutation(
     async ({ tokenId, price }) => {
       const web3Modal = new Web3Modal();
@@ -99,8 +101,13 @@ export const useBuyNFTMutation = () => {
         signer
       );
 
-      console.log("check", NFT_ADDRESS, tokenId);
+      const tokenContract = new ethers.Contract(
+        TOKEN_ADDRESS,
+        Token_ABI,
+        signer
+      );
 
+      await tokenContract.approve(MARKET_ADDRESS, price);
       const transaction = await marketContract.buyMarketItem(
         NFT_ADDRESS,
         tokenId,
