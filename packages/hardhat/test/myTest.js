@@ -181,6 +181,9 @@ describe("NFT Auction", function () {
     date.setDate(date.getDate());
     const startDate = Math.floor(date.getTime() / 1000);
 
+    let listingPrice = await auction.getListingPrice();
+    listingPrice = listingPrice.toString();
+
     await nft.connect(addr1).setApprovalForAll(auction.address, true);
     trans = await auction.connect(addr1).startAuction(
       nft.address,
@@ -188,7 +191,10 @@ describe("NFT Auction", function () {
       1, // starting price
       startDate,
       10,
-      1
+      1,
+      {
+        value: listingPrice,
+      }
     );
     result = await trans.wait();
     auctionId = result.events[2].args.auctionId;
