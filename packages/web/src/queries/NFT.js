@@ -175,6 +175,38 @@ export const useGetNFTsQuery = () => {
   });
 };
 
+export const useGetNFTDetailQuery = (tokenId) => {
+  return useQuery("NFTDetail", async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8545"
+    );
+
+    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+    const marketContract = new ethers.Contract(
+      MARKET_ADDRESS,
+      NFTMarket_ABI,
+      provider
+    );
+    console.log("===marketContract", marketContract);
+
+    const data = await marketContract.getTokenDetail(tokenId);
+    console.log("data ne", data);
+    const tokenUri = await tokenContract.tokenURI(data.tokenId);
+    const meta = await axios.get(tokenUri);
+    const price = ethers.utils.formatUnits(data.price.toString(), "ether");
+    const item = {
+      price,
+      tokenId: data.tokenId.toNumber(),
+      seller: data.seller,
+      owner: data.owner,
+      image: meta.data.image,
+      name: meta.data.name,
+      description: meta.data.description,
+    };
+    return item;
+  });
+};
+
 export const useGetCreatedNFTsQuery = () => {
   const { userInfo } = useAuth();
   return useQuery("createNFTs", async () => {
