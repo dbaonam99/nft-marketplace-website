@@ -30,10 +30,15 @@ contract NFTMarket is ReentrancyGuard {
     bool sold;
   }
 
+  struct UserCount {
+    address user;
+    uint count;
+  }
+
   mapping (uint256 => MarketItem) public idToNFT;
   mapping (uint256 => MarketItem) public idToMarketItem;
-  mapping (uint256 => address) public sellCount;
-  mapping (uint256 => address) public boughtCount;
+  mapping (uint256 => UserCount) public sellCount;
+  mapping (uint256 => UserCount) public boughtCount;
 
   event MarketItemCreated (
     uint indexed itemId,
@@ -71,8 +76,6 @@ contract NFTMarket is ReentrancyGuard {
     );
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
-
-    sellCount[itemId] = msg.sender;
     
     emit MarketItemCreated(
       itemId,
@@ -104,7 +107,16 @@ contract NFTMarket is ReentrancyGuard {
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
 
-    boughtCount[itemId] = msg.sender;
+
+    sellCount[itemId] = UserCount(
+      idToMarketItem[itemId].seller,
+      price
+    );
+
+    boughtCount[itemId] = UserCount(
+      msg.sender,
+      price
+    );
     
     uit.transferFrom(
       msg.sender,
@@ -117,12 +129,12 @@ contract NFTMarket is ReentrancyGuard {
     return idToMarketItem[tokenId];
   }
 
-  function getTopSeller() public view returns (address[] memory) {
+  function getTopSeller() public view returns (UserCount[] memory) {
     uint currentIndex = 0;
-    uint256 sellAmount = _itemIds.current();
+    uint256 soldAmount = _itemsSold.current();
 
-    address[] memory addresses = new address[](sellAmount);
-    for (uint i = 0; i < sellAmount; i++) {
+    UserCount[] memory addresses = new UserCount[](soldAmount);
+    for (uint i = 0; i < soldAmount; i++) {
       uint currentId = i + 1;
       addresses[currentIndex] = sellCount[currentId];
       currentIndex += 1;
@@ -130,11 +142,11 @@ contract NFTMarket is ReentrancyGuard {
     return addresses;
   }
 
-  function getTopBuyer() public view returns (address[] memory) {
+  function getTopBuyer() public view returns (UserCount[] memory) {
     uint currentIndex = 0;
     uint256 soldAmount = _itemsSold.current();
 
-    address[] memory addresses = new address[](soldAmount);
+    UserCount[] memory addresses = new UserCount[](soldAmount);
     for (uint i = 0; i < soldAmount; i++) {
       uint currentId = i + 1;
       addresses[currentIndex] = boughtCount[currentId];

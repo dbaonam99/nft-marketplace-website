@@ -110,8 +110,8 @@ contract NFTAuction is ReentrancyGuard {
     }
 
     function bid(uint256 auctionId) public payable nonReentrant returns (bool) {
-        uint256 startDate = idToAuction[auctionId].startTime;
-        uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
+        // uint256 startDate = idToAuction[auctionId].startTime;
+        // uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
         uint256 price = msg.value;
 
         // require(block.timestamp >= startDate && block.timestamp < endDate,  
