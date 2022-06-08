@@ -31,6 +31,7 @@ function ListedItemsContainer() {
           {NFTs?.map((item) => (
             <ListedItemsItem
               key={item.tokenId}
+              seller={item.seller}
               tokenId={item.tokenId}
               imgBig={item.image}
               imgSm={item.image}

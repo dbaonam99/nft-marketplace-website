@@ -848,7 +848,7 @@ body .bt-tab-active {
 }
 
 body .bt-dropdown-menu {
-  background-color: rgba(255, 255, 255, .7);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 body .bt-dropdown-menu .dropdown-item.active {
   background-color: #ff8abd;
@@ -952,8 +952,17 @@ body .bt-dropdown-menu .dropdown-item.active {
   padding: 5px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
-  border: 2px dashed rgba(151, 151, 151, 0.8);
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+
+.light-detailed-img img {
+  border-radius: 10px;
+}
+
 body .bt-disabled-button {
   opacity: 0.5;
   pointer-events: none;

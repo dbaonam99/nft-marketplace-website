@@ -1,4 +1,4 @@
-import DetailedImg from "../../../assets/img/art-work/detailed.jpg"
+import DetailedImg from "../../../assets/img/art-work/detailed.jpg";
 import useThemeMode from "../../../hooks/useThemeMode";
 
 const Detailed = ({ imageUrl }) => {
@@ -13,6 +13,6 @@ const Detailed = ({ imageUrl }) => {
       </div>
     </>
   );
-}
+};
 
 export default Detailed;
