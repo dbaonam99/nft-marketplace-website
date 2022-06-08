@@ -246,5 +246,22 @@ contract NFTAuction is ReentrancyGuard {
             idToAuction[auctionId].status == FINISHED;
         }
     }
+
+    function fetchAuctionItems() public view returns (Auction[] memory) {
+        uint itemCount = _auctionIds.current();
+        uint unsoldItemCount = _auctionIds.current();
+        uint currentIndex = 0;
+
+        Auction[] memory items = new Auction[](unsoldItemCount);
+        for (uint i = 0; i < itemCount; i++) {
+        if (idToAuction[i + 1].owner == address(0)) {
+            uint currentId = i + 1;
+            Auction storage currentItem = idToAuction[currentId];
+            items[currentIndex] = currentItem;
+            currentIndex += 1;
+        }
+        }
+        return items;
+    }
 }
 
