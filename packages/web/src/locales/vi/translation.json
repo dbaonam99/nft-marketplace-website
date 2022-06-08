@@ -56,7 +56,9 @@
     "itemPrice": "Giá NFT",
     "itemStartPrice": "Giá khởi điểm",
     "itemDuration": "Thời gian đấu giá",
-    "itemBiddingStep": "Bước giá"
+    "itemBiddingStep": "Bước giá",
+    "avatar": "Ảnh đại diện",
+    "username": "Tên hiển thị"
   },
   "header": {
     "home": "Trang chủ",
@@ -68,7 +70,8 @@
     "itemDetails": "Chi tiết NFT",
     "createItem": "Tạo NFT",
     "authors": "Tác giả",
-    "authorProfile": "Thông tin tác giả"
+    "authorProfile": "Thông tin tác giả",
+    "updateProfile": "Chỉnh sửa thông tin"
   },
   "footer": {
     "aboutUs": "Về Chúng Tôi",

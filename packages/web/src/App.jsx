@@ -19,6 +19,7 @@ import {
   Profile,
   Login,
   SignUp,
+  Setting,
 } from "./pages";
 import { AuthProvider } from "./auth/account";
 
@@ -156,6 +157,7 @@ const App = () => {
             <Route path="/item-details/:tokenId" component={ItemDetails} />
             <Route path="/profile" component={Profile} />
             <Route path="/my-profile" component={MyProfile} />
+            <Route path="/setting" component={Setting} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={SignUp} />
           </Switch>

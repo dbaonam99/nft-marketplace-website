@@ -56,7 +56,9 @@
     "itemPrice": "Item Price",
     "itemStartPrice": "Start price",
     "itemDuration": "Auction duration",
-    "itemBiddingStep": "Bidding step"
+    "itemBiddingStep": "Bidding step",
+    "avatar": "Avatar",
+    "username": "Username"
   },
   "header": {
     "home": "Home",
@@ -68,7 +70,8 @@
     "itemDetails": "Item Details",
     "createItem": "Create Item",
     "authors": "Authors",
-    "authorProfile": "Author Profile"
+    "authorProfile": "Author Profile",
+    "updateProfile": "Update Profile"
   },
   "footer": {
     "aboutUs": "About Us",
