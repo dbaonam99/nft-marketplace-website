@@ -4,7 +4,7 @@ import { useHistory } from "react-router-dom";
 import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
-import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
+import { useGetCreatedNFTsQuery, useGetMyNFTsQuery } from "../../queries/NFT.js";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import "../../assets/css/profile.css";
@@ -16,7 +16,8 @@ import LoadingIndicator from "../../components/LoadingIndicator";
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   let history = useHistory();
-  const { data, refetch, isLoading } = useGetCreatedNFTsQuery();
+  const { data: createdNFTs, isLoading: createdNFTsLoading } = useGetCreatedNFTsQuery();
+  const { data: myNFTs, isLoading: myNFTsLoading } = useGetMyNFTsQuery();
 
   const { t } = useTranslation();
 
@@ -114,11 +115,11 @@ const ProfileContainer = () => {
           </div>
 
           <div className="row align-items-center">
-            {isLoading ?
+            {(tab === "owned" ? myNFTsLoading : createdNFTsLoading) ?
               <div className="d-flex justify-content-center w-100">
                 <LoadingIndicator />
               </div> :
-              (tab === "owned" ? [] : data)?.map((item) => (
+              (tab === "owned" ? myNFTs : createdNFTs)?.map((item) => (
                 <ListedItemsItem
                   key={item.tokenId}
                   tokenId={item.tokenId}
