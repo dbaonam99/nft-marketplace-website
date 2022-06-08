@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useMoralis } from "react-moralis";
-import { useHistory } from "react-router-dom";
+import { useEffect, useRef, useState } from "react";
+import { useMoralis, useMoralisFile } from "react-moralis";
+import { Link, useHistory } from "react-router-dom";
 import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -18,13 +18,14 @@ const ProfileContainer = () => {
   let history = useHistory();
   const { data: createdNFTs, isLoading: createdNFTsLoading } = useGetCreatedNFTsQuery();
   const { data: myNFTs, isLoading: myNFTsLoading } = useGetMyNFTsQuery();
-
   const { t } = useTranslation();
 
-  const { isInitialized, isAuthenticated, user } = useMoralis();
+  const { isInitialized, isAuthenticated, user, setUserData, refetchUserData } = useMoralis();
+  const { saveFile } = useMoralisFile();
 
   const [copy, setCopy] = useState(false);
   const [tab, setTab] = useState("sale");
+  const inputFile = useRef();
 
   useEffect(() => {
     const checkUser = () =>
@@ -44,6 +45,20 @@ const ProfileContainer = () => {
     }
   }, [copy])
 
+  const handleChangeFile = async (e) => {
+    if (e.target.files[0]) {
+      const cover = await saveFile("cover", e.target.files[0]);
+      setUserData({
+        cover: cover._url,
+      })
+      refetchUserData()
+    }
+  }
+
+  const openFileUpload = () => {
+    inputFile.current.click();
+  };
+
   return (
     <>
       <Breadcrumb namePage="Trang cá nhân" title="Trang cá nhân" />
@@ -59,21 +74,32 @@ const ProfileContainer = () => {
             <div className="profile-banner">
               <div className="profile-banner-img">
                 <img
-                  src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
+                  src={user?.get("cover") || "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"}
                   alt=""
                 />
-                <div className="edit-banner-btn">Edit Cover</div>
+                <div className="edit-banner-btn" onClick={openFileUpload}>Edit Cover</div>
+                <input
+                  ref={inputFile}
+                  type="file"
+                  name="uploadCover"
+                  id="upload-cover-btn"
+                  onChange={handleChangeFile}
+                />
               </div>
               <div className="profile-avatar">
                 <img
-                  src="https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
+                  src={user?.get("avatar") || "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"}
                   alt=""
                 />
-                <div className="edit-profile-btn">Edit</div>
+                <Link to="/setting">
+                  <div className="edit-profile-btn">Edit</div>
+                </Link>
               </div>
             </div>
             <div className="profile-info mt-2">
-              <div className={isLightMode ? "profile-name text-dark" : "profile-name w-text"}>{user?.get("username")}</div>
+              <div className={isLightMode ? "profile-name text-dark" : "profile-name w-text"}>
+                {user?.get("username")} {user?.get("email") ? `(${user?.get("email")})` : ""}
+              </div>
               <CopyToClipboard text={user?.get("ethAddress")} onCopy={() => setCopy(true)}>
                 <div className={isLightMode ? "profile-address l-bg text-dark" : "profile-address dd-bg text-white-50"}>
                   {copy ?

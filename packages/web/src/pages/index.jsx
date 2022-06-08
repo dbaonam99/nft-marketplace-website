@@ -22,6 +22,7 @@ import Login from "./Login"
 
 import SignUp from "./SignUp"
 
+import Setting from "./Setting"
 
 
-export {Activity , Auctions , Authors , ConnectWallet , Contact , CreateItem , Discover , Home , ItemDetails , Profile , Login , SignUp}
+export { Activity, Auctions, Authors, ConnectWallet, Contact, CreateItem, Discover, Home, ItemDetails, Profile, Login, SignUp, Setting }

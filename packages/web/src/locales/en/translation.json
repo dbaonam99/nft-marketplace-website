@@ -53,7 +53,9 @@
     "uploadFile": "Upload File",
     "itemName": "Item Name",
     "itemDescription": "Item Description",
-    "itemPrice": "Item Price in NFT"
+    "itemPrice": "Item Price in NFT",
+    "avatar": "Avatar",
+    "username": "Username"
   },
   "header": {
     "home": "Home",
@@ -65,7 +67,8 @@
     "itemDetails": "Item Details",
     "createItem": "Create Item",
     "authors": "Authors",
-    "authorProfile": "Author Profile"
+    "authorProfile": "Author Profile",
+    "updateProfile": "Update Profile"
   },
   "footer": {
     "aboutUs": "About Us",
