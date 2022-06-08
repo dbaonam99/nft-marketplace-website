@@ -222,7 +222,13 @@ function Head({ Title }) {
               <i className="fa fa-bars"></i>
             </div>
           </div>
-          <LanguageSwitcher />
+          <div className="d-none d-lg-block">
+            <LanguageSwitcher />
+          </div>
+
+          <div className="d-none d-lg-block ml-3">
+            <ModeSwitcher />
+          </div>
         </div>
       </nav>
     </>
