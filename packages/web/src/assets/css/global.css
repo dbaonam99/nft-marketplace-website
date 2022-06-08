@@ -828,6 +828,10 @@ body .bt-bg {
   background-color: rgba(116, 80, 254, 0.7);
 }
 
+body .bt-border-radius {
+  border-radius: 20px;
+}
+
 body .bt-bg-light {
   background-color: #e9ebed !important;
 }
@@ -842,6 +846,14 @@ body .bt-tab-active {
   borde-color: rgba(116, 80, 254, 0.7);
   color: #343a40;
 }
+
+body .bt-dropdown-menu {
+  background-color: rgba(255, 255, 255, .7);
+}
+body .bt-dropdown-menu .dropdown-item.active {
+  background-color: #ff8abd;
+}
+
 .author-rank {
   color: #797c88;
   font-weight: 600;

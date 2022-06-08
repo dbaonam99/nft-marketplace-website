@@ -11,3 +11,21 @@
   opacity: .5;
   pointer-events: none;
 }
+
+.language-switcher-mobile .language-list {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.language-switcher-mobile .language-list .language-item {
+  color: #fff;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.language-switcher-mobile .disabled {
+  opacity: .5;
+  pointer-events: none;
+}

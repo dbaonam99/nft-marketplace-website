@@ -45,89 +45,91 @@ function Head({ Title }) {
   return (
     <>
       <Preloader Title={Title} />
-      <div
-        className={clsx(
-          isLightMode ? "drawer-overlay-light" : "drawer-overlay",
-          active && "drawer-active"
-        )}
-        onClick={toggleMenu}
-      ></div>
-      <div className={active ? "drawer-main drawer-active" : "drawer-main"}>
+      <div className="d-block d-lg-none">
         <div
-          className={
-            isLightMode
-              ? "drawer-main-container drawer-main-container-light"
-              : "drawer-main-container"
-          }
-        >
-          <ul>
-            <li className="mb-1">
-              <NavLink className={isLightMode ? "text-dark" : "w-text"} to="/">
-                {t("header.home")}
-              </NavLink>
-            </li>
-            <li className="mb-1">
-              <NavLink className={isLightMode ? "text-dark" : "w-text"} to="#">
-                {t("header.discover")}
-              </NavLink>
-              <div>
-                {data[0]?.dataUp?.map((item, i) => (
-                  <NavLink
-                    key={i}
-                    className={isLightMode ? "small-li text-muted" : "small-li"}
-                    to={item.path}
-                  >
-                    {t(item.title)}
-                  </NavLink>
-                ))}
-              </div>
-            </li>
-            <li className="mb-1">
-              <NavLink
-                className={isLightMode ? "text-dark" : "w-text"}
-                to="/activity"
-              >
-                {t("header.activity")}
-              </NavLink>
-            </li>
-            <li className="mb-1">
-              <NavLink className={isLightMode ? "text-dark" : "w-text"} to="#">
-                {t("header.pages")}
-              </NavLink>
-              <div>
-                {data[1].dataDown &&
-                  data[1].dataDown.map((item, i) => (
+          className={clsx(
+            isLightMode ? "drawer-overlay-light" : "drawer-overlay",
+            active && "drawer-active"
+          )}
+          onClick={toggleMenu}
+        ></div>
+        <div className={active ? "drawer-main drawer-active" : "drawer-main"}>
+          <div
+            className={
+              isLightMode
+                ? "drawer-main-container drawer-main-container-light"
+                : "drawer-main-container"
+            }
+          >
+            <ul>
+              <li className="mb-1">
+                <NavLink className={isLightMode ? "text-dark" : "w-text"} to="/">
+                  {t("header.home")}
+                </NavLink>
+              </li>
+              <li className="mb-1">
+                <NavLink className={isLightMode ? "text-dark" : "w-text"} to="#">
+                  {t("header.discover")}
+                </NavLink>
+                <div>
+                  {data[0]?.dataUp?.map((item, i) => (
                     <NavLink
                       key={i}
-                      className={
-                        isLightMode ? "small-li text-muted" : "small-li"
-                      }
+                      className={isLightMode ? "small-li text-muted" : "small-li"}
                       to={item.path}
                     >
                       {t(item.title)}
                     </NavLink>
                   ))}
-              </div>
-            </li>
-            <li>
-              <NavLink
-                to="/contact"
-                className={isLightMode ? "text-dark" : "w-text"}
+                </div>
+              </li>
+              <li className="mb-1">
+                <NavLink
+                  className={isLightMode ? "text-dark" : "w-text"}
+                  to="/activity"
+                >
+                  {t("header.activity")}
+                </NavLink>
+              </li>
+              <li className="mb-1">
+                <NavLink className={isLightMode ? "text-dark" : "w-text"} to="#">
+                  {t("header.pages")}
+                </NavLink>
+                <div>
+                  {data[1].dataDown &&
+                    data[1].dataDown.map((item, i) => (
+                      <NavLink
+                        key={i}
+                        className={
+                          isLightMode ? "small-li text-muted" : "small-li"
+                        }
+                        to={item.path}
+                      >
+                        {t(item.title)}
+                      </NavLink>
+                    ))}
+                </div>
+              </li>
+              <li>
+                <NavLink
+                  to="/contact"
+                  className={isLightMode ? "text-dark" : "w-text"}
+                >
+                  {t("header.contact")}
+                </NavLink>
+              </li>
+            </ul>
+            <div className="actions">
+              <ModeSwitcher />
+              <div
+                className={isLightMode ? "close-menu text-dark" : "close-menu"}
+                onClick={toggleMenu}
               >
-                {t("header.contact")}
-              </NavLink>
-            </li>
-          </ul>
-          <div className="actions">
-            <ModeSwitcher />
-            <div
-              className={isLightMode ? "close-menu text-dark" : "close-menu"}
-              onClick={toggleMenu}
-            >
-              x
+                x
+              </div>
             </div>
+            <LanguageSwitcher />
           </div>
-          <LanguageSwitcher />
         </div>
       </div>
 
@@ -141,7 +143,57 @@ function Head({ Title }) {
               <img src={NavbarLogo} alt="logo" />
             </span>
           </NavLink>
+          <ul className="navbar-nav ml-auto d-none d-lg-flex mr-3">
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/">
+                {t("header.home")}
+              </NavLink>
+            </li>
+            <li className="nav-item dropdown">
+              <NavLink
+                className="nav-link dropdown-toggle"
+                to="#"
+                data-toggle="dropdown"
+              >
+                {t("header.discover")}
+              </NavLink>
+              <div className="dropdown-menu bt-dropdown-menu">
+                {data[0]?.dataUp?.map((item, i) => (
+                  <NavLink key={i} className="dropdown-item" to={item.path}>
+                    {t(item.title)}
+                  </NavLink>
+                ))}
+              </div>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/activity">
+                {t("header.activity")}
+              </NavLink>
+            </li>
 
+            <li className="nav-item dropdown">
+              <NavLink
+                className="nav-link dropdown-toggle"
+                to="#"
+                data-toggle="dropdown"
+              >
+                {t("header.pages")}
+              </NavLink>
+              <div className="dropdown-menu bt-dropdown-menu">
+                {data[1].dataDown &&
+                  data[1].dataDown.map((item, i) => (
+                    <NavLink key={i} className="dropdown-item" to={item.path}>
+                      {t(item.title)}
+                    </NavLink>
+                  ))}
+              </div>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/contact">
+                {t("header.contact")}
+              </NavLink>
+            </li>
+          </ul>
           <div className="menu-actions">
             {!isAuthenticated && (
               <NavLink
@@ -155,10 +207,12 @@ function Head({ Title }) {
               {user?.get("ethAddress")}
             </div>
 
-            <div className="menu-button" onClick={toggleMenu}>
+            <div className="menu-button nav-responsive d-block d-lg-none" onClick={toggleMenu}>
               <i className="fa fa-bars"></i>
             </div>
           </div>
+          <LanguageSwitcher />
+
         </div>
       </nav>
     </>

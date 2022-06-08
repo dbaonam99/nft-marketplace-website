@@ -6,7 +6,7 @@ export default function PreviewItem({ image, name, price }) {
   const isLightMode = useThemeMode();
 
   return (
-    <div className={isLightMode ? "preview-item l-bg" : "preview-item dd-bg"}>
+    <div className={isLightMode ? "preview-item l-bg bt-border-radius" : "preview-item dd-bg"}>
       <div className="preview-item-container">
         <div className="who-we-contant">
           <div className="dream-dots text-left">
