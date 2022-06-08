@@ -213,6 +213,7 @@ export const useGetNFTDetailQuery = (tokenId) => {
 
 export const useGetCreatedNFTsQuery = () => {
   const { userInfo } = useAuth();
+  console.log(userInfo);
   return useQuery("createNFTs", async () => {
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"

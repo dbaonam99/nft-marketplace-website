@@ -1,22 +1,27 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useMoralis } from "react-moralis";
 import { useHistory } from "react-router-dom";
 import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
 import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
+import ListedItemsItem from "../../components/ListedItemsItem";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   let history = useHistory();
+  const { data, refetch } = useGetCreatedNFTsQuery();
 
   const { t } = useTranslation();
 
   const { isInitialized, isAuthenticated, user } = useMoralis();
+
+  const [copy, setCopy] = useState(false);
 
   useEffect(() => {
     const checkUser = () =>
@@ -27,6 +32,14 @@ const ProfileContainer = () => {
   useEffect(() => {
     SortingCard();
   }, []);
+
+  useEffect(() => {
+    if (copy) {
+      setTimeout(() => {
+        setCopy(false)
+      }, 2000);
+    }
+  }, [copy])
 
   return (
     <>
@@ -56,10 +69,57 @@ const ProfileContainer = () => {
                 <div className="edit-profile-btn">Edit</div>
               </div>
             </div>
-            <div className="profile-info">
-              <p className="profile-name">{user?.get("username")}</p>
-              <p className="profile-address">{user?.get("ethAddress")}</p>
+            <div className="profile-info mt-2">
+              <div className={isLightMode ? "profile-name text-dark" : "profile-name w-text"}>{user?.get("username")}</div>
+              <CopyToClipboard text={user?.get("ethAddress")} onCopy={() => setCopy(true)}>
+                <div className={isLightMode ? "profile-address l-bg text-dark" : "profile-address dd-bg text-white-50"}>
+                  {copy ?
+                    "Copied!" :
+                    `${user?.get("ethAddress").split('').slice(0, 5).join('')}...${user?.get("ethAddress").split('').slice(-4).join('')}`
+                  }
+                </div>
+              </CopyToClipboard>
             </div>
+          </div>
+          <div className="row mt-5 d-flex justify-content-center">
+            <div className="dream-projects-menu mb-50">
+              <div className="text-center portfolio-menu">
+                <button
+                  className={
+                    isLightMode ? "btn active text-dark" : "btn active"
+                  }
+                  data-filter="*"
+                >
+                  On Sale
+                </button>
+                <button
+                  className={isLightMode ? "btn text-dark" : "btn"}
+                  data-filter=".branding"
+                >
+                  Owned
+                </button>
+                <button
+                  className={isLightMode ? "btn text-dark" : "btn"}
+                  data-filter=".design"
+                >
+                  Created
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="row align-items-center">
+            {data?.map((item) => (
+              <ListedItemsItem
+                key={item.tokenId}
+                tokenId={item.tokenId}
+                imgBig={item.image}
+                imgSm={item.image}
+                title={item.name}
+                price={item.price}
+                bid={item.bid}
+              />
+            ))}
           </div>
         </div>
       </section>
