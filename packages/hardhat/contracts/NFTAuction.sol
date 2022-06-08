@@ -254,12 +254,12 @@ contract NFTAuction is ReentrancyGuard {
 
         Auction[] memory items = new Auction[](unsoldItemCount);
         for (uint i = 0; i < itemCount; i++) {
-        if (idToAuction[i + 1].owner == address(0)) {
-            uint currentId = i + 1;
-            Auction storage currentItem = idToAuction[currentId];
-            items[currentIndex] = currentItem;
-            currentIndex += 1;
-        }
+            if (idToAuction[i + 1].status != FINISHED) {
+                uint currentId = i + 1;
+                Auction storage currentItem = idToAuction[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
         }
         return items;
     }

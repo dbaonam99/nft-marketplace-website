@@ -1,17 +1,19 @@
 import React from "react";
 import InfoComponent from "../InfoComponent";
 import LiveAuctionsItem from "../LiveAuctionsItem";
-import { LiveAuctionsData } from "../../data/data-components/data-LiveAuctions.js";
-// import LiveAuctionsData from './data.json'
 import clsx from "clsx";
 
 import "./liveAuctions.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
+import { useGetAuctionItemsQuery } from "../../queries/Auction";
 
 function LiveAuctionsContainer() {
   const isLightMode = useThemeMode();
+  const { data: auctionItems } = useGetAuctionItemsQuery();
   const { t } = useTranslation();
+
+  console.log("AuctionItems", auctionItems);
 
   return (
     <section
@@ -21,21 +23,24 @@ function LiveAuctionsContainer() {
       )}
     >
       <div className="container">
-        <InfoComponent 
+        <InfoComponent
           titleSm={t("common.auctions")}
           titleLg={t("common.liveAuctions")}
         />
         <div className="row align-items-center">
-          {LiveAuctionsData &&
-            LiveAuctionsData.map((item, i) => (
-              <LiveAuctionsItem
-                key={i}
-                imgBig={item.imgBig}
-                imgSm={item.imgSm}
-                title={item.title}
-                text={item.text}
-              />
-            ))}
+          {auctionItems?.map((item, i) => (
+            <LiveAuctionsItem
+              key={i}
+              imgBig={item.image}
+              imgSm={item.image}
+              title={item.name}
+              text={item.text}
+              seller={item.seller}
+              tokenId={item.tokenId}
+              price={item.price}
+              bid={item.bid}
+            />
+          ))}
         </div>
       </div>
     </section>
