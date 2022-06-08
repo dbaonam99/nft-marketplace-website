@@ -35,8 +35,8 @@ contract Token is ERC20 {
     mapping (address => mapping (address => uint)) private __allowances;
 
     //the creator of the contract has the total supply and no one can create tokens
-    constructor() public {
-        __balanceOf[msg.sender] = __totalSupply;
+    constructor(address _admin) public {
+        __balanceOf[_admin] = __totalSupply;
     }
 
     function totalSupply() public view override returns (uint _totalSupply) {

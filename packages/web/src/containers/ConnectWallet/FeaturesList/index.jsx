@@ -1,22 +1,21 @@
 import { useMoralis } from "react-moralis";
+import { useTranslation } from "react-i18next";
+
 import { ConnectWalletIconsw1 } from "../../../utils/allImgs";
 import ConnectWalletIconswallet from "../../../assets/img/icons/wallet.png";
-import { useAuth } from "../../../auth/account";
 import useThemeMode from "../../../hooks/useThemeMode";
-import { useTranslation } from "react-i18next";
 
 const FeaturesList = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-  const { userInfo } = useAuth();
-  const { authenticate, isAuthenticated, user, account } = useMoralis();
+  const { authenticate, isAuthenticated, user } = useMoralis();
 
   const connectToMetaMask = async () => {
-    if (isAuthenticated) return;
+    // if (isAuthenticated) return;
     authenticate();
   };
 
-  console.log("user", account, user);
+  console.log("user", user?.get("ethAddress"));
 
   return (
     <>
@@ -48,7 +47,7 @@ const FeaturesList = () => {
                 className="wal-icon"
                 alt=""
               />
-              {userInfo?.address
+              {isAuthenticated
                 ? t("connectWallet.connected")
                 : t("connectWallet.connectMetaMask")}
             </div>

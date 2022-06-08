@@ -24,6 +24,7 @@ import "./assets/css/bootstrap.min.css";
 import "./assets/css/global.css";
 
 import "bootstrap/dist/js/bootstrap.bundle.min";
+import MyProfile from "./pages/MyProfile";
 
 const queryClient = new QueryClient();
 
@@ -67,6 +68,7 @@ const App = () => {
             <Route path="/discover" component={Discover} />
             <Route path="/item-details/:tokenId" component={ItemDetails} />
             <Route path="/profile" component={Profile} />
+            <Route path="/my-profile" component={MyProfile} />
             <Route path="/login" component={Login} />
             <Route path="/signup" component={SignUp} />
           </Switch>
