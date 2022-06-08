@@ -15,7 +15,8 @@ const HomeContainer = () => {
     // console.log("home", data);
   }, []);
 
-  // console.log(data);
+  console.log(data);
+
   return (
     <>
       <HeroContainer />

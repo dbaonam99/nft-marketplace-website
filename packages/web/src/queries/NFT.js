@@ -259,7 +259,6 @@ export const useTopSellerQuery = () => {
       "http://localhost:8545"
     );
 
-    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
     const marketContract = new ethers.Contract(
       MARKET_ADDRESS,
       NFTMarket_ABI,
@@ -272,8 +271,6 @@ export const useTopSellerQuery = () => {
       user: i.user,
       count: i.count,
     }));
-
-    console.log(items);
 
     return items;
   });
