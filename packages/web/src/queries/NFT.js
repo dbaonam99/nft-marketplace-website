@@ -268,25 +268,13 @@ export const useTopSellerQuery = () => {
 
     const data = await marketContract.getTopSeller();
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        console.log(i);
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          // price,
-          // tokenId: i.tokenId.toNumber(),
-          // seller: i.seller,
-          // owner: i.owner,
-          // image: meta.data.image,
-          // name: meta.data.name,
-          // description: meta.data.description,
-        };
-        return item;
-      })
-    );
+    const items = data.map((i) => ({
+      user: i.user,
+      count: i.count,
+    }));
 
-    return "items";
+    console.log(items);
+
+    return items;
   });
 };
