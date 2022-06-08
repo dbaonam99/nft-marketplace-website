@@ -1,5 +1,7 @@
 import React, { useRef } from "react";
+import clsx from "clsx";
 import { useTranslation } from "react-i18next";
+import LoadingIndicator from "../../../../components/LoadingIndicator";
 import useThemeMode from "../../../../hooks/useThemeMode";
 
 const ContactForm = ({
@@ -8,10 +10,11 @@ const ContactForm = ({
   createMarket,
   onFileChange,
   fileUrl,
+  fileLoading
 }) => {
   const inputFile = useRef();
   const isLightMode = useThemeMode();
-	const { t } = useTranslation();
+  const { t } = useTranslation();
 
   const openFileUpload = () => {
     inputFile.current.click();
@@ -29,8 +32,17 @@ const ContactForm = ({
             <p className={isLightMode ? "text-dark" : "w-text"}>{t("common.uploadItemFile")}</p>
             <div className={isLightMode ? "bt-border-color group-file" : "group-file"}>
               <p className={isLightMode ? "text-dark" : "g-text"}>PNG, GIF, WEBP, MP4 or MP3. Max 100mb</p>
-              <div className="new_Btn more-btn" onClick={openFileUpload}>
-                {t("common.uploadFile")}
+              <div
+                className={clsx(
+                  "new_Btn more-btn d-inline-flex align-items-center justify-content-center",
+                  fileLoading && "bt-disabled-button"
+                )}
+                onClick={openFileUpload}
+              >
+                {!fileLoading ?
+                  t("common.uploadFile") :
+                  <LoadingIndicator />
+                }
               </div>
               <br />
               {fileUrl && <img className="rounded mt-4" src={fileUrl} alt="" />}
@@ -51,8 +63,9 @@ const ContactForm = ({
                 name="name"
                 id="name"
                 required
+                value={formInput.name}
                 onChange={(e) =>
-                  updateFormInput({ ...formInput, name: e.target.value })
+                  updateFormInput("name", e.target.value)
                 }
               />
               <span className="highlight"></span>
@@ -67,11 +80,9 @@ const ContactForm = ({
                 name="Description"
                 id="Description"
                 required
+                value={formInput.description}
                 onChange={(e) =>
-                  updateFormInput({
-                    ...formInput,
-                    description: e.target.value,
-                  })
+                  updateFormInput("description", e.target.value)
                 }
               ></textarea>
               <span className="highlight"></span>
@@ -88,11 +99,12 @@ const ContactForm = ({
                 name="price"
                 id="price"
                 required
+                value={formInput.price}
                 onChange={(e) =>
-                  updateFormInput({ ...formInput, price: e.target.value })
+                  updateFormInput("price", e.target.value)
                 }
               />
-               <span className="highlight"></span>
+              <span className="highlight"></span>
               <span className={isLightMode ? "bar-light" : "bar"}></span>
               <label className={isLightMode ? "text-dark" : ""}>{t("common.itemPrice")}</label>
             </div>

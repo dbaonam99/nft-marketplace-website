@@ -929,3 +929,7 @@ body .bt-tab-active {
   border-radius: 10px;
   border: 2px dashed rgba(151, 151, 151, 0.8);
 }
+body .bt-disabled-button {
+  opacity: .5;
+  pointer-events: none;
+}

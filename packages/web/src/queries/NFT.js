@@ -45,7 +45,7 @@ export const useCreateNFTMutation = () => {
 
 export const useCreateNFTMarketItemMutation = () => {
   return useMutation(
-    async ({ listingPrice, tokenId, price }) => {
+    async ({ listingPrice, tokenId, price, callback }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
@@ -59,7 +59,7 @@ export const useCreateNFTMarketItemMutation = () => {
 
       const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
       await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
-      console.log("create price", price.toString());
+
       const transaction = await marketContract.createMarketItem(
         NFT_ADDRESS,
         tokenId,
@@ -68,7 +68,7 @@ export const useCreateNFTMarketItemMutation = () => {
           value: listingPrice,
         }
       );
-
+      callback()
       return await transaction.wait();
     },
     {

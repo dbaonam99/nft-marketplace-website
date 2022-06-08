@@ -14,6 +14,8 @@ import clsx from "clsx";
 import "../../assets/css/createItem.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import PreviewItem from "./PreviewItem";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -26,6 +28,7 @@ const CreateItemContainer = () => {
     name: "",
     description: "",
   });
+  const [fileLoading, setFileLoading] = useState(false);
 
   const createNFTMutation = useCreateNFTMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
@@ -35,11 +38,14 @@ const CreateItemContainer = () => {
   async function onFileChange(e) {
     const file = e.target.files[0];
     try {
+      setFileLoading(true);
       const added = await client.add(file);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       setFileUrl(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
+    } finally {
+      setFileLoading(false);
     }
   }
 
@@ -53,6 +59,7 @@ const CreateItemContainer = () => {
       image: fileUrl,
     });
     try {
+      setFileLoading(true);
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
@@ -60,6 +67,8 @@ const CreateItemContainer = () => {
       createSale(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
+    } finally {
+      setFileLoading(false);
     }
   }
 
@@ -74,11 +83,27 @@ const CreateItemContainer = () => {
             listingPrice: listingPrice.toString(),
             tokenId: res,
             price,
+            callback: () => {
+              updateFormInput(prevState => ({
+                ...prevState,
+                price: "",
+                name: "",
+                description: "",
+              }))
+              setFileUrl(null);
+            }
           });
         },
       }
     );
   }
+
+  const onChange = (name, value) => {
+    updateFormInput(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
+  };
 
   return (
     <>
@@ -94,15 +119,21 @@ const CreateItemContainer = () => {
       >
         <div className="container">
           <div className="row">
-            <CollectionItem />
-
             <div className="col-12 col-lg-8">
               <CreatorSec
-                updateFormInput={updateFormInput}
+                updateFormInput={onChange}
                 formInput={formInput}
                 createMarket={createMarket}
                 onFileChange={onFileChange}
                 fileUrl={fileUrl}
+                fileLoading={fileLoading}
+              />
+            </div>
+            <div className="d-none d-lg-block col-lg-4">
+              <PreviewItem
+                image={fileUrl}
+                name={formInput.name}
+                price={formInput.price}
               />
             </div>
           </div>

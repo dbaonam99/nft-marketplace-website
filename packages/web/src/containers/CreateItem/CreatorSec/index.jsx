@@ -8,6 +8,7 @@ const CreatorSec = ({
   createMarket,
   onFileChange,
   fileUrl,
+  fileLoading
 }) => {
   const isLightMode = useThemeMode();
 
@@ -21,6 +22,7 @@ const CreatorSec = ({
           createMarket={createMarket}
           onFileChange={onFileChange}
           fileUrl={fileUrl}
+          fileLoading={fileLoading}
         />
       </div>
     </>
