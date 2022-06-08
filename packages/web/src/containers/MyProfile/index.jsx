@@ -11,17 +11,19 @@ import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import ListedItemsItem from "../../components/ListedItemsItem";
+import LoadingIndicator from "../../components/LoadingIndicator";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   let history = useHistory();
-  const { data, refetch } = useGetCreatedNFTsQuery();
+  const { data, refetch, isLoading } = useGetCreatedNFTsQuery();
 
   const { t } = useTranslation();
 
   const { isInitialized, isAuthenticated, user } = useMoralis();
 
   const [copy, setCopy] = useState(false);
+  const [tab, setTab] = useState("sale");
 
   useEffect(() => {
     const checkUser = () =>
@@ -89,18 +91,21 @@ const ProfileContainer = () => {
                     isLightMode ? "btn active text-dark" : "btn active"
                   }
                   data-filter="*"
+                  onClick={() => setTab("sale")}
                 >
                   On Sale
                 </button>
                 <button
                   className={isLightMode ? "btn text-dark" : "btn"}
                   data-filter=".branding"
+                  onClick={() => setTab("owned")}
                 >
                   Owned
                 </button>
                 <button
                   className={isLightMode ? "btn text-dark" : "btn"}
                   data-filter=".design"
+                  onClick={() => setTab("created")}
                 >
                   Created
                 </button>
@@ -109,17 +114,21 @@ const ProfileContainer = () => {
           </div>
 
           <div className="row align-items-center">
-            {data?.map((item) => (
-              <ListedItemsItem
-                key={item.tokenId}
-                tokenId={item.tokenId}
-                imgBig={item.image}
-                imgSm={item.image}
-                title={item.name}
-                price={item.price}
-                bid={item.bid}
-              />
-            ))}
+            {isLoading ?
+              <div className="d-flex justify-content-center w-100">
+                <LoadingIndicator />
+              </div> :
+              (tab === "owned" ? [] : data)?.map((item) => (
+                <ListedItemsItem
+                  key={item.tokenId}
+                  tokenId={item.tokenId}
+                  imgBig={item.image}
+                  imgSm={item.image}
+                  title={item.name}
+                  price={item.price}
+                  bid={item.bid}
+                />
+              ))}
           </div>
         </div>
       </section>

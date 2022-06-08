@@ -212,8 +212,8 @@ export const useGetNFTDetailQuery = (tokenId) => {
 };
 
 export const useGetCreatedNFTsQuery = () => {
-  const { userInfo } = useAuth();
-  console.log(userInfo);
+  const { user } = useMoralis();
+
   return useQuery("createNFTs", async () => {
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
@@ -227,7 +227,7 @@ export const useGetCreatedNFTsQuery = () => {
     );
 
     const data = await marketContract
-      .connect(userInfo.address)
+      .connect(user?.get("ethAddress"))
       .fetchItemsCreated();
 
     console.log("data", data);
@@ -260,7 +260,6 @@ export const useTopSellerQuery = () => {
       "http://localhost:8545"
     );
 
-    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
     const marketContract = new ethers.Contract(
       MARKET_ADDRESS,
       NFTMarket_ABI,
@@ -273,8 +272,6 @@ export const useTopSellerQuery = () => {
       user: i.user,
       count: i.count,
     }));
-
-    console.log(items);
 
     return items;
   });
