@@ -8,8 +8,8 @@ export const AuthProvider = (props) => {
   const [userInfo, setUserInfo] = useState();
 
   const getUserInfo = (info) => {
-    console.log(info);
-    // setUserInfo(address);
+    // console.log(info);
+    // setUserInfo(info);
   };
 
   useEffect(() => {
@@ -44,8 +44,6 @@ export const AuthProvider = (props) => {
       alert("Install metamask extension!!");
     }
   }, [userInfo]);
-
-  console.log("userInfo", userInfo);
 
   return (
     <AuthContext.Provider value={{ userInfo, getUserInfo }}>

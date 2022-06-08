@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useMoralis } from "react-moralis";
-import { NavLink } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
@@ -12,16 +12,20 @@ import { useTranslation } from "react-i18next";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
+  let history = useHistory();
+
   const { t } = useTranslation();
-  const { data, refetch } = useGetCreatedNFTsQuery();
 
-  const { authenticate, isAuthenticated, user } = useMoralis();
+  const { isInitialized, isAuthenticated, user } = useMoralis();
 
-  console.log("user", user?.get("ethAddress"));
+  useEffect(() => {
+    const checkUser = () =>
+      !isAuthenticated ? history.push("/connectwallet") : null;
+    isInitialized && checkUser();
+  }, [isInitialized, isAuthenticated]);
 
   useEffect(() => {
     SortingCard();
-    refetch();
   }, []);
 
   return (
@@ -53,10 +57,8 @@ const ProfileContainer = () => {
               </div>
             </div>
             <div className="profile-info">
-              <p className="profile-name">name</p>
-              <p className="profile-address">
-                0x9e7AFA4D5599c09887D05181C87bCf762D034a23
-              </p>
+              <p className="profile-name">{user?.get("username")}</p>
+              <p className="profile-address">{user?.get("ethAddress")}</p>
             </div>
           </div>
         </div>
