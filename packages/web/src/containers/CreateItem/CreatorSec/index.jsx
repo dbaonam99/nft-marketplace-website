@@ -14,7 +14,7 @@ const CreatorSec = ({
 
   return (
     <>
-      <div className={isLightMode ? "creator-sec l-bg" : "creator-sec dd-bg"}>
+      <div className={isLightMode ? "creator-sec l-bg bt-border-radius" : "creator-sec dd-bg"}>
         <WhoWeContant />
         <ContactForm
           updateFormInput={updateFormInput}
