@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useMoralis } from "react-moralis";
 import { NavLink } from "react-router-dom";
 import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
@@ -13,6 +14,10 @@ const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const { data, refetch } = useGetCreatedNFTsQuery();
+
+  const { authenticate, isAuthenticated, user } = useMoralis();
+
+  console.log("user", user?.get("ethAddress"));
 
   useEffect(() => {
     SortingCard();
