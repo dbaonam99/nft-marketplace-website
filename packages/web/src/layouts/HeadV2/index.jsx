@@ -63,19 +63,27 @@ function Head({ Title }) {
           >
             <ul>
               <li className="mb-1">
-                <NavLink className={isLightMode ? "text-dark" : "w-text"} to="/">
+                <NavLink
+                  className={isLightMode ? "text-dark" : "w-text"}
+                  to="/"
+                >
                   {t("header.home")}
                 </NavLink>
               </li>
               <li className="mb-1">
-                <NavLink className={isLightMode ? "text-dark" : "w-text"} to="#">
+                <NavLink
+                  className={isLightMode ? "text-dark" : "w-text"}
+                  to="#"
+                >
                   {t("header.discover")}
                 </NavLink>
                 <div>
                   {data[0]?.dataUp?.map((item, i) => (
                     <NavLink
                       key={i}
-                      className={isLightMode ? "small-li text-muted" : "small-li"}
+                      className={
+                        isLightMode ? "small-li text-muted" : "small-li"
+                      }
                       to={item.path}
                     >
                       {t(item.title)}
@@ -92,7 +100,10 @@ function Head({ Title }) {
                 </NavLink>
               </li>
               <li className="mb-1">
-                <NavLink className={isLightMode ? "text-dark" : "w-text"} to="#">
+                <NavLink
+                  className={isLightMode ? "text-dark" : "w-text"}
+                  to="#"
+                >
                   {t("header.pages")}
                 </NavLink>
                 <div>
@@ -203,16 +214,15 @@ function Head({ Title }) {
                 {t("header.connectWallet")}
               </NavLink>
             )}
-            <div className="btn login-btn connect-wallet-button">
-              {user?.get("ethAddress")}
-            </div>
 
-            <div className="menu-button nav-responsive d-block d-lg-none" onClick={toggleMenu}>
+            <div
+              className="menu-button nav-responsive d-block d-lg-none"
+              onClick={toggleMenu}
+            >
               <i className="fa fa-bars"></i>
             </div>
           </div>
           <LanguageSwitcher />
-
         </div>
       </nav>
     </>
