@@ -1,17 +1,26 @@
 import HeroContainer from "./Hero";
 import TopSellers from "../../components/TopSellers";
-import TopCollections from "../../components/TopCollections";
 import ListedItems from "../../components/ListedItems";
 import LiveAuctions from "../../components/LiveAuctions";
 
 import "../../assets/css/home.css";
+import { useTopSellerQuery } from "../../queries/NFT";
+import { useEffect } from "react";
 
 const HomeContainer = () => {
+  const { data, refetch } = useTopSellerQuery();
+
+  useEffect(() => {
+    // refetch();
+    // console.log("home", data);
+  }, []);
+
+  // console.log(data);
   return (
     <>
       <HeroContainer />
       <TopSellers />
-      <TopCollections />
+      <TopSellers />
       <ListedItems />
       <LiveAuctions />
     </>

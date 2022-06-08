@@ -1,8 +1,11 @@
 import React, { useEffect } from "react";
+import { useMoralis } from "react-moralis";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Helmet } from "react-helmet";
 import { Switch, Route } from "react-router-dom";
 import Aos from "aos";
+import Modal from "react-modal";
+
 import {
   Activity,
   Auctions,
@@ -29,16 +32,100 @@ import MyProfile from "./pages/MyProfile";
 const queryClient = new QueryClient();
 
 const App = () => {
+  const { authenticate, logout } = useMoralis();
+
   useEffect(() => {
     Aos.init({
       duration: 1000,
     });
   }, []);
 
+  useEffect(() => {
+    if (window.ethereum) {
+      async function listenMMAccount() {
+        window.ethereum.on("accountsChanged", async function () {
+          setIsOpen(true);
+        });
+      }
+      listenMMAccount();
+    } else {
+      alert("Install metamask extension!!");
+    }
+  }, []);
+
+  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  const signMessage = () => {
+    setIsOpen(false);
+    authenticate();
+  };
+
+  const disconnect = () => {
+    setIsOpen(false);
+    logout();
+  };
+
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <div className="App">
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={() => setIsOpen(false)}
+            // style={customStyles}
+            style={{
+              overlay: {
+                zIndex: 9999,
+                backgroundColor: "rgba(0, 0, 0, 0.75)",
+              },
+              content: {
+                position: "absolute",
+                left: 0,
+                right: 0,
+                top: 0,
+                bottom: 0,
+                margin: "auto",
+                width: "max-content",
+                height: "max-content",
+                border: "none",
+                borderRadius: "15px",
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "center",
+                alignItems: "center",
+                padding: 40,
+              },
+            }}
+          >
+            <div
+              style={{
+                maxWidth: 350,
+                textAlign: "center",
+                fontWeight: "600",
+                fontSize: 18,
+                marginBottom: 32,
+              }}
+            >
+              Looks like you've changed primary address in your wallet. You
+              should sign new authentication message
+            </div>
+            <div>
+              <button
+                onClick={signMessage}
+                style={{ marginRight: 12 }}
+                className="more-btn"
+              >
+                Sign message
+              </button>
+              <div
+                onClick={disconnect}
+                style={{ marginLeft: 12 }}
+                className="more-btn gray-btn"
+              >
+                Disconnect
+              </div>
+            </div>
+          </Modal>
           <Helmet>
             <meta charset="utf-8" />
             <meta

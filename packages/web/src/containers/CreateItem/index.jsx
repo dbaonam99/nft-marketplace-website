@@ -14,7 +14,7 @@ import clsx from "clsx";
 import "../../assets/css/createItem.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 import PreviewItem from "./PreviewItem";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
@@ -84,14 +84,14 @@ const CreateItemContainer = () => {
             tokenId: res,
             price,
             callback: () => {
-              updateFormInput(prevState => ({
+              updateFormInput((prevState) => ({
                 ...prevState,
                 price: "",
                 name: "",
                 description: "",
-              }))
+              }));
               setFileUrl(null);
-            }
+            },
           });
         },
       }
@@ -99,10 +99,10 @@ const CreateItemContainer = () => {
   }
 
   const onChange = (name, value) => {
-    updateFormInput(prevState => ({
+    updateFormInput((prevState) => ({
       ...prevState,
-      [name]: value
-    }))
+      [name]: value,
+    }));
   };
 
   return (

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useMoralis } from "react-moralis";
 import { NavLink } from "react-router-dom";
 import { NavbarLogo } from "../../utils/allImgs";
 import Preloader from "../../components/Preloader";
@@ -11,6 +12,7 @@ import "./navbar.css";
 import clsx from "clsx";
 
 function Head({ Title }) {
+  const { isAuthenticated, user } = useMoralis();
   const [active, setActive] = useState(false);
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -141,12 +143,17 @@ function Head({ Title }) {
           </NavLink>
 
           <div className="menu-actions">
-            <NavLink
-              to="/connectwallet"
-              className="btn login-btn connect-wallet-button"
-            >
-              {t("header.connectWallet")}
-            </NavLink>
+            {!isAuthenticated && (
+              <NavLink
+                to="/connectwallet"
+                className="btn login-btn connect-wallet-button"
+              >
+                {t("header.connectWallet")}
+              </NavLink>
+            )}
+            <div className="btn login-btn connect-wallet-button">
+              {user?.get("ethAddress")}
+            </div>
 
             <div className="menu-button" onClick={toggleMenu}>
               <i className="fa fa-bars"></i>

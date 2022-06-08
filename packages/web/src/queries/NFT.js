@@ -3,7 +3,6 @@ import { useMoralis } from "react-moralis";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "react-query";
-import { toast } from "react-toastify";
 import { useAuth } from "../auth/account";
 
 import NFT_ABI from "../contracts/contracts/NFT.sol/NFT.json";
@@ -33,12 +32,12 @@ export const useCreateNFTMutation = () => {
     {
       onError: (error) => {
         if (error instanceof Error) {
-          toast.error(error.message);
+          // toast.error(error.message);
         }
       },
 
       onSuccess: (data) => {
-        toast.success(data);
+        // toast.success(data);
       },
     }
   );
@@ -69,25 +68,25 @@ export const useCreateNFTMarketItemMutation = () => {
           value: listingPrice,
         }
       );
-      callback()
+      callback();
       return await transaction.wait();
     },
     {
       onError: (error) => {
         if (error instanceof Error) {
-          toast.error(error.message);
+          // toast.error(error.message);
         }
       },
 
       onSuccess: (data) => {
-        toast.success(data);
+        // toast.success(data);
       },
     }
   );
 };
 
 export const useBuyNFTMutation = () => {
-  const { user, account } = useMoralis();
+  const { user } = useMoralis();
   return useMutation(
     async ({ tokenId, price }) => {
       const web3Modal = new Web3Modal();
@@ -115,17 +114,17 @@ export const useBuyNFTMutation = () => {
           value: price,
         }
       );
-      // return await transaction.wait();
+      return await transaction.wait();
     },
     {
       onError: (error) => {
         if (error instanceof Error) {
-          toast.error(error.message);
+          // toast.error(error.message);
         }
       },
 
       onSuccess: (data) => {
-        toast.success(data);
+        // toast.success(data);
       },
     }
   );
@@ -251,5 +250,43 @@ export const useGetCreatedNFTsQuery = () => {
     );
 
     return items;
+  });
+};
+
+export const useTopSellerQuery = () => {
+  return useQuery("topSeller", async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8545"
+    );
+
+    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+    const marketContract = new ethers.Contract(
+      MARKET_ADDRESS,
+      NFTMarket_ABI,
+      provider
+    );
+
+    const data = await marketContract.getTopSeller();
+
+    const items = await Promise.all(
+      data.map(async (i) => {
+        console.log(i);
+        const tokenUri = await tokenContract.tokenURI(i.tokenId);
+        const meta = await axios.get(tokenUri);
+        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let item = {
+          // price,
+          // tokenId: i.tokenId.toNumber(),
+          // seller: i.seller,
+          // owner: i.owner,
+          // image: meta.data.image,
+          // name: meta.data.name,
+          // description: meta.data.description,
+        };
+        return item;
+      })
+    );
+
+    return "items";
   });
 };

@@ -5,9 +5,9 @@ import HighestBid from "./HighestBid";
 import TestPopup from "./TestPopup";
 import clsx from "clsx";
 
-import "../../assets/css/itemDetails.css"
-import useThemeMode from "../../hooks/useThemeMode"
-import { useTranslation } from "react-i18next"
+import "../../assets/css/itemDetails.css";
+import useThemeMode from "../../hooks/useThemeMode";
+import { useTranslation } from "react-i18next";
 import { useGetNFTDetailQuery } from "../../queries/NFT";
 import { useParams } from "react-router-dom";
 
@@ -26,23 +26,18 @@ const ItemDetailsContainer = () => {
         title={t("header.itemDetails")}
       />
       <section
-        className={
-          clsx(
-            "section-padding-100",
-            isLightMode && "bg-light"
-          )
-        }
+        className={clsx("section-padding-100", isLightMode && "bg-light")}
       >
         <div className="container">
-          {NFTDetail &&
+          {NFTDetail && (
             <div className="row">
               <Detailed imageUrl={NFTDetail?.image} />
 
               <SidebarArea {...NFTDetail} />
 
-              <HighestBid />
+              {/* <HighestBid /> */}
             </div>
-          }
+          )}
         </div>
       </section>
       <TestPopup />
