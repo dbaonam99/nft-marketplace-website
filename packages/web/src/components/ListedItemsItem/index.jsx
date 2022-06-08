@@ -1,10 +1,24 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 import useThemeMode from "../../hooks/useThemeMode";
+import { useGetUserInfoQuery } from "../../queries/User";
 import { useTranslation } from "react-i18next";
 
-function ListedItemsItem({ tokenId, imgBig, imgSm, title, price, bid }) {
+function ListedItemsItem({
+  tokenId,
+  imgBig,
+  imgSm,
+  title,
+  price,
+  bid,
+  seller,
+}) {
   const isLightMode = useThemeMode();
+  const { data: userInfo } = useGetUserInfoQuery({
+    params: {
+      address: seller,
+    },
+  });
   const { t } = useTranslation();
 
   return (
@@ -18,7 +32,9 @@ function ListedItemsItem({ tokenId, imgBig, imgSm, title, price, bid }) {
             <div className={clsx("owner-info", isLightMode && "bg-light")}>
               <img src={imgSm} width="40" alt="" />
               <NavLink to="profile.html">
-                <h3 className={isLightMode ? "text-dark" : ""}>{title}</h3>
+                <h3 className={isLightMode ? "text-dark" : ""}>
+                  {userInfo?.username}
+                </h3>
               </NavLink>
             </div>
           </div>
@@ -26,7 +42,9 @@ function ListedItemsItem({ tokenId, imgBig, imgSm, title, price, bid }) {
             <h4 className={isLightMode ? "text-dark" : ""}>{title}</h4>
           </NavLink>
           <span>
-            <span className={isLightMode ? "text-muted" : "g-text"}>{t("common.price")}</span>{" "}
+            <span className={isLightMode ? "text-muted" : "g-text"}>
+              {t("common.price")}
+            </span>{" "}
             {price} ETH{" "}
             <span className={isLightMode ? "text-muted ml-15" : "g-text ml-15"}>
               1 {t("common.of")} 10

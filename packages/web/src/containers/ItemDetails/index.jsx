@@ -17,8 +17,6 @@ const ItemDetailsContainer = () => {
   let { tokenId } = useParams();
   const { data: NFTDetail } = useGetNFTDetailQuery(tokenId);
 
-  console.log(NFTDetail);
-
   return (
     <>
       <Breadcrumb
@@ -35,7 +33,7 @@ const ItemDetailsContainer = () => {
 
               <SidebarArea {...NFTDetail} />
 
-              {/* <HighestBid /> */}
+              <HighestBid {...NFTDetail} />
             </div>
           )}
         </div>

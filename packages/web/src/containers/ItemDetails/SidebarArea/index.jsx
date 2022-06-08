@@ -8,18 +8,24 @@ import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import TestPopup from "../TestPopup";
 import { useBuyNFTMutation } from "../../../queries/NFT";
+import { useGetUserInfoQuery } from "../../../queries/User";
 
-const SidebarArea = ({ name, price, owner, seller }) => {
-  let { tokenId } = useParams();
+const SidebarArea = ({ name, price, owner, seller, auctionId }) => {
+  const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const { data: userInfo } = useGetUserInfoQuery({
+    params: {
+      address: seller,
+    },
+  });
 
   const buyNFTMutation = useBuyNFTMutation();
 
   const buyNft = () => {
     buyNFTMutation.mutate({
-      tokenId: tokenId,
-      price
+      tokenId,
+      price,
     });
   };
 
@@ -49,9 +55,7 @@ const SidebarArea = ({ name, price, owner, seller }) => {
                   )}
                 </NavLink>
               </div>
-              <h4 className={isLightMode ? "text-dark" : ""}>
-                {name}
-              </h4>
+              <h4 className={isLightMode ? "text-dark" : ""}>{name}</h4>
             </div>
             <div
               className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
@@ -69,12 +73,6 @@ const SidebarArea = ({ name, price, owner, seller }) => {
               1/10
             </div>
             <div className="details-list">
-              <p className={isLightMode ? "text-muted" : ""}>
-                {t("common.artist")}:{" "}
-                <span className={isLightMode ? "text-dark" : ""}>
-                  {seller}
-                </span>
-              </p>
               {details &&
                 details.map((item, i) => (
                   <p className={isLightMode ? "text-muted" : ""} key={i}>
@@ -97,7 +95,7 @@ const SidebarArea = ({ name, price, owner, seller }) => {
                     }
                     style={{ wordBreak: "break-all" }}
                   >
-                    {owner}
+                    {userInfo?.username}
                   </h5>
                 </NavLink>
                 <p
@@ -144,7 +142,6 @@ const SidebarArea = ({ name, price, owner, seller }) => {
               className="open-popup-link more-btn width-100 mt-30"
               onClick={buyNft}
             >
-
               {t("common.purchaseNow")}
             </div>
           </div>
