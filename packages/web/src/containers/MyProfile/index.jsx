@@ -5,7 +5,7 @@ import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
 import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
-import { CopyToClipboard } from 'react-copy-to-clipboard';
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
@@ -38,10 +38,10 @@ const ProfileContainer = () => {
   useEffect(() => {
     if (copy) {
       setTimeout(() => {
-        setCopy(false)
+        setCopy(false);
       }, 2000);
     }
-  }, [copy])
+  }, [copy]);
 
   return (
     <>
@@ -72,13 +72,35 @@ const ProfileContainer = () => {
               </div>
             </div>
             <div className="profile-info mt-2">
-              <div className={isLightMode ? "profile-name text-dark" : "profile-name w-text"}>{user?.get("username")}</div>
-              <CopyToClipboard text={user?.get("ethAddress")} onCopy={() => setCopy(true)}>
-                <div className={isLightMode ? "profile-address l-bg text-dark" : "profile-address dd-bg text-white-50"}>
-                  {copy ?
-                    "Copied!" :
-                    `${user?.get("ethAddress").split('').slice(0, 5).join('')}...${user?.get("ethAddress").split('').slice(-4).join('')}`
+              <div
+                className={
+                  isLightMode ? "profile-name text-dark" : "profile-name w-text"
+                }
+              >
+                {user?.get("username")}
+              </div>
+              <CopyToClipboard
+                text={user?.get("ethAddress")}
+                onCopy={() => setCopy(true)}
+              >
+                <div
+                  className={
+                    isLightMode
+                      ? "profile-address l-bg text-dark"
+                      : "profile-address dd-bg text-white-50"
                   }
+                >
+                  {copy
+                    ? "Copied!"
+                    : `${user
+                        ?.get("ethAddress")
+                        .split("")
+                        .slice(0, 5)
+                        .join("")}...${user
+                        ?.get("ethAddress")
+                        .split("")
+                        .slice(-4)
+                        .join("")}`}
                 </div>
               </CopyToClipboard>
             </div>
@@ -114,10 +136,11 @@ const ProfileContainer = () => {
           </div>
 
           <div className="row align-items-center">
-            {isLoading ?
+            {isLoading ? (
               <div className="d-flex justify-content-center w-100">
                 <LoadingIndicator />
-              </div> :
+              </div>
+            ) : (
               (tab === "owned" ? [] : data)?.map((item) => (
                 <ListedItemsItem
                   key={item.tokenId}
@@ -128,7 +151,8 @@ const ProfileContainer = () => {
                   price={item.price}
                   bid={item.bid}
                 />
-              ))}
+              ))
+            )}
           </div>
         </div>
       </section>

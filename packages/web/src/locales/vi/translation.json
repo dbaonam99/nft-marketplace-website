@@ -53,7 +53,10 @@
     "uploadFile": "Tải tệp lên",
     "itemName": "Tên NFT",
     "itemDescription": "Mô tả NFT",
-    "itemPrice": "Giá NFT bằng ETH"
+    "itemPrice": "Giá NFT",
+    "itemStartPrice": "Giá khởi điểm",
+    "itemDuration": "Thời gian đấu giá",
+    "itemBiddingStep": "Bước giá"
   },
   "header": {
     "home": "Trang chủ",

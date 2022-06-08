@@ -53,7 +53,10 @@
     "uploadFile": "Upload File",
     "itemName": "Item Name",
     "itemDescription": "Item Description",
-    "itemPrice": "Item Price in NFT"
+    "itemPrice": "Item Price",
+    "itemStartPrice": "Start price",
+    "itemDuration": "Auction duration",
+    "itemBiddingStep": "Bidding step"
   },
   "header": {
     "home": "Home",

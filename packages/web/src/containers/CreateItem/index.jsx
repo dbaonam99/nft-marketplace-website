@@ -16,6 +16,7 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 // import { toast } from "react-toastify";
 import PreviewItem from "./PreviewItem";
+import { useCreateAuctionMutation } from "../../queries/Auction";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -32,10 +33,11 @@ const CreateItemContainer = () => {
 
   const createNFTMutation = useCreateNFTMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
+  const createAuctionMutation = useCreateAuctionMutation();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
 
-  async function onFileChange(e) {
+  const onFileChange = async (e) => {
     const file = e.target.files[0];
     try {
       setFileLoading(true);
@@ -47,9 +49,27 @@ const CreateItemContainer = () => {
     } finally {
       setFileLoading(false);
     }
-  }
+  };
 
-  async function createMarket() {
+  const createMarket = async (type) => {
+    switch (type) {
+      case "fixed_price": {
+        createSale();
+        break;
+      }
+      case "open_for_bids": {
+        break;
+      }
+      case "timed_auction": {
+        createAuction();
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const createSale = async () => {
     const { name, description, price } = formInput;
     if (!name || !description || !price || !fileUrl) return;
     /* first, upload to IPFS */
@@ -63,46 +83,94 @@ const CreateItemContainer = () => {
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
-
-      createSale(url);
+      createNFTMutation.mutate(
+        { url },
+        {
+          onSuccess: (res) => {
+            createNFTMarketItemMutation.mutate({
+              listingPrice: listingPrice.toString(),
+              tokenId: res,
+              price,
+              callback: () => {
+                updateFormInput((prevState) => ({
+                  ...prevState,
+                  price: "",
+                  name: "",
+                  description: "",
+                }));
+                setFileUrl(null);
+              },
+            });
+          },
+        }
+      );
     } catch (error) {
       console.log("Error uploading file: ", error);
     } finally {
       setFileLoading(false);
     }
-  }
-
-  async function createSale(url) {
-    const price = ethers.utils.parseUnits(formInput.price, "ether");
-
-    createNFTMutation.mutate(
-      { url },
-      {
-        onSuccess: (res) => {
-          createNFTMarketItemMutation.mutate({
-            listingPrice: listingPrice.toString(),
-            tokenId: res,
-            price,
-            callback: () => {
-              updateFormInput((prevState) => ({
-                ...prevState,
-                price: "",
-                name: "",
-                description: "",
-              }));
-              setFileUrl(null);
-            },
-          });
-        },
-      }
-    );
-  }
+  };
 
   const onChange = (name, value) => {
     updateFormInput((prevState) => ({
       ...prevState,
       [name]: value,
     }));
+  };
+
+  const createAuction = async () => {
+    const { name, description, price, duration, biddingStep } = formInput;
+    if (
+      !name ||
+      !description ||
+      !price ||
+      !fileUrl ||
+      !duration ||
+      !biddingStep
+    )
+      return;
+    /* first, upload to IPFS */
+    const data = JSON.stringify({
+      name,
+      description,
+      image: fileUrl,
+    });
+    try {
+      setFileLoading(true);
+      const added = await client.add(data);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
+
+      createNFTMutation.mutate(
+        { url },
+        {
+          onSuccess: (res) => {
+            createAuctionMutation.mutate({
+              listingPrice: listingPrice.toString(),
+              tokenId: res,
+              price,
+              duration,
+              biddingStep,
+              callback: () => {
+                updateFormInput((prevState) => ({
+                  ...prevState,
+                  price: "",
+                  name: "",
+                  description: "",
+                  duration: "",
+                  biddingStep: "",
+                }));
+                setFileUrl(null);
+              },
+            });
+          },
+        }
+      );
+    } catch (error) {
+      console.log("Error uploading file: ", error);
+    } finally {
+      setFileLoading(false);
+    }
   };
 
   return (

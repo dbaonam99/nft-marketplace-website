@@ -3,7 +3,6 @@ import { useMoralis } from "react-moralis";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "react-query";
-import { useAuth } from "../auth/account";
 
 import NFT_ABI from "../contracts/contracts/NFT.sol/NFT.json";
 import NFTMarket_ABI from "../contracts/contracts/NFTMarket.sol/NFTMarket.json";
