@@ -4,24 +4,17 @@ import ListedItems from "../../components/ListedItems";
 import LiveAuctions from "../../components/LiveAuctions";
 
 import "../../assets/css/home.css";
-import { useTopSellerQuery } from "../../queries/NFT";
-import { useEffect } from "react";
+import { useTopBuyerQuery, useTopSellerQuery } from "../../queries/NFT";
 
 const HomeContainer = () => {
-  const { data, refetch } = useTopSellerQuery();
-
-  useEffect(() => {
-    // refetch();
-    // console.log("home", data);
-  }, []);
-
-  console.log(data);
+  const { data: topSellers } = useTopSellerQuery();
+  const { data: topBuyers } = useTopBuyerQuery();
 
   return (
     <>
       <HeroContainer />
-      <TopSellers />
-      <TopSellers />
+      <TopSellers data={topSellers} />
+      <TopSellers isTopBuyer data={topBuyers} />
       <ListedItems />
       <LiveAuctions />
     </>

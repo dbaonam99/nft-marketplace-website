@@ -308,7 +308,28 @@ export const useTopSellerQuery = () => {
     );
 
     const data = await marketContract.getTopSeller();
+    const items = data.map((i) => ({
+      user: i.user,
+      count: i.count,
+    }));
 
+    return items;
+  });
+};
+
+export const useTopBuyerQuery = () => {
+  return useQuery("topBuyer", async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8545"
+    );
+
+    const marketContract = new ethers.Contract(
+      MARKET_ADDRESS,
+      NFTMarket_ABI,
+      provider
+    );
+
+    const data = await marketContract.getTopBuyer();
     const items = data.map((i) => ({
       user: i.user,
       count: i.count,

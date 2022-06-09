@@ -4,11 +4,8 @@ import { Link, useHistory } from "react-router-dom";
 import { SortingCard } from "../../utils";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
-import {
-  useGetCreatedNFTsQuery,
-  useGetMyNFTsQuery,
-} from "../../queries/NFT.js";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import { useGetCreatedNFTsQuery, useGetMyNFTsQuery } from "../../queries/NFT.js";
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
@@ -16,16 +13,27 @@ import { useTranslation } from "react-i18next";
 import ListedItemsItem from "../../components/ListedItemsItem";
 import LoadingIndicator from "../../components/LoadingIndicator";
 
+export const createShortAddress = (string) => {
+  if (string) {
+    return `${string
+      .split("")
+      .slice(0, 5)
+      .join("")}...${string
+        .split("")
+        .slice(-4)
+        .join("")}`
+  }
+  return "";
+}
+
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   let history = useHistory();
-  const { data: createdNFTs, isLoading: createdNFTsLoading } =
-    useGetCreatedNFTsQuery();
+  const { data: createdNFTs, isLoading: createdNFTsLoading } = useGetCreatedNFTsQuery();
   const { data: myNFTs, isLoading: myNFTsLoading } = useGetMyNFTsQuery();
   const { t } = useTranslation();
 
-  const { isInitialized, isAuthenticated, user, setUserData, refetchUserData } =
-    useMoralis();
+  const { isInitialized, isAuthenticated, user, setUserData, refetchUserData } = useMoralis();
   const { saveFile } = useMoralisFile();
 
   const [copy, setCopy] = useState(false);
@@ -45,20 +53,20 @@ const ProfileContainer = () => {
   useEffect(() => {
     if (copy) {
       setTimeout(() => {
-        setCopy(false);
+        setCopy(false)
       }, 2000);
     }
-  }, [copy]);
+  }, [copy])
 
   const handleChangeFile = async (e) => {
     if (e.target.files[0]) {
       const cover = await saveFile("cover", e.target.files[0]);
       setUserData({
         cover: cover._url,
-      });
-      refetchUserData();
+      })
+      refetchUserData()
     }
-  };
+  }
 
   const openFileUpload = () => {
     inputFile.current.click();
@@ -79,15 +87,10 @@ const ProfileContainer = () => {
             <div className="profile-banner">
               <div className="profile-banner-img">
                 <img
-                  src={
-                    user?.get("cover") ||
-                    "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-                  }
+                  src={user?.get("cover") || "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"}
                   alt=""
                 />
-                <div className="edit-banner-btn" onClick={openFileUpload}>
-                  Edit Cover
-                </div>
+                <div className="edit-banner-btn" onClick={openFileUpload}>Edit Cover</div>
                 <input
                   ref={inputFile}
                   type="file"
@@ -98,10 +101,7 @@ const ProfileContainer = () => {
               </div>
               <div className="profile-avatar">
                 <img
-                  src={
-                    user?.get("avatar") ||
-                    "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-                  }
+                  src={user?.get("avatar") || "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"}
                   alt=""
                 />
                 <Link to="/setting">
@@ -110,48 +110,15 @@ const ProfileContainer = () => {
               </div>
             </div>
             <div className="profile-info mt-2">
-              <div
-                className={
-                  isLightMode ? "profile-name text-dark" : "profile-name w-text"
-                }
-              >
-                {user?.get("username")}{" "}
-                {user?.get("email") ? `(${user?.get("email")})` : ""}
+              <div className={isLightMode ? "profile-name text-dark" : "profile-name w-text"}>
+                {user?.get("username")} {user?.get("email") ? `(${user?.get("email")})` : ""}
               </div>
-              <CopyToClipboard
-                text={user?.get("ethAddress")}
-                onCopy={() => setCopy(true)}
-              >
-                <div
-                  className={
-                    isLightMode
-                      ? "profile-address l-bg text-dark"
-                      : "profile-address dd-bg text-white-50"
+              <CopyToClipboard text={user?.get("ethAddress")} onCopy={() => setCopy(true)}>
+                <div className={isLightMode ? "profile-address l-bg text-dark" : "profile-address dd-bg text-white-50"}>
+                  {copy ?
+                    "Copied!" :
+                    createShortAddress(user?.get("ethAddress"))
                   }
-                >
-                  {copy
-                    ? "Copied!"
-                    : `${user
-                        ?.get("ethAddress")
-                        .split("")
-                        .slice(0, 5)
-                        .join("")}...${user
-                        ?.get("ethAddress")
-                        .split("")
-                        .slice(-4)
-                        .join("")}`}
-
-                  {copy
-                    ? "Copied!"
-                    : `${user
-                        ?.get("ethAddress")
-                        .split("")
-                        .slice(0, 5)
-                        .join("")}...${user
-                        ?.get("ethAddress")
-                        .split("")
-                        .slice(-4)
-                        .join("")}`}
                 </div>
               </CopyToClipboard>
             </div>
@@ -187,11 +154,10 @@ const ProfileContainer = () => {
           </div>
 
           <div className="row align-items-center">
-            {(tab === "owned" ? myNFTsLoading : createdNFTsLoading) ? (
+            {(tab === "owned" ? myNFTsLoading : createdNFTsLoading) ?
               <div className="d-flex justify-content-center w-100">
                 <LoadingIndicator />
-              </div>
-            ) : (
+              </div> :
               (tab === "owned" ? myNFTs : createdNFTs)?.map((item) => (
                 <ListedItemsItem
                   key={item.tokenId}
@@ -202,8 +168,7 @@ const ProfileContainer = () => {
                   price={item.price}
                   bid={item.bid}
                 />
-              ))
-            )}
+              ))}
           </div>
         </div>
       </section>
