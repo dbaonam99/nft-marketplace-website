@@ -37,7 +37,7 @@ const FeaturesList = () => {
             </h4>
             <div
               className={
-                isLightMode ? "pricing-item v2 bt-border" : "pricing-item v2"
+                isLightMode ? "pricing-item v2 bt-border bg-light text-dark" : "pricing-item v2"
               }
               onClick={connectToMetaMask}
             >

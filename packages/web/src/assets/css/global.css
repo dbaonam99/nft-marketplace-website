@@ -967,3 +967,31 @@ body .bt-disabled-button {
   opacity: 0.5;
   pointer-events: none;
 }
+body .pricing-item .relative {
+  display: flex;
+  align-items: center;
+}
+@media screen and (min-width: 576px) {
+  body .pricing-item .relative {
+    min-width: 218px;
+    min-height: 218px
+  }
+}
+@media screen and (min-width: 768px) {
+  body .pricing-item .relative {
+    min-width: 308px;
+    min-height: 308px
+  }
+}
+@media screen and (min-width: 992px) {
+  body .pricing-item .relative {
+    min-width: 188px;
+    min-height: 188px;
+  }
+}
+@media screen and (min-width: 1200px) {
+  body .pricing-item .relative {
+    min-width: 248px;
+    min-height: 248px;
+  }
+}

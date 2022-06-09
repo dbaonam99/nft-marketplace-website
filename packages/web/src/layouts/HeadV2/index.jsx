@@ -206,14 +206,23 @@ function Head({ Title }) {
             </li>
           </ul>
           <div className="menu-actions">
-            {!isAuthenticated && (
-              <NavLink
-                to="/connectwallet"
-                className="btn login-btn connect-wallet-button"
-              >
-                {t("header.connectWallet")}
-              </NavLink>
-            )}
+            <NavLink
+              to={isAuthenticated ? "/my-profile" : "/connectwallet"}
+              className="btn login-btn connect-wallet-button"
+            >
+              {isAuthenticated
+                ? `${user
+                  ?.get("ethAddress")
+                  .split("")
+                  .slice(0, 5)
+                  .join("")}...${user
+                    ?.get("ethAddress")
+                    .split("")
+                    .slice(-4)
+                    .join("")}`
+                : t("header.connectWallet")
+              }
+            </NavLink>
 
             <div
               className="menu-button nav-responsive d-block d-lg-none"
