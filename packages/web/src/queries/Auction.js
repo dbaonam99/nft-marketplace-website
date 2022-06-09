@@ -98,3 +98,36 @@ export const useGetAuctionItemsQuery = () => {
     return items;
   });
 };
+
+export const useGetAuctionDetailQuery = (tokenId) => {
+  return useQuery("AuctionDetail", async () => {
+    if (!tokenId) return;
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8545"
+    );
+
+    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+    const auctionContract = new ethers.Contract(
+      AUCTION_ADDRESS,
+      AUCTION_ABI,
+      provider
+    );
+
+    const data = await auctionContract.getAuctionDetail(tokenId);
+    const tokenUri = await tokenContract.tokenURI(data.tokenId);
+    const meta = await axios.get(tokenUri);
+    const item = {
+      auctionId: data.auctionId.toString(),
+      owner: data.owner,
+      tokenId: data.tokenId.toString(),
+      startingPrice: data.startingPrice.toString(),
+      startTime: data.startTime.toString(),
+      duration: data.duration.toString(),
+      biddingStep: data.biddingStep.toString(),
+      image: meta.data.image,
+      name: meta.data.name,
+      description: meta.data.description,
+    };
+    return item;
+  });
+};

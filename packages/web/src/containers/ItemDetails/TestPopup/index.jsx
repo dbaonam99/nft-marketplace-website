@@ -10,7 +10,7 @@ const TestPopup = () => {
         <div className="top-form-header">
           <h4>{t("common.placeBid")}</h4>
         </div>
-        <form action="#" method="post" id="main_login_form" novalidate="">
+        <form action="#" method="post" id="main_login_form" noValidate="">
           <div className="row">
             <div className="col-12 col-md-12">
               <div className="group">

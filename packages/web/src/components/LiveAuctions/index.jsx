@@ -2,7 +2,6 @@ import React from "react";
 import InfoComponent from "../InfoComponent";
 import LiveAuctionsItem from "../LiveAuctionsItem";
 import clsx from "clsx";
-
 import "./liveAuctions.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
@@ -32,12 +31,10 @@ function LiveAuctionsContainer() {
             <LiveAuctionsItem
               key={i}
               imgBig={item.image}
-              imgSm={item.image}
               title={item.name}
-              text={item.text}
               seller={item.seller}
               tokenId={item.tokenId}
-              price={item.price}
+              price={item.startingPrice}
               bid={item.bid}
             />
           ))}

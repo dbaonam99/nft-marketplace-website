@@ -2,9 +2,15 @@ import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
+import { useGetUserInfoQuery } from "../../queries/User";
 
-function LiveAuctionsItem({ imgBig, imgSm, title, text }) {
+function LiveAuctionsItem({ seller, imgBig, price, title, tokenId }) {
   const isLightMode = useThemeMode();
+  const { data: userInfo } = useGetUserInfoQuery({
+    params: {
+      address: seller,
+    },
+  });
   const { t } = useTranslation();
 
   return (
@@ -12,23 +18,27 @@ function LiveAuctionsItem({ imgBig, imgSm, title, text }) {
       <div className={clsx(isLightMode && "l-bg bt-border", "pricing-item ")}>
         <div className="wraper">
           <div className="relative">
-            <NavLink to="/item-details">
+            <NavLink to={`/item-details/${tokenId}?auction=true`}>
               <img src={imgBig} alt="" />
             </NavLink>{" "}
             <div className={clsx("owner-info", isLightMode && "bg-light")}>
-              <img src={imgSm} width="40" alt="" />
+              <img src={userInfo?.avatar} width="40" alt="" />
               <NavLink to="/profile">
-                <h3 className={isLightMode ? "text-dark" : ""}>{title}</h3>
+                <h3 className={isLightMode ? "text-dark" : ""}>
+                  {userInfo?.username}
+                </h3>
               </NavLink>
             </div>
           </div>
           <NavLink to="/item-details">
-            <h4 className={isLightMode ? "text-dark" : ""}>{text}</h4>
+            <h4 className={isLightMode ? "text-dark" : ""}>{title}</h4>
           </NavLink>
 
           <span>
-            <span className={isLightMode ? "text-muted" : "g-text"}>{t("common.price")}</span>{" "}
-            0.081 ETH{" "}
+            <span className={isLightMode ? "text-muted" : "g-text"}>
+              {t("common.price")}
+            </span>{" "}
+            {price} ETH{" "}
             <span className={isLightMode ? "text-muted ml-15" : "g-text ml-15"}>
               1 {t("common.of")} 10
             </span>
@@ -38,7 +48,7 @@ function LiveAuctionsItem({ imgBig, imgSm, title, text }) {
             <div className="admire">
               <NavLink
                 className="btn more-btn w-100 text-center my-0 mx-auto "
-                to="/item-details"
+                to={`/item-details/${tokenId}?auction=true`}
               >
                 {t("common.placeBid")}
               </NavLink>

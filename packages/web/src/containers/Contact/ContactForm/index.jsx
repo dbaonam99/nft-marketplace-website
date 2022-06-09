@@ -12,7 +12,7 @@ const ContactForm = () => {
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8">
           <div className="contact_form">
-            <form action="#" method="post" id="main_contact_form" novalidate>
+            <form action="#" method="post" id="main_contact_form" noValidate>
               <div className="row">
                 <div className="col-12">
                   <div id="success_fail_info"></div>

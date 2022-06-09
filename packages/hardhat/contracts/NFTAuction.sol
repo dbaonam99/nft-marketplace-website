@@ -263,5 +263,9 @@ contract NFTAuction is ReentrancyGuard {
         }
         return items;
     }
+
+    function getAuctionDetail(uint256 tokenId) public view returns (Auction memory) { 
+        return idToAuction[tokenId];
+    } 
 }
 

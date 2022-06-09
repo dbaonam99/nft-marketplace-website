@@ -10,12 +10,16 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useGetNFTDetailQuery } from "../../queries/NFT";
 import { useParams } from "react-router-dom";
+import { useGetAuctionDetailQuery } from "../../queries/Auction";
 
 const ItemDetailsContainer = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   let { tokenId } = useParams();
-  const { data: NFTDetail } = useGetNFTDetailQuery(tokenId);
+  const { data: nftDetail } = useGetNFTDetailQuery(tokenId);
+  const { data: auctionDetail } = useGetAuctionDetailQuery(tokenId);
+
+  console.log("AuctionDetail", auctionDetail);
 
   return (
     <>
@@ -27,13 +31,23 @@ const ItemDetailsContainer = () => {
         className={clsx("section-padding-100", isLightMode && "bg-light")}
       >
         <div className="container">
-          {NFTDetail && (
+          {nftDetail && (
             <div className="row">
-              <Detailed imageUrl={NFTDetail?.image} />
+              <Detailed imageUrl={nftDetail?.image} />
 
-              <SidebarArea {...NFTDetail} />
+              <SidebarArea {...nftDetail} />
 
-              <HighestBid {...NFTDetail} />
+              <HighestBid {...nftDetail} />
+            </div>
+          )}
+
+          {auctionDetail && (
+            <div className="row">
+              <Detailed imageUrl={auctionDetail?.image} />
+
+              <SidebarArea {...auctionDetail} />
+
+              <HighestBid {...auctionDetail} />
             </div>
           )}
         </div>
