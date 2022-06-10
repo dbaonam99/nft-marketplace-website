@@ -6,7 +6,7 @@ const Detailed = ({ imageUrl }) => {
 
   return (
     <>
-      <div className="col-12 col-lg-5">
+      <div className="col-12 col-lg-7">
         <div className={isLightMode ? "light-detailed-img" : "detailed-img"}>
           <img src={imageUrl || DetailedImg} alt="" />
         </div>

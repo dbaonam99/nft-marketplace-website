@@ -5,9 +5,11 @@ import axios from "axios";
 
 import AUCTION_ABI from "../contracts/contracts/NFTAuction.sol/NFTAuction.json";
 import NFT_ABI from "../contracts/contracts/NFT.sol/NFT.json";
+import Token_ABI from "../contracts/contracts/Token.sol/Token.json";
 
 import { AUCTION_ADDRESS } from "../contracts/Auction.address";
 import { NFT_ADDRESS } from "../contracts/NFT.address";
+import { TOKEN_ADDRESS } from "../contracts/Token.address";
 
 export const useCreateAuctionMutation = () => {
   return useMutation(
@@ -45,6 +47,52 @@ export const useCreateAuctionMutation = () => {
 
       callback();
       return await transaction.wait();
+    },
+    {
+      onError: (error) => {
+        if (error instanceof Error) {
+          // toast.error(error.message);
+        }
+      },
+
+      onSuccess: (data) => {
+        // toast.success(data);
+      },
+    }
+  );
+};
+
+export const useBidMutation = () => {
+  return useMutation(
+    async ({ auctionId, price }) => {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
+
+      const contract = new ethers.Contract(
+        AUCTION_ADDRESS,
+        AUCTION_ABI,
+        signer
+      );
+
+      const tokenContract = new ethers.Contract(
+        TOKEN_ADDRESS,
+        Token_ABI,
+        signer
+      );
+
+      await tokenContract.approve(AUCTION_ADDRESS, price);
+
+      console.log("bid", AUCTION_ADDRESS, price);
+      // let transaction = await contract.bid(NFT_ADDRESS, auctionId, {
+      //   value: price,
+      // });
+
+      // const result = await transaction.wait();
+      // console.log(result);
+      // return await transaction.wait();
+      return "";
     },
     {
       onError: (error) => {

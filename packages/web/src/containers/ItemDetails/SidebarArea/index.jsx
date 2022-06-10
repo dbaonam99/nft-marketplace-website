@@ -1,16 +1,35 @@
 import { NavLink, useParams } from "react-router-dom";
-import iconsf1 from "../../../assets/img/icons/f1.png";
 import authors8 from "../../../assets/img/authors/8.png";
 import authors2 from "../../../assets/img/authors/2.png";
 import artworkfire from "../../../assets/img/art-work/fire.png";
-import details from "../../../data/data-containers/data-ItemDetails-SidebarArea.json";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
-import TestPopup from "../TestPopup";
 import { useBuyNFTMutation } from "../../../queries/NFT";
 import { useGetUserInfoQuery } from "../../../queries/User";
+import { SlideCountdown } from "react-fancy-countdown";
+import BidTabs from "./BidTabs";
+import { useBidMutation } from "../../../queries/Auction";
 
-const SidebarArea = ({ name, price, owner, seller, auctionId }) => {
+const DETAILED = [
+  {
+    text1: "common.size",
+    text2: "3000 x 300",
+  },
+  {
+    text1: "common.createdAt",
+    text2: "04 April , 2021",
+  },
+];
+
+const SidebarArea = ({
+  name,
+  price,
+  owner,
+  seller,
+  auctionId,
+  description,
+  startingPrice,
+}) => {
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -21,6 +40,7 @@ const SidebarArea = ({ name, price, owner, seller, auctionId }) => {
   });
 
   const buyNFTMutation = useBuyNFTMutation();
+  const bidMutation = useBidMutation();
 
   const buyNft = () => {
     buyNFTMutation.mutate({
@@ -29,33 +49,22 @@ const SidebarArea = ({ name, price, owner, seller, auctionId }) => {
     });
   };
 
+  const bid = () => {
+    bidMutation.mutate({
+      auctionId,
+      price: startingPrice,
+    });
+  };
+
   return (
     <>
-      <div className="col-12 col-lg-4 mt-s">
+      <div className="col-12 col-lg-5 mt-s sidebar-container">
         <div className="sidebar-area">
           <div className="donnot-miss-widget">
             <div className="who-we-contant">
-              <div className="filers-list">
-                <NavLink
-                  to="/discover"
-                  className={
-                    isLightMode ? "filter-item text-dark" : "filter-item"
-                  }
-                >
-                  {isLightMode ? (
-                    <div className="d-flex align-items-center">
-                      <i className="fa fa-list mr-2" aria-hidden="true"></i>
-                      {t("itemDetails.cryptoArt")}
-                    </div>
-                  ) : (
-                    <>
-                      <img src={iconsf1} alt="" />
-                      {t("itemDetails.cryptoArt")}
-                    </>
-                  )}
-                </NavLink>
-              </div>
-              <h4 className={isLightMode ? "text-dark" : ""}>{name}</h4>
+              <h2 className={isLightMode ? "text-dark" : ""}>
+                {name} #{tokenId}
+              </h2>
             </div>
             <div
               className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
@@ -63,25 +72,34 @@ const SidebarArea = ({ name, price, owner, seller, auctionId }) => {
               <span
                 className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
               >
-                {/* {t("common.currentPrice")} {price} ETH{" "} */}
+                {t("common.currentPrice")} {price} ETH{" "}
               </span>
               <span
                 className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
               >
                 $534.22
-              </span>{" "}
-              1/10
+              </span>
             </div>
+
+            <div
+              className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
+            >
+              <span
+                className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
+              >
+                {description}
+              </span>
+            </div>
+
             <div className="details-list">
-              {details &&
-                details.map((item, i) => (
-                  <p className={isLightMode ? "text-muted" : ""} key={i}>
-                    {t(item.text1)}:{" "}
-                    <span className={isLightMode ? "text-dark" : ""}>
-                      {item.text2}
-                    </span>
-                  </p>
-                ))}
+              {DETAILED?.map((item, i) => (
+                <p className={isLightMode ? "text-muted" : ""} key={i}>
+                  {t(item.text1)}:{" "}
+                  <span className={isLightMode ? "text-dark" : ""}>
+                    {item.text2}
+                  </span>
+                </p>
+              ))}
             </div>
             <div className="author-item mb-30">
               <div className="author-img ml-0">
@@ -109,7 +127,7 @@ const SidebarArea = ({ name, price, owner, seller, auctionId }) => {
                 </p>
               </div>
             </div>
-            <div
+            {/* <div
               className={
                 isLightMode ? "highest-bid bt-bg-light" : "highest-bid"
               }
@@ -137,14 +155,40 @@ const SidebarArea = ({ name, price, owner, seller, auctionId }) => {
                   </span>
                 </div>
               </div>
+            </div> */}
+            {/* {auctionId && (
+              <div
+                className={isLightMode ? "biding-end bt-border" : "biding-end"}
+              >
+                <h4 className={isLightMode ? "mb-15 text-dark" : "mb-15"}>
+                  {t("common.biddingEndIn")}:
+                </h4>
+                <div className="count-down titled circled text-center">
+                  <SlideCountdown
+                    weeks={false}
+                    deadline="2030-12-31 14:23:22"
+                  />
+                </div>
+              </div>
+            )} */}
+            <BidTabs />
+          </div>
+        </div>
+        <div
+          className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
+        >
+          {auctionId ? (
+            <div className="open-popup-link more-btn width-100" onClick={bid}>
+              Place a bid
             </div>
+          ) : (
             <div
-              className="open-popup-link more-btn width-100 mt-30"
+              className="open-popup-link more-btn width-100"
               onClick={buyNft}
             >
               {t("common.purchaseNow")}
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

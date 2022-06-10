@@ -1,7 +1,6 @@
 import Breadcrumb from "../../components/Breadcrumb";
 import Detailed from "./Detailed";
 import SidebarArea from "./SidebarArea";
-import HighestBid from "./HighestBid";
 import TestPopup from "./TestPopup";
 import clsx from "clsx";
 
@@ -19,8 +18,6 @@ const ItemDetailsContainer = () => {
   const { data: nftDetail } = useGetNFTDetailQuery(tokenId);
   const { data: auctionDetail } = useGetAuctionDetailQuery(tokenId);
 
-  console.log("AuctionDetail", auctionDetail);
-
   return (
     <>
       <Breadcrumb
@@ -34,20 +31,14 @@ const ItemDetailsContainer = () => {
           {nftDetail && (
             <div className="row">
               <Detailed imageUrl={nftDetail?.image} />
-
               <SidebarArea {...nftDetail} />
-
-              <HighestBid {...nftDetail} />
             </div>
           )}
 
           {auctionDetail && (
-            <div className="row">
+            <div className="row item-detail-container">
               <Detailed imageUrl={auctionDetail?.image} />
-
               <SidebarArea {...auctionDetail} />
-
-              <HighestBid {...auctionDetail} />
             </div>
           )}
         </div>

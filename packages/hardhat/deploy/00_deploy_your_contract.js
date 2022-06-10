@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 const fs = require("fs");
 
-const ADMIN_ADDRESS = "0xaf696d6468060B8a66c2b781e419D344aAf9D177";
+const ADMIN_ADDRESS = "0x9e7AFA4D5599c09887D05181C87bCf762D034a23";
 
 module.exports = async () => {
   /* ----------------- Token Contract ----------------- */

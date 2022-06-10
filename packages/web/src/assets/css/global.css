@@ -945,18 +945,23 @@ body .bt-dropdown-menu .dropdown-item.active {
   padding: 5px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
+  height: 100%;
   border: 2px dashed rgba(255, 255, 255, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .light-detailed-img {
   padding: 5px;
-  background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
   height: 100%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: 2px dashed rgba(151, 151, 151, 0.8);
+  background: #e9ebed;
 }
 
 .light-detailed-img img {
