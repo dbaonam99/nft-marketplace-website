@@ -6,9 +6,10 @@ import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useBuyNFTMutation } from "../../../queries/NFT";
 import { useGetUserInfoQuery } from "../../../queries/User";
-import { SlideCountdown } from "react-fancy-countdown";
+
 import BidTabs from "./BidTabs";
 import { useBidMutation } from "../../../queries/Auction";
+import BiddingBox from "./BiddingBox";
 
 const DETAILED = [
   {
@@ -72,12 +73,27 @@ const SidebarArea = ({
               <span
                 className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
               >
-                {t("common.currentPrice")} {price} ETH{" "}
+                {t("common.from")}:
+              </span>
+              <span
+                className={
+                  isLightMode
+                    ? "mb-15 text-muted mr-15"
+                    : "mb-15 gray-text mr-15"
+                }
+              >
+                {startingPrice} UIT
+              </span>
+
+              <span
+                className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
+              >
+                {t("common.highestBid")}:
               </span>
               <span
                 className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
               >
-                $534.22
+                {startingPrice} UIT
               </span>
             </div>
 
@@ -156,21 +172,6 @@ const SidebarArea = ({
                 </div>
               </div>
             </div> */}
-            {/* {auctionId && (
-              <div
-                className={isLightMode ? "biding-end bt-border" : "biding-end"}
-              >
-                <h4 className={isLightMode ? "mb-15 text-dark" : "mb-15"}>
-                  {t("common.biddingEndIn")}:
-                </h4>
-                <div className="count-down titled circled text-center">
-                  <SlideCountdown
-                    weeks={false}
-                    deadline="2030-12-31 14:23:22"
-                  />
-                </div>
-              </div>
-            )} */}
             <BidTabs />
           </div>
         </div>
@@ -178,9 +179,7 @@ const SidebarArea = ({
           className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
         >
           {auctionId ? (
-            <div className="open-popup-link more-btn width-100" onClick={bid}>
-              Place a bid
-            </div>
+            <BiddingBox onBid={bid} />
           ) : (
             <div
               className="open-popup-link more-btn width-100"

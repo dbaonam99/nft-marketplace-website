@@ -586,6 +586,10 @@ ol {
   margin-bottom: 10px;
 }
 
+.flex-1 {
+  flex: 1;
+}
+
 .dream-dots span {
   font-weight: bold;
   display: inline-block;
@@ -848,7 +852,7 @@ body .bt-tab-active {
 }
 
 body .bt-dropdown-menu {
-  background-color: rgba(255, 255, 255, 0.7);
+  /* background-color: rgba(255, 255, 255, 0.7); */
 }
 body .bt-dropdown-menu .dropdown-item.active {
   background-color: #ff8abd;
@@ -936,10 +940,15 @@ body .bt-dropdown-menu .dropdown-item.active {
 }
 .biding-end {
   text-align: center;
-  margin-top: 30px;
-  padding: 20px 15px 10px;
-  border: 2px dashed rgba(255, 255, 255, 0.2);
-  border-radius: 20px;
+  margin-bottom: 15px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.biding-end p {
+  margin: 0;
+  text-align: left;
 }
 .detailed-img {
   padding: 5px;
@@ -979,13 +988,13 @@ body .pricing-item .relative {
 @media screen and (min-width: 576px) {
   body .pricing-item .relative {
     min-width: 218px;
-    min-height: 218px
+    min-height: 218px;
   }
 }
 @media screen and (min-width: 768px) {
   body .pricing-item .relative {
     min-width: 308px;
-    min-height: 308px
+    min-height: 308px;
   }
 }
 @media screen and (min-width: 992px) {
@@ -998,5 +1007,11 @@ body .pricing-item .relative {
   body .pricing-item .relative {
     min-width: 248px;
     min-height: 248px;
+  }
+}
+
+@media (max-width: 991px) {
+  .biding-end {
+    max-width: 720px;
   }
 }

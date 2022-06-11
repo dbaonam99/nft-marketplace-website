@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import useThemeMode from "../../../hooks/useThemeMode";
-import TestPopup from "../TestPopup";
 import { data } from "../../../data/data-containers/data-HighestBid.js";
 import authors1 from "../../../assets/img/authors/1.png";
 import { useState } from "react";

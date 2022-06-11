@@ -10,7 +10,7 @@ const ItemDetails = () => {
     <>
       <Head Title={t("header.itemDetails")} />
       <ItemDetailsContainer />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

@@ -16,8 +16,8 @@ contract NFTMarket is ReentrancyGuard {
   uint256 listingPrice = 100;
 
   constructor(address _uit, address _contractOwner) {
-      uit = IERC20(_uit);
-      contractOwner = _contractOwner;
+    uit = IERC20(_uit);
+    contractOwner = _contractOwner;
   }
 
   struct MarketItem {

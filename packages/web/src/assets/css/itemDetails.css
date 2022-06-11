@@ -173,16 +173,14 @@ textarea:required {
   display: flex;
   font-family: Courier;
   font-weight: bold;
-  justify-content: center;
-  grid-gap: 1rem;
-  gap: 0.3rem;
+  justify-content: space-between;
   color: #fff;
 }
 
 .slide-block-time {
-  font-size: 30px;
-  min-width: 24%;
+  font-size: 20px;
   margin: 0;
+  width: 40px;
 }
 
 .wrap-stage {
@@ -190,7 +188,6 @@ textarea:required {
   justify-content: center;
   align-items: center;
   width: 100%;
-  background: #290571;
 }
 
 .slide-block-time .wrap-stage > .stage {
@@ -217,7 +214,7 @@ textarea:required {
 .sidebar-area {
   overflow: scroll;
   height: calc(100vh - 146px);
-  padding-bottom: 90px;
+  padding-bottom: 190px;
 }
 
 .item-detail-cta-light {
@@ -289,4 +286,74 @@ textarea:required {
   font-weight: 600;
   color: white;
   border-bottom: 2px white solid;
+}
+
+.item-detail-section {
+  height: 100vh;
+}
+
+.auction-countdown {
+  display: flex;
+  justify-content: space-between;
+}
+
+.auction-countdown-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.biding-end-title-light {
+  color: rgba(22, 22, 26, 0.6);
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 20px !important;
+}
+
+.biding-end-title {
+  color: rgba(255, 255, 255, 0.5);
+  font-weight: bold;
+  font-size: 16px;
+  margin-right: 20px !important;
+}
+
+.auction-countdown-item p {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0;
+  line-height: 1.3;
+  color: white;
+}
+
+.auction-countdown-item p:last-child {
+  color: rgb(140, 140, 140);
+  font-weight: bold;
+  font-size: 13px;
+}
+
+@media (max-width: 991px) {
+  .item-detail-section {
+    height: max-content;
+  }
+
+  .sidebar-area {
+    overflow: auto;
+    height: max-content;
+    padding-bottom: 0;
+  }
+
+  .item-detail-cta-light {
+    position: fixed;
+    display: flex;
+    justify-content: center;
+  }
+
+  .item-detail-cta-light .more-btn {
+    max-width: 720px;
+  }
+
+  .item-detail-cta {
+    position: fixed;
+  }
 }

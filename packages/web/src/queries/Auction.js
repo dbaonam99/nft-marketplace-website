@@ -83,16 +83,11 @@ export const useBidMutation = () => {
       );
 
       await tokenContract.approve(AUCTION_ADDRESS, price);
+      let transaction = await contract.bid(auctionId, {
+        value: price,
+      });
 
-      console.log("bid", AUCTION_ADDRESS, price);
-      // let transaction = await contract.bid(NFT_ADDRESS, auctionId, {
-      //   value: price,
-      // });
-
-      // const result = await transaction.wait();
-      // console.log(result);
-      // return await transaction.wait();
-      return "";
+      return await transaction.wait();
     },
     {
       onError: (error) => {

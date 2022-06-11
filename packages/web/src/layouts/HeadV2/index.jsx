@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useMoralis } from "react-moralis";
-import { NavLink } from "react-router-dom";
+import { NavLink, useHistory } from "react-router-dom";
 import { NavbarLogo } from "../../utils/allImgs";
 import Preloader from "../../components/Preloader";
 import data from "../../data/data-layouts/data-Head.json";
@@ -12,11 +12,16 @@ import "./navbar.css";
 import clsx from "clsx";
 
 function Head({ Title }) {
+  let { location } = useHistory();
   const { isAuthenticated, user } = useMoralis();
   const [active, setActive] = useState(false);
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const navbarRef = useRef();
+
+  const itemDetailPath =
+    location.pathname.split("/").length > 2 &&
+    location.pathname.split("/")[1] === "item-details";
 
   useEffect(() => {
     window.addEventListener("scroll", (e) => {
@@ -212,16 +217,15 @@ function Head({ Title }) {
             >
               {isAuthenticated
                 ? `${user
-                  ?.get("ethAddress")
-                  .split("")
-                  .slice(0, 5)
-                  .join("")}...${user
+                    ?.get("ethAddress")
+                    .split("")
+                    .slice(0, 5)
+                    .join("")}...${user
                     ?.get("ethAddress")
                     .split("")
                     .slice(-4)
                     .join("")}`
-                : t("header.connectWallet")
-              }
+                : t("header.connectWallet")}
             </NavLink>
 
             <div
