@@ -161,7 +161,17 @@ function Head({ Title }) {
           </NavLink>
           <ul className="navbar-nav ml-auto d-none d-lg-flex mr-3">
             <li className="nav-item">
-              <NavLink className="nav-link" to="/">
+              <NavLink
+                className="nav-link"
+                to="/"
+                style={{
+                  color: itemDetailPath
+                    ? isLightMode
+                      ? "black"
+                      : "white"
+                    : "",
+                }}
+              >
                 {t("header.home")}
               </NavLink>
             </li>
@@ -170,6 +180,13 @@ function Head({ Title }) {
                 className="nav-link dropdown-toggle"
                 to="#"
                 data-toggle="dropdown"
+                style={{
+                  color: itemDetailPath
+                    ? isLightMode
+                      ? "black"
+                      : "white"
+                    : "",
+                }}
               >
                 {t("header.discover")}
               </NavLink>
@@ -182,7 +199,17 @@ function Head({ Title }) {
               </div>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/activity">
+              <NavLink
+                className="nav-link"
+                to="/activity"
+                style={{
+                  color: itemDetailPath
+                    ? isLightMode
+                      ? "black"
+                      : "white"
+                    : "",
+                }}
+              >
                 {t("header.activity")}
               </NavLink>
             </li>
@@ -192,6 +219,13 @@ function Head({ Title }) {
                 className="nav-link dropdown-toggle"
                 to="#"
                 data-toggle="dropdown"
+                style={{
+                  color: itemDetailPath
+                    ? isLightMode
+                      ? "black"
+                      : "white"
+                    : "",
+                }}
               >
                 {t("header.pages")}
               </NavLink>
@@ -205,7 +239,17 @@ function Head({ Title }) {
               </div>
             </li>
             <li className="nav-item">
-              <NavLink className="nav-link" to="/contact">
+              <NavLink
+                className="nav-link"
+                to="/contact"
+                style={{
+                  color: itemDetailPath
+                    ? isLightMode
+                      ? "black"
+                      : "white"
+                    : "",
+                }}
+              >
                 {t("header.contact")}
               </NavLink>
             </li>
@@ -214,6 +258,9 @@ function Head({ Title }) {
             <NavLink
               to={isAuthenticated ? "/my-profile" : "/connectwallet"}
               className="btn login-btn connect-wallet-button"
+              style={{
+                color: itemDetailPath ? (isLightMode ? "black" : "white") : "",
+              }}
             >
               {isAuthenticated
                 ? `${user

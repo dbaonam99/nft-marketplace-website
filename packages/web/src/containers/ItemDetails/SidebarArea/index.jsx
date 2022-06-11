@@ -8,7 +8,11 @@ import { useBuyNFTMutation } from "../../../queries/NFT";
 import { useGetUserInfoQuery } from "../../../queries/User";
 
 import BidTabs from "./BidTabs";
-import { useBidMutation } from "../../../queries/Auction";
+import {
+  useBidMutation,
+  useGetHighestBidAmountQuery,
+  useGetHighestBidderQuery,
+} from "../../../queries/Auction";
 import BiddingBox from "./BiddingBox";
 
 const DETAILED = [
@@ -39,6 +43,12 @@ const SidebarArea = ({
       address: seller,
     },
   });
+  const { data: highestBidder } = useGetHighestBidderQuery({
+    auctionId,
+  });
+  const { data: highestBidAmount } = useGetHighestBidAmountQuery({
+    auctionId,
+  });
 
   const buyNFTMutation = useBuyNFTMutation();
   const bidMutation = useBidMutation();
@@ -56,6 +66,8 @@ const SidebarArea = ({
       price: startingPrice,
     });
   };
+
+  console.log("highestBidder", highestBidder, highestBidAmount);
 
   return (
     <>
@@ -93,7 +105,7 @@ const SidebarArea = ({
               <span
                 className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
               >
-                {startingPrice} UIT
+                {highestBidAmount} UIT
               </span>
             </div>
 

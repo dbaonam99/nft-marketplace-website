@@ -174,3 +174,39 @@ export const useGetAuctionDetailQuery = (tokenId) => {
     return item;
   });
 };
+
+export const useGetHighestBidderQuery = ({ auctionId }) => {
+  return useQuery("highestBidder", async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8545"
+    );
+
+    const auctionContract = new ethers.Contract(
+      AUCTION_ADDRESS,
+      AUCTION_ABI,
+      provider
+    );
+
+    const data = await auctionContract.getCurrentBidOwner(auctionId);
+
+    return data.toString();
+  });
+};
+
+export const useGetHighestBidAmountQuery = ({ auctionId }) => {
+  return useQuery("highestBidAmount", async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8545"
+    );
+
+    const auctionContract = new ethers.Contract(
+      AUCTION_ADDRESS,
+      AUCTION_ABI,
+      provider
+    );
+
+    const data = await auctionContract.getCurrentBidAmount(auctionId);
+
+    return data.toString();
+  });
+};
