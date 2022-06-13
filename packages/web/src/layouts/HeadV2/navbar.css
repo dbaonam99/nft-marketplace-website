@@ -158,6 +158,12 @@ nav {
   align-items: center;
   cursor: pointer;
 }
+.navbarV2 .menu-actions img {
+  width: 40px;
+  height: 40px;
+  border-radius: 100%;
+  cursor: pointer;
+}
 .navbarV2 .connect-wallet-button {
   margin: 0 20px 0 0 !important;
   height: 40px;

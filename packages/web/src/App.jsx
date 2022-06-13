@@ -158,8 +158,6 @@ const App = () => {
             <Route path="/profile" component={Profile} />
             <Route path="/my-profile" component={MyProfile} />
             <Route path="/setting" component={Setting} />
-            <Route path="/login" component={Login} />
-            <Route path="/signup" component={SignUp} />
           </Switch>
         </div>
       </AuthProvider>

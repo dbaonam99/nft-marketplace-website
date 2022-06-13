@@ -1,45 +1,25 @@
 [
-  {    
-    "dataUp" :[
+  {
+    "dataUp": [
       {
-        "path":"/auctions",
+        "path": "/auctions",
         "title": "common.liveAuctions"
       },
       {
-        "path":"/discover",
+        "path": "/discover",
         "title": "header.discover"
       },
       {
-        "path":"/itemdetails",
-        "title": "header.itemDetails"
+        "path": "/authors",
+        "title": "header.authors"
       }
     ]
   },
-  {    
-    "dataDown" : [
+  {
+    "dataDown": [
       {
-        "path":"/connectwallet",
-        "title": "header.connectWallet"
-      },
-      {
-        "path":"/createitem",
+        "path": "/createitem",
         "title": "header.createItem"
-      },
-      {
-        "path":"/authors",
-        "title": "header.authors"
-      },
-      {
-        "path":"/profile",
-        "title": "header.authorProfile"
-      },
-      {
-        "path":"/login",
-        "title": "common.login"
-      },
-      {
-        "path":"/signup",
-        "title": "common.signUp"
       }
     ]
   }

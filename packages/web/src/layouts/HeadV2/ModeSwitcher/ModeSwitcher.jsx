@@ -17,15 +17,13 @@ export default function ModeSwitcher() {
   };
 
   return (
-    <div onClick={handleClick} className={clsx("mode-switcher", mode === "light" && "light")}>
+    <div
+      onClick={handleClick}
+      className={clsx("mode-switcher", mode === "light" && "light")}
+    >
       <img src={sunIcon} alt="" />
       <img src={moonIcon} alt="" />
-      <div className={clsx("circle", mode === "dark" ? "left" : "right")}></div>
-      {/* {mode === "dark" ? (
-        <i className="fa fa-sun-o fa-sm"></i>
-      ) : (
-        <i className="fa fa-moon-o fa-sm"></i>
-      )} */}
+      <div className={clsx("circle", mode === "dark" ? "left" : "right")} />
     </div>
   );
 }

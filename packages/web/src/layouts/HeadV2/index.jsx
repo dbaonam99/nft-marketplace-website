@@ -10,6 +10,7 @@ import { useTranslation } from "react-i18next";
 import useThemeMode from "../../hooks/useThemeMode";
 import "./navbar.css";
 import clsx from "clsx";
+import { getUserInfo } from "../../queries/User";
 
 function Head({ Title }) {
   let { location } = useHistory();
@@ -18,6 +19,7 @@ function Head({ Title }) {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const navbarRef = useRef();
+  const [userInfo, setUserInfo] = useState({});
 
   const itemDetailPath =
     location.pathname.split("/").length > 2 &&
@@ -45,7 +47,16 @@ function Head({ Title }) {
     }
   }, [active]);
 
+  useEffect(() => {
+    (async () => {
+      const _userInfo = await getUserInfo(user.get("ethAddress"));
+      setUserInfo(_userInfo);
+    })();
+  }, [user]);
+
   const toggleMenu = () => setActive(!active);
+
+  console.log("userInfo", userInfo);
 
   return (
     <>
@@ -216,8 +227,8 @@ function Head({ Title }) {
 
             <li className="nav-item dropdown">
               <NavLink
-                className="nav-link dropdown-toggle"
-                to="#"
+                className="nav-link"
+                to="/createitem"
                 data-toggle="dropdown"
                 style={{
                   color: itemDetailPath
@@ -227,16 +238,8 @@ function Head({ Title }) {
                     : "",
                 }}
               >
-                {t("header.pages")}
+                {t("header.createItem")}
               </NavLink>
-              <div className="dropdown-menu bt-dropdown-menu">
-                {data[1].dataDown &&
-                  data[1].dataDown.map((item, i) => (
-                    <NavLink key={i} className="dropdown-item" to={item.path}>
-                      {t(item.title)}
-                    </NavLink>
-                  ))}
-              </div>
             </li>
             <li className="nav-item">
               <NavLink
@@ -255,25 +258,25 @@ function Head({ Title }) {
             </li>
           </ul>
           <div className="menu-actions">
-            <NavLink
-              to={isAuthenticated ? "/my-profile" : "/connectwallet"}
-              className="btn login-btn connect-wallet-button"
-              style={{
-                color: itemDetailPath ? (isLightMode ? "black" : "white") : "",
-              }}
-            >
-              {isAuthenticated
-                ? `${user
-                    ?.get("ethAddress")
-                    .split("")
-                    .slice(0, 5)
-                    .join("")}...${user
-                    ?.get("ethAddress")
-                    .split("")
-                    .slice(-4)
-                    .join("")}`
-                : t("header.connectWallet")}
-            </NavLink>
+            {isAuthenticated ? (
+              <NavLink to={isAuthenticated ? "/my-profile" : "/connectwallet"}>
+                <img src={userInfo.avatar} alt="" width="40px" height="40px" />
+              </NavLink>
+            ) : (
+              <NavLink
+                to={isAuthenticated ? "/my-profile" : "/connectwallet"}
+                className="btn login-btn connect-wallet-button"
+                style={{
+                  color: itemDetailPath
+                    ? isLightMode
+                      ? "black"
+                      : "white"
+                    : "",
+                }}
+              >
+                {t("header.connectWallet")}
+              </NavLink>
+            )}
 
             <div
               className="menu-button nav-responsive d-block d-lg-none"

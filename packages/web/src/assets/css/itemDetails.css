@@ -214,7 +214,7 @@ textarea:required {
 .sidebar-area {
   overflow: scroll;
   height: calc(100vh - 146px);
-  padding-bottom: 190px;
+  padding-bottom: 160px;
 }
 
 .item-detail-cta-light {
