@@ -866,6 +866,10 @@ body .bt-dropdown-menu .dropdown-item.active {
 .author-img {
   margin: 0 15px;
 }
+.author-img img {
+  object-fit: cover;
+  border-radius: 50%;
+}
 .author-item {
   display: flex;
   align-items: center;
@@ -950,6 +954,7 @@ body .bt-dropdown-menu .dropdown-item.active {
   margin: 0;
   text-align: left;
 }
+
 .detailed-img {
   padding: 5px;
   background: rgba(255, 255, 255, 0.03);
@@ -959,6 +964,11 @@ body .bt-dropdown-menu .dropdown-item.active {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.detailed-img img {
+  border-radius: 10px;
+  max-height: calc(100vh - 200px);
 }
 
 .light-detailed-img {
@@ -975,6 +985,7 @@ body .bt-dropdown-menu .dropdown-item.active {
 
 .light-detailed-img img {
   border-radius: 10px;
+  max-height: calc(100vh - 200px);
 }
 
 body .bt-disabled-button {

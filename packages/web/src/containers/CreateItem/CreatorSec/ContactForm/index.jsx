@@ -138,6 +138,7 @@ const ContactForm = (props) => {
                         : "marketplace-type-dark"
                     }
                     onClick={() => setMarketplaceType(item.id)}
+                    key={item.id}
                   >
                     {isLightMode ? item.icon : item.iconDark}
                     <div

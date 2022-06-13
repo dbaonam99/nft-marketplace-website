@@ -11,7 +11,6 @@ const FeaturesList = () => {
   const { authenticate, isAuthenticated, user } = useMoralis();
 
   const connectToMetaMask = async () => {
-    // if (isAuthenticated) return;
     authenticate();
   };
 
@@ -37,7 +36,9 @@ const FeaturesList = () => {
             </h4>
             <div
               className={
-                isLightMode ? "pricing-item v2 bt-border bg-light text-dark" : "pricing-item v2"
+                isLightMode
+                  ? "pricing-item v2 bt-border bg-light text-dark"
+                  : "pricing-item v2"
               }
               onClick={connectToMetaMask}
             >

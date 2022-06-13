@@ -1,16 +1,21 @@
 import Detailed from "./Detailed";
-import SidebarArea from "./SidebarArea";
+import AuctionSidebar from "./AuctionSidebar";
+import MarketAuctionSideBar from "./MarketAuctionSideBar";
 import clsx from "clsx";
 
 import "../../assets/css/itemDetails.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useGetNFTDetailQuery } from "../../queries/NFT";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useGetAuctionDetailQuery } from "../../queries/Auction";
 
 const ItemDetailsContainer = () => {
   const isLightMode = useThemeMode();
-  let { tokenId } = useParams();
+  const { tokenId } = useParams();
+  const { search } = useLocation();
+  const sp = new URLSearchParams(search);
+  const isAuctionDetail = sp.get("auction");
+
   const { data: nftDetail } = useGetNFTDetailQuery(tokenId);
   const { data: auctionDetail } = useGetAuctionDetailQuery(tokenId);
 
@@ -23,17 +28,15 @@ const ItemDetailsContainer = () => {
         )}
       >
         <div className="container">
-          {nftDetail && (
-            <div className="row">
-              <Detailed imageUrl={nftDetail?.image} />
-              <SidebarArea {...nftDetail} />
-            </div>
-          )}
-
-          {auctionDetail && (
+          {isAuctionDetail ? (
             <div className="row item-detail-container">
               <Detailed imageUrl={auctionDetail?.image} />
-              <SidebarArea {...auctionDetail} />
+              <AuctionSidebar {...auctionDetail} />
+            </div>
+          ) : (
+            <div className="row item-detail-container">
+              <Detailed imageUrl={nftDetail?.image} />
+              <MarketAuctionSideBar {...nftDetail} />
             </div>
           )}
         </div>

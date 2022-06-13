@@ -1,32 +1,15 @@
 import { NavLink, useParams } from "react-router-dom";
-import authors8 from "../../../assets/img/authors/8.png";
-import authors2 from "../../../assets/img/authors/2.png";
-import artworkfire from "../../../assets/img/art-work/fire.png";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useBuyNFTMutation } from "../../../queries/NFT";
 import { useGetUserInfoQuery } from "../../../queries/User";
 
-import BidTabs from "./BidTabs";
-import {
-  useBidMutation,
-  useGetHighestBidAmountQuery,
-  useGetHighestBidderQuery,
-} from "../../../queries/Auction";
+import BidTabs from "../BidTabs";
+import { useBidMutation } from "../../../queries/Auction";
 import BiddingBox from "./BiddingBox";
+import { useEffect } from "react";
 
-const DETAILED = [
-  {
-    text1: "common.size",
-    text2: "3000 x 300",
-  },
-  {
-    text1: "common.createdAt",
-    text2: "04 April , 2021",
-  },
-];
-
-const SidebarArea = ({
+const MarketAuctionSideBar = ({
   name,
   price,
   owner,
@@ -38,20 +21,17 @@ const SidebarArea = ({
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-  const { data: userInfo } = useGetUserInfoQuery({
-    params: {
-      address: seller,
-    },
-  });
-  const { data: highestBidder } = useGetHighestBidderQuery({
-    auctionId,
-  });
-  const { data: highestBidAmount } = useGetHighestBidAmountQuery({
-    auctionId,
+
+  const { data: userInfo, refetch } = useGetUserInfoQuery({
+    ethAddress: seller,
   });
 
   const buyNFTMutation = useBuyNFTMutation();
   const bidMutation = useBidMutation();
+
+  useEffect(() => {
+    refetch();
+  }, [refetch, seller]);
 
   const buyNft = () => {
     buyNFTMutation.mutate({
@@ -67,7 +47,7 @@ const SidebarArea = ({
     });
   };
 
-  console.log("highestBidder", highestBidder, highestBidAmount);
+  console.log(userInfo);
 
   return (
     <>
@@ -85,7 +65,7 @@ const SidebarArea = ({
               <span
                 className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
               >
-                {t("common.from")}:
+                {t("common.price")}:
               </span>
               <span
                 className={
@@ -94,18 +74,7 @@ const SidebarArea = ({
                     : "mb-15 gray-text mr-15"
                 }
               >
-                {startingPrice} UIT
-              </span>
-
-              <span
-                className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
-              >
-                {t("common.highestBid")}:
-              </span>
-              <span
-                className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
-              >
-                {highestBidAmount} UIT
+                {price?.toString()} UIT
               </span>
             </div>
 
@@ -118,20 +87,9 @@ const SidebarArea = ({
                 {description}
               </span>
             </div>
-
-            <div className="details-list">
-              {DETAILED?.map((item, i) => (
-                <p className={isLightMode ? "text-muted" : ""} key={i}>
-                  {t(item.text1)}:{" "}
-                  <span className={isLightMode ? "text-dark" : ""}>
-                    {item.text2}
-                  </span>
-                </p>
-              ))}
-            </div>
             <div className="author-item mb-30">
               <div className="author-img ml-0">
-                <img src={authors8} width="70" alt="" />
+                <img src={userInfo?.avatar} width="70" alt="" />
               </div>
               <div className="author-info">
                 <NavLink to="/profile">
@@ -155,35 +113,7 @@ const SidebarArea = ({
                 </p>
               </div>
             </div>
-            {/* <div
-              className={
-                isLightMode ? "highest-bid bt-bg-light" : "highest-bid"
-              }
-            >
-              <h5 className={isLightMode ? "text-dark mb-15" : "w-text mb-15"}>
-                {t("common.highestBid")}
-              </h5>
-              <div className="admire">
-                <div className={isLightMode ? "adm text-dark" : "adm w-text"}>
-                  <img src={authors2} width="30" alt="" className="mr-5p" />
-                  Wadee-Nel
-                </div>
-                <div className="adm">
-                  <img src={artworkfire} width="30" alt="" className="mr-5p" />
-                  <span
-                    className={
-                      isLightMode ? "text-muted bold mr-5p" : "bold mr-5p"
-                    }
-                  >
-                    0.34 ETH
-                  </span>
-                  <span className={isLightMode ? "text-muted" : "gray-text"}>
-                    {" "}
-                    $534.22
-                  </span>
-                </div>
-              </div>
-            </div> */}
+
             <BidTabs />
           </div>
         </div>
@@ -206,4 +136,4 @@ const SidebarArea = ({
   );
 };
 
-export default SidebarArea;
+export default MarketAuctionSideBar;
