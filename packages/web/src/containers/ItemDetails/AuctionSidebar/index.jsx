@@ -1,9 +1,8 @@
 import { NavLink, useParams } from "react-router-dom";
-import authors8 from "../../../assets/img/authors/8.png";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useBuyNFTMutation } from "../../../queries/NFT";
-import { useGetUserInfoQuery } from "../../../queries/User";
+import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
 import {
@@ -12,6 +11,7 @@ import {
   useGetHighestBidderQuery,
 } from "../../../queries/Auction";
 import BiddingBox from "./BiddingBox";
+import { useEffect, useState } from "react";
 
 const DETAILED = [
   {
@@ -36,20 +36,23 @@ const AuctionSidebar = ({
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-  const { data: userInfo } = useGetUserInfoQuery({
-    params: {
-      address: seller,
-    },
-  });
   const { data: highestBidder } = useGetHighestBidderQuery({
     auctionId,
   });
   const { data: highestBidAmount } = useGetHighestBidAmountQuery({
     auctionId,
   });
+  const [userInfo, setUserInfo] = useState({});
 
   const buyNFTMutation = useBuyNFTMutation();
   const bidMutation = useBidMutation();
+
+  useEffect(() => {
+    (async () => {
+      const _userInfo = await getUserInfo(owner);
+      setUserInfo(_userInfo);
+    })();
+  }, [owner]);
 
   const buyNft = () => {
     buyNFTMutation.mutate({
@@ -127,7 +130,7 @@ const AuctionSidebar = ({
             </div>
             <div className="author-item mb-30">
               <div className="author-img ml-0">
-                <img src={authors8} width="70" alt="" />
+                <img src={userInfo?.avatar} width="70" alt="" />
               </div>
               <div className="author-info">
                 <NavLink to="/profile">

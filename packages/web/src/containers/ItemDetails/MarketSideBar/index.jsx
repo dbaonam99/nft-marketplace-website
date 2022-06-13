@@ -2,36 +2,25 @@ import { NavLink, useParams } from "react-router-dom";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useBuyNFTMutation } from "../../../queries/NFT";
-import { useGetUserInfoQuery } from "../../../queries/User";
+import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
-import { useBidMutation } from "../../../queries/Auction";
-import BiddingBox from "./BiddingBox";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
-const MarketAuctionSideBar = ({
-  name,
-  price,
-  owner,
-  seller,
-  auctionId,
-  description,
-  startingPrice,
-}) => {
+const MarketSideBar = ({ name, price, owner, seller, description }) => {
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-
-  const { data: userInfo, refetch } = useGetUserInfoQuery({
-    ethAddress: seller,
-  });
+  const [userInfo, setUserInfo] = useState({});
 
   const buyNFTMutation = useBuyNFTMutation();
-  const bidMutation = useBidMutation();
 
   useEffect(() => {
-    refetch();
-  }, [refetch, seller]);
+    (async () => {
+      const _userInfo = await getUserInfo(seller);
+      setUserInfo(_userInfo);
+    })();
+  }, [seller]);
 
   const buyNft = () => {
     buyNFTMutation.mutate({
@@ -39,15 +28,6 @@ const MarketAuctionSideBar = ({
       price,
     });
   };
-
-  const bid = () => {
-    bidMutation.mutate({
-      auctionId,
-      price: startingPrice,
-    });
-  };
-
-  console.log(userInfo);
 
   return (
     <>
@@ -120,20 +100,13 @@ const MarketAuctionSideBar = ({
         <div
           className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
         >
-          {auctionId ? (
-            <BiddingBox onBid={bid} />
-          ) : (
-            <div
-              className="open-popup-link more-btn width-100"
-              onClick={buyNft}
-            >
-              {t("common.purchaseNow")}
-            </div>
-          )}
+          <div className="open-popup-link more-btn width-100" onClick={buyNft}>
+            {t("common.purchaseNow")}
+          </div>
         </div>
       </div>
     </>
   );
 };
 
-export default MarketAuctionSideBar;
+export default MarketSideBar;

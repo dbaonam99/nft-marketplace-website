@@ -32,8 +32,8 @@ function LiveAuctionsContainer() {
               key={i}
               imgBig={item.image}
               title={item.name}
-              seller={item.seller}
-              tokenId={item.tokenId}
+              seller={item.owner}
+              auctionId={item.auctionId}
               price={item.startingPrice}
               bid={item.bid}
             />

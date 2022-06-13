@@ -1,6 +1,6 @@
 import Detailed from "./Detailed";
 import AuctionSidebar from "./AuctionSidebar";
-import MarketAuctionSideBar from "./MarketAuctionSideBar";
+import MarketSideBar from "./MarketSideBar";
 import clsx from "clsx";
 
 import "../../assets/css/itemDetails.css";
@@ -36,7 +36,7 @@ const ItemDetailsContainer = () => {
           ) : (
             <div className="row item-detail-container">
               <Detailed imageUrl={nftDetail?.image} />
-              <MarketAuctionSideBar {...nftDetail} />
+              <MarketSideBar {...nftDetail} />
             </div>
           )}
         </div>

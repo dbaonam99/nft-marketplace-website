@@ -1,8 +1,9 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
 import useThemeMode from "../../hooks/useThemeMode";
-import { useGetUserInfoQuery } from "../../queries/User";
+import { getUserInfo } from "../../queries/User";
 import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
 
 function ListedItemsItem({
   tokenId,
@@ -14,12 +15,16 @@ function ListedItemsItem({
   seller,
 }) {
   const isLightMode = useThemeMode();
-  const { data: userInfo } = useGetUserInfoQuery({
-    params: {
-      address: seller,
-    },
-  });
+
+  const [userInfo, setUserInfo] = useState({});
   const { t } = useTranslation();
+
+  useEffect(() => {
+    (async () => {
+      const _userInfo = await getUserInfo(seller);
+      setUserInfo(_userInfo);
+    })();
+  }, [seller]);
 
   return (
     <div className="col-lg-3 col-sm-6 col-xs-12">
@@ -30,7 +35,7 @@ function ListedItemsItem({
               <img src={imgBig} alt="" />
             </NavLink>
             <div className={clsx("owner-info", isLightMode && "bg-light")}>
-              <img src={imgSm} width="40" alt="" />
+              <img src={userInfo?.avatar} width="40" alt="" />
               <NavLink to="profile.html">
                 <h3 className={isLightMode ? "text-dark" : ""}>
                   {userInfo?.username}
