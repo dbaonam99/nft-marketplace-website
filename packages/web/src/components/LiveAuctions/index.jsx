@@ -12,7 +12,6 @@ function LiveAuctionsContainer() {
   const { data: auctionItems } = useGetAuctionItemsQuery();
   const { t } = useTranslation();
 
-  console.log("AuctionItems", auctionItems);
 
   return (
     <section

@@ -214,7 +214,7 @@ textarea:required {
 .sidebar-area {
   overflow: scroll;
   height: calc(100vh - 146px);
-  padding-bottom: 160px;
+  padding-bottom: 180px;
 }
 
 .item-detail-cta-light {
@@ -319,11 +319,13 @@ textarea:required {
 }
 
 .auction-countdown-item p {
+  text-align: left;
   font-size: 20px;
   font-weight: bold;
   margin: 0;
   line-height: 1.3;
   color: white;
+  width: 100%;
 }
 
 .auction-countdown-item p:last-child {

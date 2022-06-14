@@ -43,6 +43,7 @@ const ContactForm = (props) => {
   const [currentMarketplaceType, setMarketplaceType] = useState(
     MARKET_TYPES[0].id
   );
+  const [currentDurationType, setCurrentDurationType] = useState("hour");
 
   const openFileUpload = () => {
     inputFile.current.click();
@@ -211,15 +212,47 @@ const ContactForm = (props) => {
                     id="duration"
                     required
                     value={formInput.duration}
-                    onChange={(e) =>
-                      updateFormInput("duration", e.target.value)
-                    }
+                    onChange={(e) => {
+                      console.log(e.target.value);
+                      updateFormInput("duration", e.target.value);
+                      updateFormInput("durationType", currentDurationType);
+                    }}
                   />
                   <span className="highlight"></span>
                   <span className={isLightMode ? "bar-light" : "bar"}></span>
                   <label className={isLightMode ? "text-dark" : ""}>
                     {t("common.itemDuration")}
                   </label>
+                  <div className="duration-types">
+                    <div
+                      onClick={() => setCurrentDurationType("hour")}
+                      className={
+                        currentDurationType === "hour"
+                          ? isLightMode
+                            ? "duration-type duration-type-active"
+                            : "duration-type-dark duration-type-active-dark"
+                          : isLightMode
+                          ? "duration-type"
+                          : "duration-type-dark"
+                      }
+                    >
+                      Hour
+                    </div>
+                    <div
+                      onClick={() => setCurrentDurationType("day")}
+                      className={
+                        currentDurationType === "day"
+                          ? isLightMode
+                            ? "duration-type duration-type-active"
+                            : "duration-type-dark duration-type-active-dark"
+                          : isLightMode
+                          ? "duration-type"
+                          : "duration-type-dark"
+                      }
+                    >
+                      Day
+                    </div>
+                  </div>
                 </div>
               </div>
 

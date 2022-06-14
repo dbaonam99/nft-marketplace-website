@@ -40,7 +40,8 @@ contract NFTAuction is ReentrancyGuard {
         uint256 startingPrice,
         uint256 startTime,
         uint256 duration,
-        uint256 biddingStep
+        uint256 biddingStep,
+        uint256 createdDate
     );
     event AuctionBid(uint256 auctionId, address bidder, uint256 price);
     event Withdraw(address indexed bidder, uint amount);
@@ -62,6 +63,7 @@ contract NFTAuction is ReentrancyGuard {
         uint256 highestBidAmount;
         address highestBidder;
         bytes32 status;
+        uint256 createdDate;
     }
 
     function getListingPrice() public view returns (uint256) {
@@ -76,10 +78,7 @@ contract NFTAuction is ReentrancyGuard {
         uint256 duration,
         uint256 biddingStep
     ) public payable nonReentrant returns (uint256) {
-        require(
-            biddingStep > 0,
-            "Bidding step must be at least 1 wei"
-        );
+        require(biddingStep > 0, "Bidding step must be at least 1 wei");
         require(msg.value == listingPrice, "Price must be equal to listing price");
 
         _auctionIds.increment();
@@ -96,7 +95,8 @@ contract NFTAuction is ReentrancyGuard {
             duration,
             startingPrice,
             address(0),
-            CREATED
+            CREATED,
+            block.timestamp
         );
 
         ERC721(nftContract).transferFrom(msg.sender, contractOwner, tokenId);
@@ -109,9 +109,9 @@ contract NFTAuction is ReentrancyGuard {
             startingPrice,
             startTime,
             duration,
-            biddingStep
+            biddingStep,
+            block.timestamp
         );
-
         return auctionId;
     }
 

@@ -39,7 +39,7 @@ export const useCreateAuctionMutation = () => {
         NFT_ADDRESS,
         tokenId,
         price,
-        12,
+        new Date().getTime(),
         duration,
         biddingStep,
         { value: listingPrice }
@@ -159,6 +159,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
     const data = await auctionContract.getAuctionDetail(tokenId);
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
     const meta = await axios.get(tokenUri);
+    console.log("data", data);
     const item = {
       auctionId: data.auctionId.toString(),
       owner: data.owner,

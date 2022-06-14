@@ -1,17 +1,16 @@
 import { NavLink, useParams } from "react-router-dom";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
-import { useBuyNFTMutation } from "../../../queries/NFT";
 import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
 import {
-  useBidMutation,
   useGetHighestBidAmountQuery,
   useGetHighestBidderQuery,
 } from "../../../queries/Auction";
 import BiddingBox from "./BiddingBox";
 import { useEffect, useState } from "react";
+import BidModal from "./BidModal";
 
 const DETAILED = [
   {
@@ -32,6 +31,8 @@ const AuctionSidebar = ({
   auctionId,
   description,
   startingPrice,
+  duration,
+  startTime,
 }) => {
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
@@ -43,9 +44,7 @@ const AuctionSidebar = ({
     auctionId,
   });
   const [userInfo, setUserInfo] = useState({});
-
-  const buyNFTMutation = useBuyNFTMutation();
-  const bidMutation = useBidMutation();
+  const [modalIsOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -54,22 +53,13 @@ const AuctionSidebar = ({
     })();
   }, [owner]);
 
-  const buyNft = () => {
-    buyNFTMutation.mutate({
-      tokenId,
-      price,
-    });
-  };
-
-  const bid = () => {
-    bidMutation.mutate({
-      auctionId,
-      price: startingPrice,
-    });
-  };
-
   return (
     <>
+      <BidModal
+        modalIsOpen={modalIsOpen}
+        setIsOpen={setIsOpen}
+        auctionId={auctionId}
+      />
       <div className="col-12 col-lg-5 mt-s sidebar-container">
         <div className="sidebar-area">
           <div className="donnot-miss-widget">
@@ -130,7 +120,7 @@ const AuctionSidebar = ({
             </div>
             <div className="author-item mb-30">
               <div className="author-img ml-0">
-                <img src={userInfo?.avatar} width="70" alt="" />
+                <img src={userInfo?.avatar} width="60" alt="" />
               </div>
               <div className="author-info">
                 <NavLink to="/profile">
@@ -154,51 +144,20 @@ const AuctionSidebar = ({
                 </p>
               </div>
             </div>
-            {/* <div
-              className={
-                isLightMode ? "highest-bid bt-bg-light" : "highest-bid"
-              }
-            >
-              <h5 className={isLightMode ? "text-dark mb-15" : "w-text mb-15"}>
-                {t("common.highestBid")}
-              </h5>
-              <div className="admire">
-                <div className={isLightMode ? "adm text-dark" : "adm w-text"}>
-                  <img src={authors2} width="30" alt="" className="mr-5p" />
-                  Wadee-Nel
-                </div>
-                <div className="adm">
-                  <img src={artworkfire} width="30" alt="" className="mr-5p" />
-                  <span
-                    className={
-                      isLightMode ? "text-muted bold mr-5p" : "bold mr-5p"
-                    }
-                  >
-                    0.34 ETH
-                  </span>
-                  <span className={isLightMode ? "text-muted" : "gray-text"}>
-                    {" "}
-                    $534.22
-                  </span>
-                </div>
-              </div>
-            </div> */}
+
             <BidTabs isAuction />
           </div>
         </div>
         <div
           className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
         >
-          {auctionId ? (
-            <BiddingBox onBid={bid} />
-          ) : (
-            <div
-              className="open-popup-link more-btn width-100"
-              onClick={buyNft}
-            >
-              {t("common.purchaseNow")}
-            </div>
-          )}
+          <BiddingBox
+            onBid={() => setIsOpen(true)}
+            highestBidder={highestBidder}
+            highestBidAmount={highestBidAmount}
+            duration={duration}
+            startTime={startTime}
+          />
         </div>
       </div>
     </>

@@ -4,6 +4,9 @@
   transition: all 0.3s;
 }
 
+iframe {
+  display: none;
+}
 body {
   font-family: "Poppins", sans-serif;
   overflow-x: hidden;
@@ -953,6 +956,14 @@ body .bt-dropdown-menu .dropdown-item.active {
 .biding-end p {
   margin: 0;
   text-align: left;
+}
+.biding-end .sides {
+  width: 50%;
+  padding-right: 10px;
+}
+.biding-end .sides:last-child {
+  border-left: 1px #ddd solid;
+  padding-left: 10px;
 }
 
 .detailed-img {

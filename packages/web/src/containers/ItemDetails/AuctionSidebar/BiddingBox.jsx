@@ -1,10 +1,27 @@
+import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
 import { useTranslation } from "react-i18next";
 import useThemeMode from "../../../hooks/useThemeMode";
+import { getUserInfo } from "../../../queries/User";
 
-const BiddingBox = ({ onBid }) => {
+const BiddingBox = ({
+  onBid,
+  highestBidAmount,
+  highestBidder,
+  duration,
+  startTime,
+}) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const [userInfo, setUserInfo] = useState({});
+
+  useEffect(() => {
+    (async () => {
+      const _userInfo = await getUserInfo(highestBidder);
+      setUserInfo(_userInfo);
+    })();
+  }, [highestBidder]);
+
   return (
     <div
       style={{
@@ -15,7 +32,26 @@ const BiddingBox = ({ onBid }) => {
       }}
     >
       <div className={isLightMode ? "biding-end" : "biding-end"}>
-        <div style={{ width: "100%", display: "flex", alignItems: "center" }}>
+        <div className="sides">
+          <p
+            className={
+              isLightMode ? "biding-end-title-light" : "biding-end-title"
+            }
+          >
+            {t("common.highestBid")}:
+          </p>
+          <div className="count-down titled circled text-center flex-1">
+            <div className="auction-countdown">
+              <div className="auction-countdown-item">
+                <p className={isLightMode ? "text-dark" : ""}>
+                  {highestBidAmount} UIT
+                </p>
+                <p>{userInfo?.username}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="sides">
           <p
             className={
               isLightMode ? "biding-end-title-light" : "biding-end-title"
@@ -25,10 +61,10 @@ const BiddingBox = ({ onBid }) => {
           </p>
           <div className="count-down titled circled text-center flex-1">
             <Countdown
-              date={Date.now() + 100000000}
+              date={new Date(Number(duration) + Number(startTime))}
               renderer={(props) => {
                 if (props.completed) {
-                  return <span>You are good to go!</span>;
+                  return <span>Auction ended!</span>;
                 } else {
                   return (
                     <div className="auction-countdown">

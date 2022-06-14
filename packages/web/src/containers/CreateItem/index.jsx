@@ -28,6 +28,7 @@ const CreateItemContainer = () => {
     price: "",
     name: "",
     description: "",
+    durationType: "",
   });
   const [fileLoading, setFileLoading] = useState(false);
 
@@ -119,16 +120,35 @@ const CreateItemContainer = () => {
   };
 
   const createAuction = async () => {
-    const { name, description, price, duration, biddingStep } = formInput;
+    const { name, description, price, duration, durationType, biddingStep } =
+      formInput;
+
     if (
       !name ||
       !description ||
       !price ||
       !fileUrl ||
       !duration ||
-      !biddingStep
+      !biddingStep ||
+      !durationType
     )
       return;
+
+    let durationTimestamp = 0;
+
+    switch (durationType) {
+      case "hour": {
+        durationTimestamp = duration * 3600 * 1000;
+        break;
+      }
+      case "day": {
+        durationTimestamp = duration * 24 * 3600 * 1000;
+        break;
+      }
+      default:
+        break;
+    }
+
     /* first, upload to IPFS */
     const data = JSON.stringify({
       name,
@@ -149,7 +169,7 @@ const CreateItemContainer = () => {
               listingPrice: listingPrice.toString(),
               tokenId: res,
               price,
-              duration,
+              duration: durationTimestamp,
               biddingStep,
               callback: () => {
                 updateFormInput((prevState) => ({

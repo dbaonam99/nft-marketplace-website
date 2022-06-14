@@ -19,6 +19,8 @@ const ItemDetailsContainer = () => {
   const { data: nftDetail } = useGetNFTDetailQuery(tokenId);
   const { data: auctionDetail } = useGetAuctionDetailQuery(tokenId);
 
+  console.log("auctionDetail", auctionDetail);
+
   return (
     <>
       <section

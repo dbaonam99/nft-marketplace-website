@@ -1,7 +1,58 @@
 .center-block {
-    display: block;
-    margin-right: auto;
-    margin-left: auto;
-    /* width: 0; */
-    /* height: 0; */
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
+  /* width: 0; */
+  /* height: 0; */
+}
+
+.duration-types {
+  position: absolute;
+  right: 0;
+  top: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.duration-types .duration-type {
+  padding: 2px 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid #eee;
+  font-size: 14px;
+}
+
+.duration-types .duration-type-active {
+  padding: 2px 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid #000;
+  font-size: 14px;
+}
+
+.duration-types .duration-type-dark {
+  padding: 2px 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid #343a40;
+  font-size: 14px;
+  color: #fff;
+}
+
+.duration-types .duration-type-active-dark {
+  padding: 2px 15px;
+  margin-left: 10px;
+  cursor: pointer;
+  border-radius: 10px;
+  border: 2px solid #eee;
+  font-size: 14px;
+}
+
+.relative {
+  position: relative;
 }

@@ -28,6 +28,7 @@ contract NFTMarket is ReentrancyGuard {
     address payable owner;
     uint256 price;
     bool sold;
+    uint256 createdDate;
   }
 
   struct UserCount {
@@ -47,7 +48,8 @@ contract NFTMarket is ReentrancyGuard {
     address seller,
     address owner,
     uint256 price,
-    bool sold
+    bool sold,
+    uint256 createdDate
   );
 
   function getListingPrice() public view returns (uint256) {
@@ -72,7 +74,8 @@ contract NFTMarket is ReentrancyGuard {
       payable(msg.sender),
       payable(address(0)),
       price,
-      false
+      false,
+      block.timestamp
     );
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
@@ -84,7 +87,8 @@ contract NFTMarket is ReentrancyGuard {
       msg.sender,
       address(0),
       price,
-      false
+      false,
+      block.timestamp
     );
   }
 
