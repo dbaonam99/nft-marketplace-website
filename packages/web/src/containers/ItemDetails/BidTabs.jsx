@@ -3,12 +3,18 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { data } from "../../data/data-containers/data-HighestBid.js";
 import authors1 from "../../assets/img/authors/1.png";
 import { useState } from "react";
+import { useGetBidHistoryQuery } from "../../queries/Auction";
 
-const BidTabs = ({ isAuction }) => {
+const BidTabs = ({ isAuction, auctionId }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const { data: bidHistory } = useGetBidHistoryQuery({
+    auctionId,
+  });
 
   const [currentTab, setTab] = useState(0);
+
+  console.log(bidHistory);
 
   return (
     <>
@@ -52,7 +58,7 @@ const BidTabs = ({ isAuction }) => {
               : "highest-bid bid-item"
           }
         >
-          {data?.map((item, i) => (
+          {bidHistory?.map((item, i) => (
             <div key={i} className={`author-item ${item.addMargin && "mb-0"}`}>
               <div className="author-img ml-0">
                 <img src={item.img} width="40" alt="" />
@@ -64,7 +70,7 @@ const BidTabs = ({ isAuction }) => {
                     className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
                   >
                     {" "}
-                    {item.text}
+                    {item.bidder}
                   </span>
                 </p>
                 <p className={isLightMode ? "text-muted" : ""}>
@@ -73,7 +79,7 @@ const BidTabs = ({ isAuction }) => {
                     className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
                   >
                     {" "}
-                    {item.bid} ETH
+                    {item.price} UIT
                   </span>
                 </p>
               </div>
@@ -81,7 +87,7 @@ const BidTabs = ({ isAuction }) => {
                 <p className={isLightMode ? "text-muted" : ""}>$346.38</p>
                 <p className={isLightMode ? "text-muted" : ""}>
                   <i className="fa fa-clock-o mr-5p"></i>
-                  {item.time} AM
+                  {item.bidDate.toString()} AM
                 </p>
               </div>
             </div>

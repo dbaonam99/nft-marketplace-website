@@ -159,7 +159,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
     const data = await auctionContract.getAuctionDetail(tokenId);
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
     const meta = await axios.get(tokenUri);
-    console.log("data", data);
+
     const item = {
       auctionId: data.auctionId.toString(),
       owner: data.owner,
@@ -209,5 +209,36 @@ export const useGetHighestBidAmountQuery = ({ auctionId }) => {
     const data = await auctionContract.getCurrentBidAmount(auctionId);
 
     return data.toString();
+  });
+};
+
+export const useGetBidHistoryQuery = ({ auctionId }) => {
+  return useQuery("bidHistory", async () => {
+    const provider = new ethers.providers.JsonRpcProvider(
+      "http://localhost:8545"
+    );
+
+    const auctionContract = new ethers.Contract(
+      AUCTION_ADDRESS,
+      AUCTION_ABI,
+      provider
+    );
+
+    const data = await auctionContract.getAuctionHistory(auctionId);
+
+    const items = await Promise.all(
+      data.map(async (i) => {
+        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+        let item = {
+          price,
+          auctionId: i.auctionId.toNumber(),
+          bidder: i.bidder,
+          owner: i.owner,
+          bidDate: i.bidDate,
+        };
+        return item;
+      })
+    );
+    return items;
   });
 };

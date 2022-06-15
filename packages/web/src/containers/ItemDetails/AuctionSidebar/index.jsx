@@ -145,7 +145,7 @@ const AuctionSidebar = ({
               </div>
             </div>
 
-            <BidTabs isAuction />
+            <BidTabs isAuction auctionId={auctionId} />
           </div>
         </div>
         <div

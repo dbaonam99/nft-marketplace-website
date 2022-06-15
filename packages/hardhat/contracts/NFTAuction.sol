@@ -17,6 +17,7 @@ contract NFTAuction is ReentrancyGuard {
 
     using Counters for Counters.Counter;
     Counters.Counter private _auctionIds;
+    Counters.Counter private _bidIds;
 
     IERC20 uit;
     address contractOwner;
@@ -30,6 +31,28 @@ contract NFTAuction is ReentrancyGuard {
     enum Status {
         active,
         finished
+    }
+
+    struct Auction {
+        uint256 auctionId;
+        address nftContract;
+        uint256 tokenId;
+        address owner;
+        uint256 startTime;
+        uint256 startingPrice;
+        uint256 biddingStep;
+        uint256 duration;
+        uint256 highestBidAmount;
+        address highestBidder;
+        bytes32 status;
+        uint256 createdDate;
+    }
+
+    struct BidInfo {
+        uint256 auctionId;
+        address bidder;
+        uint256 bidDate;
+        uint256 price;
     }
 
     event AuctionCreated(
@@ -50,21 +73,7 @@ contract NFTAuction is ReentrancyGuard {
 
     mapping(uint256 => Auction) public idToAuction;
     mapping(address => uint) public bids;
-
-    struct Auction {
-        uint256 auctionId;
-        address nftContract;
-        uint256 tokenId;
-        address owner;
-        uint256 startTime;
-        uint256 startingPrice;
-        uint256 biddingStep;
-        uint256 duration;
-        uint256 highestBidAmount;
-        address highestBidder;
-        bytes32 status;
-        uint256 createdDate;
-    }
+    mapping(uint256 => BidInfo) public bidHistory;
 
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
@@ -120,6 +129,9 @@ contract NFTAuction is ReentrancyGuard {
         // uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
         uint256 price = msg.value;
 
+        _bidIds.increment();
+        uint256 bidId = _bidIds.current();
+
         // require(block.timestamp >= startDate && block.timestamp < endDate,  
         //     "Auction is finished or not started yet"
         // );
@@ -136,6 +148,14 @@ contract NFTAuction is ReentrancyGuard {
             idToAuction[auctionId].highestBidAmount = price;
             idToAuction[auctionId].highestBidder = msg.sender;
             idToAuction[auctionId].status = BIDDING;
+
+            bidHistory[bidId] = BidInfo(
+                auctionId,
+                msg.sender,
+                block.timestamp,
+                price
+            );
+
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -164,10 +184,33 @@ contract NFTAuction is ReentrancyGuard {
             idToAuction[auctionId].highestBidder = msg.sender;
             idToAuction[auctionId].highestBidAmount = price;
 
+            bidHistory[bidId] = BidInfo(
+                auctionId,
+                msg.sender,
+                block.timestamp,
+                price
+            );
+
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
         return false;
+    }
+
+    function getAuctionHistory(uint256 auctionId) public view returns (BidInfo[] memory) {
+        uint bidCount = _bidIds.current();
+        uint currentIndex = 0;
+
+        BidInfo[] memory items = new BidInfo[](bidCount);
+        for (uint i = 0; i < bidCount; i++) {
+            if (idToAuction[i + 1].auctionId == auctionId) {
+                uint currentId = i + 1;
+                BidInfo storage currentItem = bidHistory[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
     }
 
     function getCurrentBidOwner(uint256 auctionId) public view returns (address) {
