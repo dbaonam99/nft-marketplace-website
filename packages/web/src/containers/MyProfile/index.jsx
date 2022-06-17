@@ -2,14 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { useMoralis, useMoralisFile } from "react-moralis";
 import { Link, useHistory } from "react-router-dom";
 import { SortingCard } from "../../utils";
-import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
 import { useGetCreatedNFTsQuery, useGetMyNFTsQuery } from "../../queries/NFT.js";
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
-import { useTranslation } from "react-i18next";
 import ListedItemsItem from "../../components/ListedItemsItem";
 import LoadingIndicator from "../../components/LoadingIndicator";
 
@@ -29,11 +27,10 @@ export const createShortAddress = (string) => {
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   let history = useHistory();
-  const { data: createdNFTs, isLoading: createdNFTsLoading } = useGetCreatedNFTsQuery();
-  const { data: myNFTs, isLoading: myNFTsLoading } = useGetMyNFTsQuery();
-  const { t } = useTranslation();
-
   const { isInitialized, isAuthenticated, user, setUserData, refetchUserData } = useMoralis();
+  const { data: createdNFTs, isLoading: createdNFTsLoading } = useGetCreatedNFTsQuery(user?.get("ethAddress"));
+  const { data: myNFTs, isLoading: myNFTsLoading } = useGetMyNFTsQuery(user?.get("ethAddress"));
+
   const { saveFile, isUploading } = useMoralisFile();
 
   const [copy, setCopy] = useState(false);
@@ -158,7 +155,7 @@ const ProfileContainer = () => {
             </div>
           </div>
 
-          <div className="row align-items-center">
+          <div className="row">
             {(tab === "owned" ? myNFTsLoading : createdNFTsLoading) ?
               <div className="d-flex justify-content-center w-100">
                 <LoadingIndicator />

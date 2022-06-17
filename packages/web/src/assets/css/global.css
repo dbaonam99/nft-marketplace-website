@@ -1010,13 +1010,22 @@ body .pricing-item .relative {
   display: flex;
   align-items: center;
 }
-body .pricing-item .relative img {
+body .pricing-item .relative a {
+  width: 100%;
+  height: 100%;
+}
+body .pricing-item .relative a > img {
   object-fit: cover;
+  width: 100%;
+  height: 100%;
 }
 @media screen and (min-width: 576px) {
   body .pricing-item .relative {
     width: 218px;
     height: 218px;
+  }
+  body .owner-info h3 {
+    max-width: 100px;
   }
 }
 @media screen and (min-width: 768px) {
@@ -1024,17 +1033,26 @@ body .pricing-item .relative img {
     width: 308px;
     height: 308px;
   }
+  body .owner-info h3 {
+    max-width: 150px;
+  }
 }
 @media screen and (min-width: 992px) {
   body .pricing-item .relative {
     width: 188px;
     height: 188px;
   }
+  body .owner-info h3 {
+    max-width: 80px;
+  }
 }
 @media screen and (min-width: 1200px) {
   body .pricing-item .relative {
     width: 248px;
     height: 248px;
+  }
+  body .owner-info h3 {
+    max-width: 120px;
   }
 }
 

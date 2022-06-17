@@ -126,7 +126,7 @@ const App = () => {
             <Route path="/createitem" component={CreateItem} />
             <Route path="/discover" component={Discover} />
             <Route path="/item-details/:tokenId" component={ItemDetails} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile/:ethAddress" component={Profile} />
             <Route path="/my-profile" component={MyProfile} />
             <Route path="/setting" component={Setting} />
           </Switch>

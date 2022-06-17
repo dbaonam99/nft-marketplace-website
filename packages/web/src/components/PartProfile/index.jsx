@@ -2,7 +2,7 @@
 import { useTranslation } from "react-i18next";
 import useThemeMode from "../../hooks/useThemeMode";
 
-function PartProfile({ img1, img2, img3, data }) {
+function PartProfile({ img1, img2, img3, data, user }) {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
 
@@ -22,23 +22,19 @@ function PartProfile({ img1, img2, img3, data }) {
           <img src={img2} width="50" alt="" />
         </span>
         <div className="collection_info text-center">
-          <h6 className={isLightMode ? "text-dark" : ""}>Morgan Wright</h6>
+          <h6 className={isLightMode ? "text-dark" : ""}>{user?.username}</h6>
           <p className={isLightMode ? "text-dark mr-5p" : "w-text mr-5p"}>
             Creative NFTs Designer <img src={img3} width="20" alt="" />
-          </p>
-          <p className={isLightMode ? "mt-15 text-muted" : "mt-15"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Eos
-            distinctio labore.
           </p>
 
           <div className="search-widget-area mt-15">
             <form action="#" method="post">
               <input
-                className={isLightMode ? "bt-border text-dark" : ""}
+                className={isLightMode ? "bt-border text-dark pr-3" : "pr-5"}
                 type="text"
                 name="wallet"
                 id="wallet"
-              // value="Xjo03s-osi6732..."
+                value={user?.ethAddress}
               />
               <button className={isLightMode ? "btn text-dark" : "btn"}>
                 <i className="fa fa-copy"></i>
@@ -46,7 +42,7 @@ function PartProfile({ img1, img2, img3, data }) {
             </form>
           </div>
 
-          <ul className="social-links mt-30 mb-30">
+          {/* <ul className="social-links mt-30 mb-30">
             {data &&
               data.map((item, i) => (
                 <li key={i}>
@@ -58,7 +54,7 @@ function PartProfile({ img1, img2, img3, data }) {
           </ul>
           <a href="profile.html" className="more-btn">
             {t("common.follow")}
-          </a>
+          </a> */}
         </div>
       </div>
     </div>

@@ -211,9 +211,7 @@ export const useGetNFTDetailQuery = (tokenId) => {
   });
 };
 
-export const useGetCreatedNFTsQuery = () => {
-  const { user } = useMoralis();
-
+export const useGetCreatedNFTsQuery = (ethAdress) => {
   return useQuery("createNFTs", async () => {
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
@@ -227,7 +225,7 @@ export const useGetCreatedNFTsQuery = () => {
     );
 
     const data = await marketContract
-      .connect(user?.get("ethAddress"))
+      .connect(ethAdress)
       .fetchItemsCreated();
 
     console.log("data", data);
@@ -254,9 +252,7 @@ export const useGetCreatedNFTsQuery = () => {
   });
 };
 
-export const useGetMyNFTsQuery = () => {
-  const { user } = useMoralis();
-
+export const useGetMyNFTsQuery = (ethAddress) => {
   return useQuery("myNFTs", async () => {
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
@@ -270,7 +266,7 @@ export const useGetMyNFTsQuery = () => {
     );
 
     const data = await marketContract
-      .connect(user?.get("ethAddress"))
+      .connect(ethAddress)
       .fetchMyNFTs();
 
     const items = await Promise.all(

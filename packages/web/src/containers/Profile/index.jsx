@@ -1,28 +1,39 @@
-import { useEffect } from "react";
-import { useMoralis } from "react-moralis";
-import { NavLink } from "react-router-dom";
-import { SortingCard } from "../../utils";
+import { useEffect, useState } from "react";
+import { NavLink, useParams } from "react-router-dom";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
-import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
+import LoadingIndicator from "../../components/LoadingIndicator";
+import ListedItemsItem from "./ListedItemsItem";
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
+import { getUserInfo } from "../../queries/User";
+import { useGetCreatedNFTsQuery, useGetMyNFTsQuery } from "../../queries/NFT.js";
+import { SortingCard } from "../../utils";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const { data, refetch } = useGetCreatedNFTsQuery();
-
-  const { authenticate, isAuthenticated, user } = useMoralis();
-
-  console.log("user", user?.get("ethAddress"));
+  const { ethAddress } = useParams();
+  const [user, setUserInfo] = useState(null);
+  const [tab, setTab] = useState("sale");
+  const { data: createdNFTs, isLoading: createdNFTsLoading, refetch: createdNFTsRefetch } = useGetCreatedNFTsQuery(ethAddress);
+  const { data: myNFTs, isLoading: myNFTsLoading, refetch: myNFTsRefetch } = useGetMyNFTsQuery(ethAddress);
 
   useEffect(() => {
     SortingCard();
-    refetch();
   }, []);
+
+  useEffect(() => {
+    (async () => {
+      const _userInfo = await getUserInfo(ethAddress);
+      setUserInfo(_userInfo);
+      createdNFTsRefetch();
+      myNFTsRefetch();
+    })();
+  }, [ethAddress]);
 
   return (
     <>
@@ -39,128 +50,55 @@ const ProfileContainer = () => {
       >
         <div className="container">
           <div className="row">
-            <CollectionItem />
+            <CollectionItem user={user} />
 
             <div className="col-12 col-md-9">
-              <div className="dream-projects-menu mb-50">
-                <div className="text-center portfolio-menu">
-                  <button
-                    className={
-                      isLightMode ? "btn active text-dark" : "btn active"
-                    }
-                    data-filter="*"
-                  >
-                    All
-                  </button>
-                  <button
-                    className={isLightMode ? "btn text-dark" : "btn"}
-                    data-filter=".branding"
-                  >
-                    Collectable
-                  </button>
-                  <button
-                    className={isLightMode ? "btn text-dark" : "btn"}
-                    data-filter=".design"
-                  >
-                    Created
-                  </button>
-                  <button
-                    className={isLightMode ? "btn text-dark" : "btn"}
-                    data-filter=".development"
-                  >
-                    On Auction
-                  </button>
+              <div className="row d-flex justify-content-center">
+                <div className="dream-projects-menu mb-50">
+                  <div className="text-center portfolio-menu">
+                    <button
+                      className={
+                        isLightMode ? "btn active text-dark" : "btn active"
+                      }
+                      data-filter="*"
+                      onClick={() => setTab("sale")}
+                    >
+                      On Sale
+                    </button>
+                    <button
+                      className={isLightMode ? "btn text-dark" : "btn"}
+                      data-filter=".branding"
+                      onClick={() => setTab("owned")}
+                    >
+                      Owned
+                    </button>
+                    <button
+                      className={isLightMode ? "btn text-dark" : "btn"}
+                      data-filter=".design"
+                      onClick={() => setTab("created")}
+                    >
+                      Created
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="row">
-                <div className="container">
-                  <div className="row dream-portfolio" data-aos="fade-up">
-                    {data?.map((item, i) => (
-                      <div
-                        className={`col-12 col-md-6 col-lg-4 single_gallery_item ${item.ClassChange}`}
-                        key={i}
-                      >
-                        <div
-                          className={
-                            isLightMode
-                              ? "l-bg bt-border pricing-item "
-                              : "pricing-item "
-                          }
-                        >
-                          <div className="wraper">
-                            <div className="relative">
-                              <NavLink to="/item-details">
-                                <img src={item.image} alt="" />
-                              </NavLink>
-                              <div
-                                className={
-                                  isLightMode
-                                    ? "owner-info bg-light"
-                                    : "owner-info"
-                                }
-                              >
-                                <img src={item.imgSm} width="40" alt="" />
-                                <a href="/profile">
-                                  <h3
-                                    className={isLightMode ? "text-dark" : ""}
-                                  >
-                                    {item.name}
-                                  </h3>
-                                </a>
-                              </div>
-                            </div>
-                            <NavLink to="/item-details">
-                              <h4 className={isLightMode ? "text-dark" : ""}>
-                                Scarecrow in daylight
-                              </h4>
-                            </NavLink>
-                            <span>
-                              <span
-                                className={
-                                  isLightMode ? "text-muted" : "g-text"
-                                }
-                              >
-                                Price
-                              </span>{" "}
-                              {item.price} ETH{" "}
-                              <span className="g-text ml-15">1 of 10</span>
-                            </span>
-                            <div
-                              className={
-                                isLightMode ? "text-dark pricing" : "pricing"
-                              }
-                            >
-                              Highest Bid :{" "}
-                              <span className="ml-15">{item.bid} ETH</span>{" "}
-                            </div>
-                            <div className="admire">
-                              <div
-                                className={
-                                  isLightMode ? "adm text-muted" : "adm"
-                                }
-                              >
-                                <i className="fa fa-clock-o"></i>6 Hours Ago
-                              </div>
-                              <div
-                                className={
-                                  isLightMode ? "adm text-muted" : "adm"
-                                }
-                              >
-                                <i className="fa fa-heart-o"></i>134 Like
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="col-12 col-lg-12 text-center">
-                  <a className="btn more-btn" href="/discover">
-                    {t("common.loadmore")}
-                  </a>
-                </div>
+                {(tab === "owned" ? myNFTsLoading : createdNFTsLoading) ?
+                  <div className="d-flex justify-content-center w-100">
+                    <LoadingIndicator />
+                  </div> :
+                  (tab === "owned" ? myNFTs : createdNFTs)?.map((item) => (
+                    <ListedItemsItem
+                      key={item.tokenId}
+                      tokenId={item.tokenId}
+                      imgBig={item.image}
+                      imgSm={item.image}
+                      title={item.name}
+                      price={item.price}
+                      bid={item.bid}
+                      seller={ethAddress}
+                    />
+                  ))}
               </div>
             </div>
           </div>

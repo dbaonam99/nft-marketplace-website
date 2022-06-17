@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
-import useThemeMode from "../../hooks/useThemeMode";
-import { getUserInfo } from "../../queries/User";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
+import useThemeMode from "../../../hooks/useThemeMode";
+import { getUserInfo } from "../../../queries/User";
 
 function ListedItemsItem({
   tokenId,
@@ -27,7 +27,7 @@ function ListedItemsItem({
   }, [seller]);
 
   return (
-    <div className="col-lg-3 col-sm-6 col-xs-12">
+    <div className="col-lg-4 col-sm-6 col-xs-12">
       <div className={clsx(isLightMode && "l-bg bt-border", "pricing-item ")}>
         <div className="wraper">
           <div className="relative">

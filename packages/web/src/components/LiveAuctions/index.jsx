@@ -25,7 +25,7 @@ function LiveAuctionsContainer() {
           titleSm={t("common.auctions")}
           titleLg={t("common.liveAuctions")}
         />
-        <div className="row align-items-center">
+        <div className="row">
           {auctionItems?.map((item, i) => (
             <LiveAuctionsItem
               key={i}

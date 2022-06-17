@@ -27,7 +27,7 @@ function ListedItemsContainer() {
           titleSm={t("common.discoverNewItems")}
           titleLg={t("common.newNFTList")}
         />
-        <div className="row align-items-center">
+        <div className="row">
           {NFTs?.map((item) => (
             <ListedItemsItem
               key={item.tokenId}

@@ -4,15 +4,16 @@ import CreateItemAuthors2 from "../../../assets/img/authors/2.png"
 import CreateItemArtworkfire from "../../../assets/img/art-work/fire.png"
 import CreateItemDataIcon from '../../../data/data-containers/data-CollectionItem-Profile.json'
 
-const CollectionItem = () => {
+const CollectionItem = ({ user }) => {
 
   return (
     <>
       <PartProfile
-        img1={CreateItemProfileheader}
-        img2={CreateItemAuthors2}
+        img1={user?.cover}
+        img2={user?.avatar}
         img3={CreateItemArtworkfire}
         data={CreateItemDataIcon}
+        user={user}
       />
     </>
   );
