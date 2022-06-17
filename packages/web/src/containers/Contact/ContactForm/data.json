@@ -1,5 +1,21 @@
 [
-	{"Class":"col-12 col-md-6" , "delay":"300" , "name":"name" , "title":"common.name"},
-	{"Class":"col-12 col-md-6" , "delay":"400" , "name":"email" , "title":"common.email"},
-	{"Class":"col-12" , "delay":"500" , "name":"subject" , "title":"common.subject"}
+	{
+		"Class": "col-12 col-md-6",
+		"delay": "300",
+		"name": "name",
+		"title": "common.name"
+	},
+	{
+		"Class": "col-12 col-md-6",
+		"delay": "400",
+		"name": "email",
+		"title": "common.email",
+		"type": "email"
+	},
+	{
+		"Class": "col-12",
+		"delay": "500",
+		"name": "subject",
+		"title": "common.subject"
+	}
 ]

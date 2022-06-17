@@ -2,17 +2,63 @@ import NameInput from "./NameInput";
 import data from "./data.json";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
+import emailjs from "emailjs-com";
+import { useEffect } from "react";
 
 const ContactForm = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const [values, setValues] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: ""
+  })
+  const [status, setStatus] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    emailjs.sendForm('service_dzl3hqr', 'template_rz9wws6', e.target, 'f58m7Pqet81B4wQiv')
+      .then((result) => {
+        setStatus(result.text);
+        setValues({
+          name: "",
+          email: "",
+          subject: "",
+          message: ""
+        })
+      }, (error) => {
+        setStatus(error.text);
+      });
+
+  }
+
+  const onChange = (name, value) => {
+    setValues(prevValue => ({
+      ...prevValue,
+      [name]: value
+    }))
+  }
 
   return (
     <>
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8">
+          {
+            status &&
+            (
+              status === "OK" ?
+                <div class="alert alert-success" role="alert">
+                  Message sent successfully!!!
+                </div> :
+                <div class="alert alert-danger" role="alert">
+                  Message sent failed!!!
+                </div>
+            )
+          }
           <div className="contact_form">
-            <form action="#" method="post" id="main_contact_form" noValidate>
+            <form id="main_contact_form" onSubmit={handleSubmit}>
               <div className="row">
                 <div className="col-12">
                   <div id="success_fail_info"></div>
@@ -22,9 +68,12 @@ const ContactForm = () => {
                     <NameInput
                       Class={item.Class}
                       name={item.name}
-                      title={item.title}
+                      title={t(item.title)}
                       delay={item.delay}
                       key={i}
+                      onChange={onChange}
+                      value={values[item.name]}
+                      type={item.type}
                     />
                   ))}
 
@@ -41,6 +90,8 @@ const ContactForm = () => {
                       name="message"
                       id="message"
                       required
+                      value={values["message"]}
+                      onChange={(e) => onChange("message", e.target.value)}
                     ></textarea>
                     <span className="highlight"></span>
                     <span className={isLightMode ? "bar-light" : "bar"}></span>
