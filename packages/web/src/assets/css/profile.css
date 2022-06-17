@@ -54,6 +54,7 @@
   margin-top: 50px;
   line-height: 1.43;
   color: #fff;
+  word-break: break-all;
 }
 .owner-info {
   display: flex;
@@ -255,6 +256,18 @@
 
 .profile-banner-img:hover .edit-banner-btn {
   transform: scale(1);
+}
+
+.profile-banner-img-loading {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, .4);
+  pointer-event: none;
 }
 
 .edit-profile-btn {

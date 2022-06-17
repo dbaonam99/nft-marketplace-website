@@ -34,7 +34,7 @@ const ProfileContainer = () => {
   const { t } = useTranslation();
 
   const { isInitialized, isAuthenticated, user, setUserData, refetchUserData } = useMoralis();
-  const { saveFile } = useMoralisFile();
+  const { saveFile, isUploading } = useMoralisFile();
 
   const [copy, setCopy] = useState(false);
   const [tab, setTab] = useState("sale");
@@ -59,12 +59,16 @@ const ProfileContainer = () => {
   }, [copy])
 
   const handleChangeFile = async (e) => {
-    if (e.target.files[0]) {
-      const cover = await saveFile("cover", e.target.files[0]);
-      setUserData({
-        cover: cover._url,
-      })
-      refetchUserData()
+    try {
+      if (e.target.files[0]) {
+        const cover = await saveFile("cover", e.target.files[0]);
+        setUserData({
+          cover: cover._url,
+        })
+        refetchUserData()
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
 
@@ -90,6 +94,7 @@ const ProfileContainer = () => {
                   src={user?.get("cover") || "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"}
                   alt=""
                 />
+                {isUploading && <div className="profile-banner-img-loading"><LoadingIndicator /></div>}
                 <div className="edit-banner-btn" onClick={openFileUpload}>Edit Cover</div>
                 <input
                   ref={inputFile}
@@ -167,6 +172,7 @@ const ProfileContainer = () => {
                   title={item.name}
                   price={item.price}
                   bid={item.bid}
+                  seller={user.get("ethAddress")}
                 />
               ))}
           </div>

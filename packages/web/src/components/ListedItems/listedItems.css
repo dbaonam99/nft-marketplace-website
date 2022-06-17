@@ -52,6 +52,8 @@
   border: 1px solid #969494;
   position: absolute;
   width: max-content;
+  word-break: break-all;
+  max-width: 80%;
   padding: 7px 10px;
   border-radius: 30px;
 
