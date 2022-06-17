@@ -4,6 +4,17 @@ const fs = require("fs");
 const ADMIN_ADDRESS = "0x9e7AFA4D5599c09887D05181C87bCf762D034a23";
 
 module.exports = async () => {
+  /* ----------------- History Contract ----------------- */
+
+  const History = await hre.ethers.getContractFactory("History");
+  const history = await History.deploy();
+  await history.deployed();
+  console.log("History deployed to:", history.address);
+  fs.writeFileSync(
+    "../web/src/contracts/Token.address.js",
+    `export const TOKEN_ADDRESS = "${history.address}";`
+  );
+
   /* ----------------- Token Contract ----------------- */
 
   const Token = await hre.ethers.getContractFactory("Token");
@@ -18,7 +29,7 @@ module.exports = async () => {
   /* ----------------- NFT Contract ----------------- */
 
   const NFT = await hre.ethers.getContractFactory("NFT");
-  const nft = await NFT.deploy();
+  const nft = await NFT.deploy(history.address);
   await nft.deployed();
   console.log("NFT deployed to:", nft.address);
   fs.writeFileSync(
