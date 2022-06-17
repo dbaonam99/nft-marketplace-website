@@ -1,28 +1,35 @@
-import Activity from './Activity'
+import Activity from "./Activity";
 
-import Auctions from "./Auctions"
+import Auctions from "./Auctions";
 
-import Authors from "./Authors"
+import Authors from "./Authors";
 
-import ConnectWallet from "./ConnectWallet"
+import ConnectWallet from "./ConnectWallet";
 
-import Contact from "./Contact"
+import Contact from "./Contact";
 
-import CreateItem from "./CreateItem"
+import CreateItem from "./CreateItem";
 
-import Discover from "./Discover"
+import Discover from "./Discover";
 
-import Home from "./Home"
+import Home from "./Home";
 
-import ItemDetails from "./ItemDetails"
+import ItemDetails from "./ItemDetails";
 
-import Profile from "./Profile"
+import Profile from "./Profile";
 
-import Login from "./Login"
+import Setting from "./Setting";
 
-import SignUp from "./SignUp"
-
-import Setting from "./Setting"
-
-
-export { Activity, Auctions, Authors, ConnectWallet, Contact, CreateItem, Discover, Home, ItemDetails, Profile, Login, SignUp, Setting }
+export {
+  Activity,
+  Auctions,
+  Authors,
+  ConnectWallet,
+  Contact,
+  CreateItem,
+  Discover,
+  Home,
+  ItemDetails,
+  Profile,
+  Setting,
+};

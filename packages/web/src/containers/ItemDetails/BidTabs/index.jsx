@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
-import useThemeMode from "../../hooks/useThemeMode";
-import { data } from "../../data/data-containers/data-HighestBid.js";
-import authors1 from "../../assets/img/authors/1.png";
+import useThemeMode from "../../../hooks/useThemeMode";
+import authors1 from "../../../assets/img/authors/1.png";
 import { useState } from "react";
-import { useGetBidHistoryQuery } from "../../queries/Auction";
+import { useGetBidHistoryQuery } from "../../../queries/Auction";
+import HistoryItem from "./HistoryItem";
 
 const BidTabs = ({ isAuction, auctionId }) => {
   const isLightMode = useThemeMode();
@@ -13,8 +13,6 @@ const BidTabs = ({ isAuction, auctionId }) => {
   });
 
   const [currentTab, setTab] = useState(0);
-
-  console.log(bidHistory);
 
   return (
     <>
@@ -59,38 +57,7 @@ const BidTabs = ({ isAuction, auctionId }) => {
           }
         >
           {bidHistory?.map((item, i) => (
-            <div key={i} className={`author-item ${item.addMargin && "mb-0"}`}>
-              <div className="author-img ml-0">
-                <img src={item.img} width="40" alt="" />
-              </div>
-              <div className="author-info">
-                <p className={isLightMode ? "text-muted" : ""}>
-                  {t("common.by")}
-                  <span
-                    className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
-                  >
-                    {" "}
-                    {item.bidder}
-                  </span>
-                </p>
-                <p className={isLightMode ? "text-muted" : ""}>
-                  {t("common.bidAt")}
-                  <span
-                    className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
-                  >
-                    {" "}
-                    {item.price} UIT
-                  </span>
-                </p>
-              </div>
-              <div className="bid-price">
-                <p className={isLightMode ? "text-muted" : ""}>$346.38</p>
-                <p className={isLightMode ? "text-muted" : ""}>
-                  <i className="fa fa-clock-o mr-5p"></i>
-                  {item.bidDate.toString()} AM
-                </p>
-              </div>
-            </div>
+            <HistoryItem item={item} key={i} />
           ))}
         </div>
       )}
@@ -124,7 +91,8 @@ const BidTabs = ({ isAuction, auctionId }) => {
                     0.212 ETH
                   </span>
                   <span>
-                    <i className="fa fa-clock-o mr-5p"></i>01:36 AM
+                    <i className="fa fa-clock-o mr-5p" />
+                    01:36 AM
                   </span>
                 </p>
               </div>

@@ -14,6 +14,7 @@ const BiddingBox = ({
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const [userInfo, setUserInfo] = useState({});
+  const [ended, setEnded] = useState(false);
 
   useEffect(() => {
     (async () => {
@@ -38,33 +39,17 @@ const BiddingBox = ({
               isLightMode ? "biding-end-title-light" : "biding-end-title"
             }
           >
-            {t("common.highestBid")}:
-          </p>
-          <div className="count-down titled circled text-center flex-1">
-            <div className="auction-countdown">
-              <div className="auction-countdown-item">
-                <p className={isLightMode ? "text-dark" : ""}>
-                  {highestBidAmount} UIT
-                </p>
-                <p>{userInfo?.username}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="sides">
-          <p
-            className={
-              isLightMode ? "biding-end-title-light" : "biding-end-title"
-            }
-          >
-            {t("common.biddingEndIn")}
+            {!ended && t("common.biddingEndIn")}
           </p>
           <div className="count-down titled circled text-center flex-1">
             <Countdown
               date={new Date(Number(duration) + Number(startTime))}
               renderer={(props) => {
                 if (props.completed) {
-                  return <span>Auction ended!</span>;
+                  setEnded(true);
+                  return (
+                    <b style={{ color: "red" }}>{t("common.biddingEnded")}</b>
+                  );
                 } else {
                   return (
                     <div className="auction-countdown">
@@ -99,10 +84,31 @@ const BiddingBox = ({
             />
           </div>
         </div>
+        <div className="sides">
+          <p
+            className={
+              isLightMode ? "biding-end-title-light" : "biding-end-title"
+            }
+          >
+            {t("common.highestBid")}:
+          </p>
+          <div className="count-down titled circled text-center flex-1">
+            <div className="auction-countdown">
+              <div className="auction-countdown-item">
+                <p className={isLightMode ? "text-dark" : ""}>
+                  {highestBidAmount} UIT
+                </p>
+                <p>{userInfo?.username}</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="open-popup-link more-btn width-100" onClick={onBid}>
-        Place a bid
-      </div>
+      {!ended && (
+        <div className="open-popup-link more-btn width-100" onClick={onBid}>
+          Place a bid
+        </div>
+      )}
     </div>
   );
 };

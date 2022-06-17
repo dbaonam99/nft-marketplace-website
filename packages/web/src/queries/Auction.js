@@ -171,6 +171,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       image: meta.data.image,
       name: meta.data.name,
       description: meta.data.description,
+      createdDate: data.createdDate.toString(),
     };
     return item;
   });
@@ -233,7 +234,6 @@ export const useGetBidHistoryQuery = ({ auctionId }) => {
           price,
           auctionId: i.auctionId.toNumber(),
           bidder: i.bidder,
-          owner: i.owner,
           bidDate: i.bidDate,
         };
         return item;

@@ -224,7 +224,7 @@ textarea:required {
   width: 100%;
   padding: 15px;
   backdrop-filter: blur(20px);
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(25, 25, 25, 0.1);
 }
 
 .item-detail-cta {
@@ -234,7 +234,7 @@ textarea:required {
   width: 100%;
   padding: 15px;
   backdrop-filter: blur(20px);
-  background: rgba(25, 28, 31, 0.1);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .bid-tab-items-light {

@@ -2,6 +2,7 @@ import { NavLink, useParams } from "react-router-dom";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { getUserInfo } from "../../../queries/User";
+import moment from "moment";
 
 import BidTabs from "../BidTabs";
 import {
@@ -11,17 +12,6 @@ import {
 import BiddingBox from "./BiddingBox";
 import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
-
-const DETAILED = [
-  {
-    text1: "common.size",
-    text2: "3000 x 300",
-  },
-  {
-    text1: "common.createdAt",
-    text2: "04 April , 2021",
-  },
-];
 
 const AuctionSidebar = ({
   name,
@@ -33,6 +23,7 @@ const AuctionSidebar = ({
   startingPrice,
   duration,
   startTime,
+  createdDate,
 }) => {
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
@@ -109,14 +100,12 @@ const AuctionSidebar = ({
             </div>
 
             <div className="details-list">
-              {DETAILED?.map((item, i) => (
-                <p className={isLightMode ? "text-muted" : ""} key={i}>
-                  {t(item.text1)}:{" "}
-                  <span className={isLightMode ? "text-dark" : ""}>
-                    {item.text2}
-                  </span>
-                </p>
-              ))}
+              <p className={isLightMode ? "text-muted" : ""}>
+                {t("common.createdAt")}:{" "}
+                <span className={isLightMode ? "text-dark" : ""}>
+                  {moment(new Date(createdDate * 1000)).format("DD-MM-YYYY")}
+                </span>
+              </p>
             </div>
             <div className="author-item mb-30">
               <div className="author-img ml-0">
