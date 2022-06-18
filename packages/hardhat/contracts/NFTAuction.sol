@@ -21,11 +21,13 @@ contract NFTAuction is ReentrancyGuard {
 
     IERC20 uit;
     address contractOwner;
+    address historyAddress;
     uint256 listingPrice = 100;
     
-    constructor(address _uit, address _contractOwner) {
+    constructor(address _uit, address _contractOwner, address _historyAddress) {
         uit = IERC20(_uit);
         contractOwner = _contractOwner;
+        historyAddress = _historyAddress;
     }
 
     enum Status {

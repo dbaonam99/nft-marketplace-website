@@ -25,7 +25,7 @@ describe("NFT Market", function () {
     await token.deployed();
 
     const Market = await ethers.getContractFactory("NFTMarket");
-    market = await Market.deploy(token.address, owner.address);
+    market = await Market.deploy(token.address, owner.address, history.address);
     await market.deployed();
 
     const NFT = await ethers.getContractFactory("NFT");
@@ -47,91 +47,92 @@ describe("NFT Market", function () {
     await nft.connect(addr2).createToken("https://www.mytokenlocation.com6");
   });
 
-  it("Should get history token", async function () {
-    console.log(await history.getUserHistory(addr1.address));
+  it("Should transfer Tokens to Bidders", async function () {
+    await token.approve(owner.address, 1000000);
+
+    await token.transferFrom(owner.address, addr1.address, 10000);
+    await token.transferFrom(owner.address, addr2.address, 10000);
+    await token.transferFrom(owner.address, addr3.address, 10000);
+
+    expect(await getBalance(addr1.address)).to.equal("10000");
+    expect(await getBalance(addr2.address)).to.equal("10000");
+    expect(await getBalance(addr3.address)).to.equal("10000");
   });
 
-  // it("Should transfer Tokens to Bidders", async function () {
-  //   await token.approve(owner.address, 1000000);
+  it("Should put a Token for sale", async function () {
+    let listingPrice = await market.getListingPrice();
+    listingPrice = listingPrice.toString();
 
-  //   await token.transferFrom(owner.address, addr1.address, 10000);
-  //   await token.transferFrom(owner.address, addr2.address, 10000);
-  //   await token.transferFrom(owner.address, addr3.address, 10000);
+    await nft.connect(addr1).setApprovalForAll(market.address, true);
+    await market.connect(addr1).createMarketItem(nft.address, 1, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr1).createMarketItem(nft.address, 2, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr1).createMarketItem(nft.address, 3, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr1).createMarketItem(nft.address, 4, 1000, {
+      value: listingPrice,
+    });
 
-  //   expect(await getBalance(addr1.address)).to.equal("10000");
-  //   expect(await getBalance(addr2.address)).to.equal("10000");
-  //   expect(await getBalance(addr3.address)).to.equal("10000");
-  // });
+    await nft.connect(addr2).setApprovalForAll(market.address, true);
+    await market.connect(addr2).createMarketItem(nft.address, 5, 1000, {
+      value: listingPrice,
+    });
+    await market.connect(addr2).createMarketItem(nft.address, 6, 1000, {
+      value: listingPrice,
+    });
+  });
 
-  // it("Should put a Token for sale", async function () {
-  //   let listingPrice = await market.getListingPrice();
-  //   listingPrice = listingPrice.toString();
+  it("Should buy a Token", async function () {
+    expect(await getBalance(addr1.address)).to.equal("10000");
+    expect(await getBalance(addr2.address)).to.equal("10000");
 
-  //   await nft.connect(addr1).setApprovalForAll(market.address, true);
-  //   await market.connect(addr1).createMarketItem(nft.address, 1, 1000, {
-  //     value: listingPrice,
-  //   });
-  //   await market.connect(addr1).createMarketItem(nft.address, 2, 1000, {
-  //     value: listingPrice,
-  //   });
-  //   await market.connect(addr1).createMarketItem(nft.address, 3, 1000, {
-  //     value: listingPrice,
-  //   });
-  //   await market.connect(addr1).createMarketItem(nft.address, 4, 1000, {
-  //     value: listingPrice,
-  //   });
+    await token.connect(addr2).approve(market.address, 1000);
+    await market.connect(addr2).buyMarketItem(nft.address, 1, {
+      value: 1000,
+    });
 
-  //   await nft.connect(addr2).setApprovalForAll(market.address, true);
-  //   await market.connect(addr2).createMarketItem(nft.address, 5, 1000, {
-  //     value: listingPrice,
-  //   });
-  //   await market.connect(addr2).createMarketItem(nft.address, 6, 1000, {
-  //     value: listingPrice,
-  //   });
-  // });
+    await token.connect(addr3).approve(market.address, 1000);
+    await market.connect(addr3).buyMarketItem(nft.address, 2, {
+      value: 1000,
+    });
 
-  // it("Should buy a Token", async function () {
-  //   expect(await getBalance(addr1.address)).to.equal("10000");
-  //   expect(await getBalance(addr2.address)).to.equal("10000");
+    expect(await getBalance(addr1.address)).to.equal("12000");
+    expect(await getBalance(addr2.address)).to.equal("8900"); // 100 is listing price
+    expect(await getBalance(addr3.address)).to.equal("8900"); // 100 is listing price
+  });
 
-  //   await token.connect(addr2).approve(market.address, 1000);
-  //   await market.connect(addr2).buyMarketItem(nft.address, 1, {
-  //     value: 1000,
-  //   });
+  it("Should addr2 own a Token", async function () {
+    const items = await market.fetchMyNFTs(addr2.address);
+    items.map(async (i) => {
+      const item = {
+        seller: i.seller,
+        owner: i.owner,
+        tokenId: i.tokenId.toString(),
+      };
+      return item;
+    });
+    return items;
+  });
 
-  //   await token.connect(addr3).approve(market.address, 1000);
-  //   await market.connect(addr3).buyMarketItem(nft.address, 2, {
-  //     value: 1000,
-  //   });
+  it("Should get Token detail", async function () {
+    await market.getTokenDetail(1);
+  });
 
-  //   expect(await getBalance(addr1.address)).to.equal("12000");
-  //   expect(await getBalance(addr2.address)).to.equal("8900"); // 100 is listing price
-  //   expect(await getBalance(addr3.address)).to.equal("8900"); // 100 is listing price
-  // });
+  it("Should get top seller", async function () {
+    await market.getTopSeller();
+  });
 
-  // it("Should addr2 own a Token", async function () {
-  //   const items = await market.connect(addr2.address).fetchMyNFTs();
-  //   return items.map(async (i) => {
-  //     const item = {
-  //       seller: i.seller,
-  //       owner: i.owner,
-  //       tokenId: i.tokenId.toString(),
-  //     };
-  //     return item;
-  //   });
-  // });
+  it("Should get top buyer", async function () {
+    await market.getTopBuyer();
+  });
 
-  // it("Should get Token detail", async function () {
-  //   await market.getTokenDetail(1);
-  // });
-
-  // it("Should get top seller", async function () {
-  //   await market.getTopSeller();
-  // });
-
-  // it("Should get top buyer", async function () {
-  //   await market.getTopBuyer();
-  // });
+  it("Should get history token", async function () {
+    await history.getUserHistory(addr1.address);
+  });
 });
 
 // describe("NFT Auction", function () {
