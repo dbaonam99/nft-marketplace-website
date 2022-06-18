@@ -7,7 +7,7 @@ import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
 
-const MarketSideBar = ({ name, price, owner, seller, description }) => {
+const MarketSideBar = ({ name, price, owner, seller, description, sold }) => {
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -17,12 +17,13 @@ const MarketSideBar = ({ name, price, owner, seller, description }) => {
 
   useEffect(() => {
     (async () => {
-      const _userInfo = await getUserInfo(seller);
+      const _userInfo = await getUserInfo(sold ? owner : seller);
       setUserInfo(_userInfo);
     })();
-  }, [seller]);
+  }, [seller, owner, sold]);
 
   const buyNft = () => {
+    if (sold) return;
     buyNFTMutation.mutate({
       tokenId,
       price: price,
@@ -101,7 +102,7 @@ const MarketSideBar = ({ name, price, owner, seller, description }) => {
           className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
         >
           <div className="open-popup-link more-btn width-100" onClick={buyNft}>
-            {t("common.purchaseNow")}
+            {sold ? "SOLD" : t("common.purchaseNow")}
           </div>
         </div>
       </div>

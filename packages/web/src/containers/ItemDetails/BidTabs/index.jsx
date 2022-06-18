@@ -14,6 +14,8 @@ const BidTabs = ({ isAuction, auctionId }) => {
 
   const [currentTab, setTab] = useState(0);
 
+  console.log(bidHistory);
+
   return (
     <>
       <div className={isLightMode ? "bid-tab-items-light" : "bid-tab-items"}>

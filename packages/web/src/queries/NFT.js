@@ -109,13 +109,14 @@ export const useBuyNFTMutation = () => {
       console.log(_price);
 
       await tokenContract.approve(MARKET_ADDRESS, _price);
-      // const transaction = await marketContract.buyMarketItem(
-      //   NFT_ADDRESS,
-      //   tokenId,
-      //   {
-      //     value: _price,
-      //   }
-      // );
+      const transaction = await marketContract.buyMarketItem(
+        NFT_ADDRESS,
+        tokenId,
+        {
+          value: _price,
+        }
+      );
+      console.log("transaction", transaction);
       // return await transaction.wait();
     },
     {
@@ -214,6 +215,7 @@ export const useGetNFTDetailQuery = (tokenId) => {
       image: meta.data.image,
       name: meta.data.name,
       description: meta.data.description,
+      sold: data.sold,
     };
     return item;
   });

@@ -11,7 +11,8 @@ contract NFTMarket is ReentrancyGuard {
   using Counters for Counters.Counter;
   Counters.Counter private _itemIds;
   Counters.Counter private _itemsSold;
-
+  Counters.Counter private _marketHistoryCount;
+ 
   IERC20 uit;
   address contractOwner;
   address historyAddress;
@@ -39,10 +40,20 @@ contract NFTMarket is ReentrancyGuard {
     uint count;
   }
 
+  struct MarketHistory {
+    uint256 tokenId;
+    address user;
+    uint256 createdDate;
+    uint256 price;
+    string message;
+  }
+
   mapping (uint256 => MarketItem) public idToNFT;
   mapping (uint256 => MarketItem) public idToMarketItem;
   mapping (uint256 => UserCount) public sellCount;
   mapping (uint256 => UserCount) public boughtCount;
+  mapping (uint256 => mapping(uint => MarketHistory)) public marketHistory;
+  mapping (uint256 => uint256) public historyCount;
 
   event MarketItemCreated (
     uint indexed itemId,
@@ -68,11 +79,12 @@ contract NFTMarket is ReentrancyGuard {
     return listingPrice;
   }
 
+  event MarketHistoryCreated(uint test);
   function createMarketItem(
     address nftContract,
     uint256 tokenId,
     uint256 price
-  ) public payable nonReentrant {
+  ) public payable nonReentrant returns (uint256) {
     require(price > 0, "Price must be at least 1 wei");
     require(msg.value == listingPrice, "Price must be equal to listing price");
 
@@ -90,9 +102,21 @@ contract NFTMarket is ReentrancyGuard {
       block.timestamp
     );
 
+    emit MarketHistoryCreated(itemId);
+
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
     createHistory(msg.sender, block.timestamp, "Put token for sale!", "User put token for sale!");
+
+    _marketHistoryCount.increment();
+    historyCount[tokenId]++;
+    marketHistory[tokenId][historyCount[tokenId]] = MarketHistory(
+      tokenId,
+      msg.sender,
+      block.timestamp,
+      price,
+      "sell"
+    );
     
     emit MarketItemCreated(
       itemId,
@@ -104,6 +128,8 @@ contract NFTMarket is ReentrancyGuard {
       false,
       block.timestamp
     );
+
+    return itemId;
   }
 
   function buyMarketItem(
@@ -113,6 +139,8 @@ contract NFTMarket is ReentrancyGuard {
     uint price = idToMarketItem[itemId].price;
     uint tokenId = idToMarketItem[itemId].tokenId;
     require(msg.value == price, "Please submit the asking price in order to complete the purchase");
+
+    emit MarketHistoryCreated(itemId);
 
     uit.transferFrom(
       msg.sender,
@@ -136,6 +164,16 @@ contract NFTMarket is ReentrancyGuard {
     boughtCount[itemId] = UserCount(
       msg.sender,
       price
+    );
+
+    _marketHistoryCount.increment();
+    historyCount[tokenId]++;
+    marketHistory[tokenId][historyCount[tokenId]] = MarketHistory(
+      tokenId,
+      msg.sender,
+      block.timestamp,
+      price,
+      "buy"
     );
     
     uit.transferFrom(
@@ -235,6 +273,21 @@ contract NFTMarket is ReentrancyGuard {
         currentIndex += 1;
       }
     }
+    return items;
+  }
+
+  function getMarketHistory(uint256 tokenId) public view returns (MarketHistory[] memory) {
+    uint _historyCount = _marketHistoryCount.current();
+    uint _historyOfTokenCount = historyCount[tokenId];
+
+    MarketHistory[] memory items = new MarketHistory[](_historyOfTokenCount);
+    for (uint i = 0; i < _historyCount; i++) {
+      if (marketHistory[tokenId][i + 1].tokenId == tokenId) {
+        MarketHistory storage currentItem = marketHistory[tokenId][i + 1];
+        items[i] = currentItem;
+      }
+    }
+    
     return items;
   }
 }

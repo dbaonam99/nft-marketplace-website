@@ -105,6 +105,33 @@ describe("NFT Market", function () {
     expect(await getBalance(addr3.address)).to.equal("8900"); // 100 is listing price
   });
 
+  it("Should put a Token for sale", async function () {
+    let listingPrice = await market.getListingPrice();
+    listingPrice = listingPrice.toString();
+
+    await nft.connect(addr2).setApprovalForAll(market.address, true);
+    await market.connect(addr2).createMarketItem(nft.address, 1, 2000, {
+      value: listingPrice,
+    }); // return 7
+  });
+
+  it("Should buy a Token", async function () {
+    await token.connect(addr3).approve(market.address, 2000);
+    await market.connect(addr3).buyMarketItem(nft.address, 7, {
+      value: 2000,
+    });
+  });
+
+  it("Should put a Token for sale", async function () {
+    let listingPrice = await market.getListingPrice();
+    listingPrice = listingPrice.toString();
+
+    await nft.connect(addr3).setApprovalForAll(market.address, true);
+    await market.connect(addr3).createMarketItem(nft.address, 1, 3000, {
+      value: listingPrice,
+    });
+  });
+
   it("Should addr2 own a Token", async function () {
     const items = await market.fetchMyNFTs(addr2.address);
     items.map(async (i) => {
@@ -132,6 +159,31 @@ describe("NFT Market", function () {
 
   it("Should get history token", async function () {
     await history.getUserHistory(addr1.address);
+  });
+
+  it("Should get history market", async function () {
+    const items = await market.getMarketHistory(1);
+    console.log(
+      items.map(async (i) => {
+        const item = {
+          tokenId: i.tokenId.toString(),
+          price: i.price.toString(),
+          message: i.message.toString(),
+        };
+        return item;
+      })
+    );
+    const items2 = await market.getMarketHistory(2);
+    console.log(
+      items2.map(async (i) => {
+        const item = {
+          tokenId: i.tokenId.toString(),
+          price: i.price.toString(),
+          message: i.message.toString(),
+        };
+        return item;
+      })
+    );
   });
 });
 
