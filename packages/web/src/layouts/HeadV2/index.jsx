@@ -49,14 +49,14 @@ function Head({ Title }) {
 
   useEffect(() => {
     (async () => {
-      const _userInfo = await getUserInfo(user.get("ethAddress"));
+      const _userInfo = await getUserInfo(user?.get("ethAddress"));
       setUserInfo(_userInfo);
     })();
   }, [user]);
 
   const toggleMenu = () => setActive(!active);
 
-  console.log("userInfo", userInfo);
+  console.log("isAuthenticated", isAuthenticated);
 
   return (
     <>
@@ -260,7 +260,7 @@ function Head({ Title }) {
           <div className="menu-actions">
             {isAuthenticated ? (
               <NavLink to={isAuthenticated ? "/my-profile" : "/connectwallet"}>
-                <img src={userInfo.avatar} alt="" width="40px" height="40px" />
+                <img src={userInfo?.avatar} alt="" width="40px" height="40px" />
               </NavLink>
             ) : (
               <NavLink
