@@ -216,6 +216,7 @@ export const useGetNFTDetailQuery = (tokenId) => {
       name: meta.data.name,
       description: meta.data.description,
       sold: data.sold,
+      itemId: data.itemId.toNumber(),
     };
     return item;
   });
@@ -354,4 +355,42 @@ export const useTopBuyerQuery = () => {
 
     return items;
   });
+};
+
+export const useGetMarketHistoryQuery = ({ itemId }) => {
+  return useQuery(
+    "marketHistory",
+    async () => {
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
+
+      const marketContract = new ethers.Contract(
+        MARKET_ADDRESS,
+        NFTMarket_ABI,
+        provider
+      );
+
+      const data = await marketContract.getMarketHistory(itemId);
+
+      console.log(data);
+      const items = await Promise.all(
+        data.map(async (i) => {
+          let price = Number(i.price.toString()) * 10 ** 10;
+          let item = {
+            price,
+            tokenId: i.tokenId.toNumber(),
+            user: i.user,
+            message: i.message,
+            // createdDate: i.createdDate,
+          };
+          return item;
+        })
+      );
+      return items;
+    },
+    {
+      refetchInterval: 2000,
+    }
+  );
 };

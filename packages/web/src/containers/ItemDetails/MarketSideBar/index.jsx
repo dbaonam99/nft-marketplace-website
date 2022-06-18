@@ -7,7 +7,15 @@ import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
 
-const MarketSideBar = ({ name, price, owner, seller, description, sold }) => {
+const MarketSideBar = ({
+  name,
+  price,
+  owner,
+  seller,
+  description,
+  sold,
+  itemId,
+}) => {
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -95,7 +103,7 @@ const MarketSideBar = ({ name, price, owner, seller, description, sold }) => {
               </div>
             </div>
 
-            <BidTabs />
+            <BidTabs itemId={itemId} />
           </div>
         </div>
         <div
