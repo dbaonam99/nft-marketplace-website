@@ -1,10 +1,7 @@
-
-import { useTranslation } from "react-i18next";
 import useThemeMode from "../../hooks/useThemeMode";
 
 function PartProfile({ img1, img2, img3, data, user }) {
   const isLightMode = useThemeMode();
-  const { t } = useTranslation();
 
   return (
     <div className="col-12 col-lg-3">

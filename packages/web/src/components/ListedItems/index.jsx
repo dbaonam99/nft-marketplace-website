@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import React from "react";
 import clsx from "clsx";
 import { NavLink } from "react-router-dom";
 import InfoComponent from "../InfoComponent";
@@ -7,12 +7,12 @@ import ListedItemsItem from "../ListedItemsItem";
 import "./listedItems.css";
 
 import useThemeMode from "../../hooks/useThemeMode";
-import { useGetNFTsQuery } from "../../queries/NFT";
+import { useGetMarketItemsQuery } from "../../queries/NFT";
 import { useTranslation } from "react-i18next";
 
 function ListedItemsContainer() {
   const isLightMode = useThemeMode();
-  const { data: NFTs } = useGetNFTsQuery();
+  const { data: NFTs } = useGetMarketItemsQuery();
   const { t } = useTranslation();
 
   return (

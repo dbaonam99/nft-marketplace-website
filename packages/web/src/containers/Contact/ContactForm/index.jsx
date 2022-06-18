@@ -4,7 +4,6 @@ import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import emailjs from "emailjs-com";
-import { useEffect } from "react";
 
 const ContactForm = () => {
   const isLightMode = useThemeMode();
@@ -13,50 +12,56 @@ const ContactForm = () => {
     name: "",
     email: "",
     subject: "",
-    message: ""
-  })
+    message: "",
+  });
   const [status, setStatus] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    emailjs.sendForm('service_dzl3hqr', 'template_rz9wws6', e.target, 'f58m7Pqet81B4wQiv')
-      .then((result) => {
-        setStatus(result.text);
-        setValues({
-          name: "",
-          email: "",
-          subject: "",
-          message: ""
-        })
-      }, (error) => {
-        setStatus(error.text);
-      });
-
-  }
+    emailjs
+      .sendForm(
+        "service_dzl3hqr",
+        "template_rz9wws6",
+        e.target,
+        "f58m7Pqet81B4wQiv"
+      )
+      .then(
+        (result) => {
+          setStatus(result.text);
+          setValues({
+            name: "",
+            email: "",
+            subject: "",
+            message: "",
+          });
+        },
+        (error) => {
+          setStatus(error.text);
+        }
+      );
+  };
 
   const onChange = (name, value) => {
-    setValues(prevValue => ({
+    setValues((prevValue) => ({
       ...prevValue,
-      [name]: value
-    }))
-  }
+      [name]: value,
+    }));
+  };
 
   return (
     <>
       <div className="row justify-content-center">
         <div className="col-12 col-md-10 col-lg-8">
-          {
-            status &&
-            (
-              status === "OK" ?
-                <div class="alert alert-success" role="alert">
-                  Message sent successfully!!!
-                </div> :
-                <div class="alert alert-danger" role="alert">
-                  Message sent failed!!!
-                </div>
-            )
-          }
+          {status &&
+            (status === "OK" ? (
+              <div class="alert alert-success" role="alert">
+                Message sent successfully!!!
+              </div>
+            ) : (
+              <div class="alert alert-danger" role="alert">
+                Message sent failed!!!
+              </div>
+            ))}
           <div className="contact_form">
             <form id="main_contact_form" onSubmit={handleSubmit}>
               <div className="row">

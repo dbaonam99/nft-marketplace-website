@@ -1,8 +1,6 @@
 import { useState } from "react";
-import { ethers } from "ethers";
 import { create as ipfsHttpClient } from "ipfs-http-client";
 import Breadcrumb from "../../components/Breadcrumb";
-import CollectionItem from "./CollectionItem";
 import CreatorSec from "./CreatorSec";
 import {
   useCreateNFTMarketItemMutation,

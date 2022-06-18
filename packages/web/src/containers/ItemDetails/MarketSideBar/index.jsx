@@ -25,7 +25,7 @@ const MarketSideBar = ({ name, price, owner, seller, description }) => {
   const buyNft = () => {
     buyNFTMutation.mutate({
       tokenId,
-      price,
+      price: price,
     });
   };
 

@@ -56,8 +56,6 @@ function Head({ Title }) {
 
   const toggleMenu = () => setActive(!active);
 
-  console.log("isAuthenticated", isAuthenticated);
-
   return (
     <>
       <Preloader Title={Title} />

@@ -1,5 +1,4 @@
 import Web3Modal from "web3modal";
-import { useMoralis } from "react-moralis";
 import axios from "axios";
 import { ethers } from "ethers";
 import { useMutation, useQuery } from "react-query";
@@ -59,10 +58,12 @@ export const useCreateNFTMarketItemMutation = () => {
       const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
       await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
 
+      const _price = price * 10 ** 10;
+
       const transaction = await marketContract.createMarketItem(
         NFT_ADDRESS,
         tokenId,
-        price.toString(),
+        _price,
         {
           value: listingPrice,
         }
@@ -85,7 +86,6 @@ export const useCreateNFTMarketItemMutation = () => {
 };
 
 export const useBuyNFTMutation = () => {
-  const { user } = useMoralis();
   return useMutation(
     async ({ tokenId, price }) => {
       const web3Modal = new Web3Modal();
@@ -105,15 +105,18 @@ export const useBuyNFTMutation = () => {
         signer
       );
 
-      await tokenContract.approve(MARKET_ADDRESS, price);
-      const transaction = await marketContract.buyMarketItem(
-        NFT_ADDRESS,
-        tokenId,
-        {
-          value: price,
-        }
-      );
-      return await transaction.wait();
+      const _price = price * 10 ** 10;
+      console.log(_price);
+
+      await tokenContract.approve(MARKET_ADDRESS, _price);
+      // const transaction = await marketContract.buyMarketItem(
+      //   NFT_ADDRESS,
+      //   tokenId,
+      //   {
+      //     value: _price,
+      //   }
+      // );
+      // return await transaction.wait();
     },
     {
       onError: (error) => {
@@ -145,40 +148,45 @@ export const useGetListingPriceQuery = () => {
   });
 };
 
-export const useGetNFTsQuery = () => {
-  return useQuery("NFTs", async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:8545"
-    );
+export const useGetMarketItemsQuery = () => {
+  return useQuery(
+    "NFTs",
+    async () => {
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
 
-    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
-    const marketContract = new ethers.Contract(
-      MARKET_ADDRESS,
-      NFTMarket_ABI,
-      provider
-    );
-    const data = await marketContract.fetchMarketItems();
+      const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+      const marketContract = new ethers.Contract(
+        MARKET_ADDRESS,
+        NFTMarket_ABI,
+        provider
+      );
+      const data = await marketContract.fetchMarketItems();
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
-        };
-        return item;
-      })
-    );
+      const items = await Promise.all(
+        data.map(async (i) => {
+          const tokenUri = await tokenContract.tokenURI(i.tokenId);
+          const meta = await axios.get(tokenUri);
+          let item = {
+            price: Number(i.price.toString()) / 10 ** 10,
+            tokenId: i.itemId.toNumber(),
+            seller: i.seller,
+            owner: i.owner,
+            image: meta.data.image,
+            name: meta.data.name,
+            description: meta.data.description,
+          };
+          return item;
+        })
+      );
 
-    return items;
-  });
+      return items || [];
+    },
+    {
+      refetchInterval: 5000,
+    }
+  );
 };
 
 export const useGetNFTDetailQuery = (tokenId) => {
@@ -199,7 +207,7 @@ export const useGetNFTDetailQuery = (tokenId) => {
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
     const meta = await axios.get(tokenUri);
     const item = {
-      price: data.price,
+      price: Number(data.price.toString()) / 10 ** 10,
       tokenId: data.tokenId.toNumber(),
       seller: data.seller,
       owner: data.owner,
@@ -211,84 +219,95 @@ export const useGetNFTDetailQuery = (tokenId) => {
   });
 };
 
-export const useGetCreatedNFTsQuery = (ethAdress) => {
-  return useQuery("createNFTs", async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:8545"
-    );
+export const useGetCreatedNFTsQuery = (ethAddress) => {
+  return useQuery(
+    "createNFTs",
+    async () => {
+      if (!ethAddress) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
 
-    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
-    const marketContract = new ethers.Contract(
-      MARKET_ADDRESS,
-      NFTMarket_ABI,
-      provider
-    );
+      const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+      const marketContract = new ethers.Contract(
+        MARKET_ADDRESS,
+        NFTMarket_ABI,
+        provider
+      );
 
-    const data = await marketContract
-      .connect(ethAdress)
-      .fetchItemsCreated();
+      const data = await marketContract.fetchItemsCreated(ethAddress);
 
-    console.log("data", data);
+      console.log("react-query", data);
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
-        };
-        return item;
-      })
-    );
+      const items = await Promise.all(
+        data.map(async (i) => {
+          const tokenUri = await tokenContract.tokenURI(i.tokenId);
+          const meta = await axios.get(tokenUri);
+          let item = {
+            price: Number(i.price.toString()) / 10 ** 10,
+            tokenId: i.tokenId.toNumber(),
+            seller: i.seller,
+            owner: i.owner,
+            image: meta.data.image,
+            name: meta.data.name,
+            description: meta.data.description,
+          };
+          return item;
+        })
+      );
 
-    return items;
-  });
+      return items || [];
+    },
+    {
+      refetchInterval: 5000,
+    }
+  );
 };
 
 export const useGetMyNFTsQuery = (ethAddress) => {
-  return useQuery("myNFTs", async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:8545"
-    );
+  return useQuery(
+    "myNFTs",
+    async () => {
+      if (!ethAddress) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
 
-    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
-    const marketContract = new ethers.Contract(
-      MARKET_ADDRESS,
-      NFTMarket_ABI,
-      provider
-    );
+      const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+      const marketContract = new ethers.Contract(
+        MARKET_ADDRESS,
+        NFTMarket_ABI,
+        provider
+      );
+      console.log(ethAddress);
 
-    const data = await marketContract
-      .connect(ethAddress)
-      .fetchMyNFTs();
+      const data = await marketContract.fetchMyNFTs(ethAddress);
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          tokenId: i.tokenId.toNumber(),
-          seller: i.seller,
-          owner: i.owner,
-          image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
-        };
-        return item;
-      })
-    );
+      console.log(data);
 
-    return items;
-  });
+      const items = await Promise.all(
+        data.map(async (i) => {
+          const tokenUri = await tokenContract.tokenURI(i.tokenId);
+          const meta = await axios.get(tokenUri);
+          let item = {
+            price: i.price,
+            tokenId: i.tokenId.toNumber(),
+            seller: i.seller,
+            owner: i.owner,
+            image: meta.data.image,
+            name: meta.data.name,
+            description: meta.data.description,
+          };
+          return item;
+        })
+      );
+
+      return items || [];
+    },
+    {
+      refetchInterval: 5000,
+    }
+  );
 };
 
 export const useTopSellerQuery = () => {

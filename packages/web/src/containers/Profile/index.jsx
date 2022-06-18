@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
 import LoadingIndicator from "../../components/LoadingIndicator";
@@ -9,18 +10,28 @@ import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { getUserInfo } from "../../queries/User";
-import { useGetCreatedNFTsQuery, useGetMyNFTsQuery } from "../../queries/NFT.js";
+import {
+  useGetCreatedNFTsQuery,
+  useGetMyNFTsQuery,
+} from "../../queries/NFT.js";
 import { SortingCard } from "../../utils";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-  const { data, refetch } = useGetCreatedNFTsQuery();
   const { ethAddress } = useParams();
   const [user, setUserInfo] = useState(null);
   const [tab, setTab] = useState("sale");
-  const { data: createdNFTs, isLoading: createdNFTsLoading, refetch: createdNFTsRefetch } = useGetCreatedNFTsQuery(ethAddress);
-  const { data: myNFTs, isLoading: myNFTsLoading, refetch: myNFTsRefetch } = useGetMyNFTsQuery(ethAddress);
+  const {
+    data: createdNFTs,
+    isLoading: createdNFTsLoading,
+    refetch: createdNFTsRefetch,
+  } = useGetCreatedNFTsQuery(ethAddress);
+  const {
+    data: myNFTs,
+    isLoading: myNFTsLoading,
+    refetch: myNFTsRefetch,
+  } = useGetMyNFTsQuery(ethAddress);
 
   useEffect(() => {
     SortingCard();
@@ -83,10 +94,11 @@ const ProfileContainer = () => {
                 </div>
               </div>
               <div className="row">
-                {(tab === "owned" ? myNFTsLoading : createdNFTsLoading) ?
+                {(tab === "owned" ? myNFTsLoading : createdNFTsLoading) ? (
                   <div className="d-flex justify-content-center w-100">
                     <LoadingIndicator />
-                  </div> :
+                  </div>
+                ) : (
                   (tab === "owned" ? myNFTs : createdNFTs)?.map((item) => (
                     <ListedItemsItem
                       key={item.tokenId}
@@ -98,7 +110,8 @@ const ProfileContainer = () => {
                       bid={item.bid}
                       seller={ethAddress}
                     />
-                  ))}
+                  ))
+                )}
               </div>
             </div>
           </div>

@@ -1,13 +1,6 @@
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { create as ipfsHttpClient } from "ipfs-http-client";
 import Breadcrumb from "../../components/Breadcrumb";
 import CreatorSec from "./CreatorSec";
-import {
-  useCreateNFTMarketItemMutation,
-  useCreateNFTMutation,
-  useGetListingPriceQuery,
-} from "../../queries/NFT";
 import clsx from "clsx";
 
 import "../../assets/css/createItem.css";
@@ -15,8 +8,6 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useMoralis, useMoralisFile } from "react-moralis";
 import { useHistory } from "react-router-dom";
-// import { toast } from "react-toastify";
-
 
 const CreateItemContainer = () => {
   const history = useHistory();
@@ -25,7 +16,6 @@ const CreateItemContainer = () => {
     username: "",
     email: "",
   });
-  const [fileLoading, setFileLoading] = useState(false);
 
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -34,12 +24,12 @@ const CreateItemContainer = () => {
 
   useEffect(() => {
     if (user) {
-      updateFormInput(prev => ({
+      updateFormInput((prev) => ({
         ...prev,
         username: user.get("username"),
         email: user.get("email"),
-      }))
-      setFileUrl(user.get("avatar"))
+      }));
+      setFileUrl(user.get("avatar"));
     }
   }, [user]);
 
@@ -62,15 +52,15 @@ const CreateItemContainer = () => {
         avatar: avatar._url,
         username: formInput.username,
         email: formInput.email,
-      })
+      });
     } else {
       setUserData({
         username: formInput.username,
         email: formInput.email,
-      })
+      });
     }
-    history.push("/my-profile")
-  }
+    history.push("/my-profile");
+  };
 
   return (
     <>
@@ -93,7 +83,6 @@ const CreateItemContainer = () => {
                 updateProfile={updateProfile}
                 onFileChange={onFileChange}
                 fileUrl={fileUrl}
-                fileLoading={fileLoading}
               />
             </div>
           </div>

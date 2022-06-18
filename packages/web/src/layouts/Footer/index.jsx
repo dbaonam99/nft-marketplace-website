@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React from "react";
 
 import "./footer.css";
@@ -17,9 +18,7 @@ function Footer() {
               <div className="footer-widget about-widget">
                 <h3 className="has-line-center">{t("footer.aboutUs")}</h3>
                 <div className="widget-content">
-                  <div className="text">
-                    {t("footer.aboutUsContent")}
-                  </div>
+                  <div className="text">{t("footer.aboutUsContent")}</div>
                   <ul className="social-links">
                     {data[0].iconsData &&
                       data[0].iconsData.map((item, i) => (
@@ -57,9 +56,7 @@ function Footer() {
               <div className="footer-widget newsletter-widget">
                 <h3 className="has-line-center">{t("footer.newsletter")}</h3>
                 <div className="widget-content">
-                  <div className="text">
-                    {t("footer.newsletterContent")}
-                  </div>
+                  <div className="text">{t("footer.newsletterContent")}</div>
                   <div className="newsletter-form">
                     <form method="post">
                       <div className="form-group">

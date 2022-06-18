@@ -23,10 +23,10 @@ interface ERC20 {
 contract Token is ERC20 {
     string public constant symbol = "UIT";
     string public constant name = "UIT Token";
-    uint8 public constant decimals = 18;
+    uint8 public constant decimals = 10;
  
-    //1,000,000+18 zeros
-    uint private constant __totalSupply = 1000000000000000000000000;
+    //1,000,000+10 zeros
+    uint private constant __totalSupply = 10000000000000000;
 
     //this mapping is where we store the balances of an address
     mapping (address => uint) private __balanceOf;

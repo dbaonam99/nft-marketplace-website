@@ -1,11 +1,8 @@
-import PartProfile from "../../../components/PartProfile"
-import CreateItemProfileheader from "../../../assets/img/art-work/profile-header.jpg"
-import CreateItemAuthors2 from "../../../assets/img/authors/2.png"
-import CreateItemArtworkfire from "../../../assets/img/art-work/fire.png"
-import CreateItemDataIcon from '../../../data/data-containers/data-CollectionItem-Profile.json'
+import PartProfile from "../../../components/PartProfile";
+import CreateItemArtworkfire from "../../../assets/img/art-work/fire.png";
+import CreateItemDataIcon from "../../../data/data-containers/data-CollectionItem-Profile.json";
 
 const CollectionItem = ({ user }) => {
-
   return (
     <>
       <PartProfile
@@ -17,6 +14,6 @@ const CollectionItem = ({ user }) => {
       />
     </>
   );
-}
+};
 
 export default CollectionItem;

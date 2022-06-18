@@ -8,13 +8,11 @@ import useThemeMode from "../../../hooks/useThemeMode";
 const FeaturesList = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-  const { authenticate, isAuthenticated, user } = useMoralis();
+  const { authenticate, isAuthenticated } = useMoralis();
 
   const connectToMetaMask = async () => {
     authenticate();
   };
-
-  console.log("user", user?.get("ethAddress"));
 
   return (
     <>
@@ -31,7 +29,6 @@ const FeaturesList = () => {
               className={isLightMode ? "text-dark mb-30" : "w-text mb-30"}
               data-wow-delay="0.3s"
             >
-              Kết nối tới ví của bạn để bắt đầu sưu tầm, mua và bán các NFT.
               {t("connectWallet.connectYourWalletDescription")}
             </h4>
             <div
