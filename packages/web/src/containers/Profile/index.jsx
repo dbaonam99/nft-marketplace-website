@@ -45,7 +45,7 @@ const ProfileContainer = () => {
       myNFTsRefetch();
     })();
   }, [ethAddress]);
-
+  console.log(myNFTs);
   return (
     <>
       <Breadcrumb

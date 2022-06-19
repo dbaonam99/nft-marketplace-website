@@ -293,7 +293,7 @@ export const useGetMyNFTsQuery = (ethAddress) => {
           const tokenUri = await tokenContract.tokenURI(i.tokenId);
           const meta = await axios.get(tokenUri);
           let item = {
-            price: i.price,
+            price: Number(i.price.toString()) / 10 ** 10,
             tokenId: i.tokenId.toNumber(),
             seller: i.seller,
             owner: i.owner,

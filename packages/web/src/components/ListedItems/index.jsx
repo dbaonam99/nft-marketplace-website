@@ -9,10 +9,11 @@ import "./listedItems.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useGetMarketItemsQuery } from "../../queries/NFT";
 import { useTranslation } from "react-i18next";
+import LoadingIndicator from "../LoadingIndicator";
 
 function ListedItemsContainer() {
   const isLightMode = useThemeMode();
-  const { data: NFTs } = useGetMarketItemsQuery();
+  const { data: NFTs, isLoading } = useGetMarketItemsQuery();
   const { t } = useTranslation();
 
   return (
@@ -28,18 +29,27 @@ function ListedItemsContainer() {
           titleLg={t("common.newNFTList")}
         />
         <div className="row">
-          {NFTs?.map((item) => (
-            <ListedItemsItem
-              key={item.tokenId}
-              seller={item.seller}
-              tokenId={item.tokenId}
-              imgBig={item.image}
-              imgSm={item.image}
-              title={item.name}
-              price={item.price}
-              bid={item.bid}
-            />
-          ))}
+          {isLoading ?
+            <div
+              className="d-flex align-items-center justify-content-center w-100"
+            >
+              <LoadingIndicator />
+            </div> :
+            <>
+              {NFTs?.map((item) => (
+                <ListedItemsItem
+                  key={item.tokenId}
+                  seller={item.seller}
+                  tokenId={item.tokenId}
+                  imgBig={item.image}
+                  imgSm={item.image}
+                  title={item.name}
+                  price={item.price}
+                  bid={item.bid}
+                />
+              ))}
+            </>
+          }
           <div className="col-12 col-lg-12 text-center">
             <NavLink className="btn more-btn" to="/discover">
               {t("common.loadmore")}

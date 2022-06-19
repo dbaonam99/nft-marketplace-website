@@ -5138,9 +5138,6 @@ a.ant-btn-sm {
   color: rgba(255, 255, 255, 0.45);
   font-size: 14px;
   transition: color 0.3s;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 .ant-comment-actions > li,
 .ant-comment-content-author-name > *,
