@@ -5,7 +5,13 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useBidMutation } from "../../queries/Auction";
 import { useCreateNFTMarketItemMutation } from "../../queries/NFT";
 
-const SaleModal = ({ modalIsOpen, setIsOpen, itemId, listingPrice }) => {
+const SaleModal = ({
+  modalIsOpen,
+  setIsOpen,
+  itemId,
+  tokenId,
+  listingPrice,
+}) => {
   const isLightMode = useThemeMode();
   const bidMutation = useBidMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
@@ -17,11 +23,12 @@ const SaleModal = ({ modalIsOpen, setIsOpen, itemId, listingPrice }) => {
     //   auctionId,
     //   price: bidPrice,
     // });
-    console.log("itemId", listingPrice);
+    console.log("Sale Modal", tokenId, itemId);
     createNFTMarketItemMutation.mutate({
       listingPrice: listingPrice.toString(),
-      tokenId: itemId,
+      tokenId,
       price: bidPrice,
+      itemId,
       callback: () => {
         console.log("check");
       },

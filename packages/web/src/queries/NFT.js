@@ -43,7 +43,7 @@ export const useCreateNFTMutation = () => {
 
 export const useCreateNFTMarketItemMutation = () => {
   return useMutation(
-    async ({ listingPrice, tokenId, price, callback }) => {
+    async ({ listingPrice, tokenId, price, itemId, callback }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
@@ -60,10 +60,13 @@ export const useCreateNFTMarketItemMutation = () => {
 
       const _price = price * 10 ** 10;
 
+      console.log(itemId);
+
       const transaction = await marketContract.createMarketItem(
         NFT_ADDRESS,
         tokenId,
         _price,
+        itemId || 0,
         {
           value: listingPrice,
         }
@@ -300,6 +303,7 @@ export const useGetMyNFTsQuery = (ethAddress) => {
             sold: i.sold,
             itemId: i.itemId.toNumber(),
           };
+          console.log("item", item);
           return item;
         })
       );

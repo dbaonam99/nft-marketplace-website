@@ -126,6 +126,8 @@ const ProfileContainer = () => {
         break;
     }
 
+    console.log(data);
+
     return (
       <>
         {loading ? (

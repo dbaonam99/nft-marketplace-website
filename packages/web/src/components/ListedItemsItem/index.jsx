@@ -33,12 +33,15 @@ function ListedItemsItem({
     })();
   }, [seller]);
 
+  console.log("check", tokenId);
+
   return (
     <>
       <SaleModal
         modalIsOpen={modalIsOpen}
         setIsOpen={setIsOpen}
         itemId={itemId}
+        tokenId={tokenId}
         listingPrice={listingPrice}
       />
 
