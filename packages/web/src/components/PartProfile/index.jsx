@@ -12,7 +12,7 @@ function PartProfile({ img1, img2, img3, data, user }) {
             : "service_single_content collection-item"
         }
       >
-        <div className="collection_icon">
+        <div className={`collection_icon ${!img1 && "mb-5"}`}>
           <img src={img1} className="center-block" alt="" />
         </div>
         <span className={isLightMode ? "aut-info bt-border" : "aut-info"}>

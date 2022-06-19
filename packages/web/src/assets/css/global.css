@@ -868,6 +868,7 @@ body .bt-dropdown-menu .dropdown-item.active {
 }
 .author-img {
   margin: 0 15px;
+  flex-shrink: 0;
 }
 .author-img img {
   object-fit: cover;
@@ -882,6 +883,13 @@ body .bt-dropdown-menu .dropdown-item.active {
   margin-bottom: 0;
 }
 
+
+.author-item .author-info h5 {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  max-width: 220px;
+}
 .collection-item {
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.03);

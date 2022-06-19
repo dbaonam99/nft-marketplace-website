@@ -29,7 +29,7 @@ function TopSellersItem({ rank, user, price }) {
         />
       </div>
       <div className="author-info">
-        <a href="profile.html">
+        <a href={`/profile/${userInfo.ethAddress}`}>
           <h5 className={clsx("author-name", isLightMode && "text-dark")}>
             {userInfo?.username}
           </h5>
