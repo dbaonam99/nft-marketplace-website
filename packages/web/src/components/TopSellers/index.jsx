@@ -4,8 +4,9 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { ethers } from "ethers";
 import { useMemo } from "react";
+import LoadingIndicator from "../LoadingIndicator";
 
-function TopSellersContainer({ data, isTopBuyer }) {
+function TopSellersContainer({ data, isTopBuyer, isLoading }) {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
 
@@ -27,46 +28,53 @@ function TopSellersContainer({ data, isTopBuyer }) {
       )}
     >
       <div className="container">
-        <div className="row align-items-center">
-          <div className="col-12 col-lg-12">
-            <div className="who-we-contant">
-              <div className="dream-dots text-left">
-                <span className="gradient-text">
-                  {t("common.creativeCreators")}
-                </span>
+        {isLoading ?
+          <div
+            className="d-flex align-items-center justify-content-center w-100"
+          >
+            <LoadingIndicator />
+          </div> :
+          <div className="row align-items-center">
+            <div className="col-12 col-lg-12">
+              <div className="who-we-contant">
+                <div className="dream-dots text-left">
+                  <span className="gradient-text">
+                    {t("common.creativeCreators")}
+                  </span>
+                </div>
+                <h4 className={clsx(isLightMode && "text-dark")}>
+                  {t(
+                    isTopBuyer
+                      ? "common.topMonthBuyers"
+                      : "common.topMonthSellers"
+                  )}
+                </h4>
               </div>
-              <h4 className={clsx(isLightMode && "text-dark")}>
-                {t(
-                  isTopBuyer
-                    ? "common.topMonthBuyers"
-                    : "common.topMonthSellers"
-                )}
-              </h4>
             </div>
-          </div>
 
-          <div className="col-12 col-lg-4">
-            <div
-              className={clsx("creator-sec", isLightMode ? "ll-bg" : "dd-bg")}
-            >
-              {sortedData &&
-                sortedData?.length > 0 &&
-                sortedData
-                  ?.slice(0, 3)
-                  ?.map((item, i) => (
-                    <TopSellersItem
-                      key={item.user}
-                      rank={i}
-                      user={item.user}
-                      price={ethers.utils.formatUnits(
-                        item.count.toString(),
-                        "ether"
-                      )}
-                    />
-                  ))}
+            <div className="col-12 col-lg-4">
+              <div
+                className={clsx("creator-sec", isLightMode ? "ll-bg" : "dd-bg")}
+              >
+                {sortedData &&
+                  sortedData?.length > 0 &&
+                  sortedData
+                    ?.slice(0, 3)
+                    ?.map((item, i) => (
+                      <TopSellersItem
+                        key={item.user}
+                        rank={i}
+                        user={item.user}
+                        price={ethers.utils.formatUnits(
+                          item.count.toString(),
+                          "ether"
+                        )}
+                      />
+                    ))}
+              </div>
             </div>
           </div>
-        </div>
+        }
       </div>
     </section>
   );

@@ -7,14 +7,14 @@ import "../../assets/css/home.css";
 import { useTopBuyerQuery, useTopSellerQuery } from "../../queries/NFT";
 
 const HomeContainer = () => {
-  const { data: topSellers } = useTopSellerQuery();
-  const { data: topBuyers } = useTopBuyerQuery();
+  const { data: topSellers, isLoading: isTopSellersLoading } = useTopSellerQuery();
+  const { data: topBuyers, isLoading: isTopBuyerLoading } = useTopBuyerQuery();
 
   return (
     <>
       <HeroContainer />
-      <TopSellers data={topSellers} />
-      <TopSellers isTopBuyer data={topBuyers} />
+      <TopSellers data={topSellers} isLoading={isTopSellersLoading} />
+      <TopSellers isTopBuyer data={topBuyers} isLoading={isTopBuyerLoading} />
       <ListedItems />
       <LiveAuctions />
     </>
