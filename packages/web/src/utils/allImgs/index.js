@@ -63,6 +63,7 @@ import ActivityIconsf7 from "../../assets/img/icons/f7.png";
 import ConnectWalletIconsw1 from "../../assets/img/icons/w1.png";
 import ConnectWalletIconsw2 from "../../assets/img/icons/w2.png";
 import ConnectWalletIconsw3 from "../../assets/img/icons/w3.png";
+import ConnectWalletIconsw4 from "../../assets/img/icons/w4.svg";
 import ConnectWalletIconswallet from "../../assets/img/icons/wallet.png";
 import ConnectWalletCoreimgPlatform from "../../assets/img/core-img/platform.png";
 import ConnectWalletCoreimgRings from "../../assets/img/core-img/rings.png";
@@ -182,6 +183,7 @@ export {
   ConnectWalletIconsw1,
   ConnectWalletIconsw2,
   ConnectWalletIconsw3,
+  ConnectWalletIconsw4,
   ConnectWalletCoreimgPlatform,
   ConnectWalletCoreimgRings,
   ConnectWalletArtworkc1,

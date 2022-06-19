@@ -1,7 +1,7 @@
 import { useMoralis } from "react-moralis";
 import { useTranslation } from "react-i18next";
 
-import { ConnectWalletIconsw1 } from "../../../utils/allImgs";
+import { ConnectWalletIconsw1, ConnectWalletIconsw4 } from "../../../utils/allImgs";
 import ConnectWalletIconswallet from "../../../assets/img/icons/wallet.png";
 import useThemeMode from "../../../hooks/useThemeMode";
 
@@ -48,6 +48,22 @@ const FeaturesList = () => {
               {isAuthenticated
                 ? t("connectWallet.connected")
                 : t("connectWallet.connectMetaMask")}
+            </div>
+
+            <div
+              className={
+                isLightMode
+                  ? "pricing-item v2 bt-border bg-light text-dark"
+                  : "pricing-item v2"
+              }
+            >
+              <img
+                src={ConnectWalletIconsw4}
+                width="30"
+                className="wal-icon"
+                alt=""
+              />
+              Torus (Coming soon)
             </div>
           </div>
         </div>
