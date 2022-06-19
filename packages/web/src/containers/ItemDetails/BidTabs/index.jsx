@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import useThemeMode from "../../../hooks/useThemeMode";
-import authors1 from "../../../assets/img/authors/1.png";
 import { useState } from "react";
 import { useGetBidHistoryQuery } from "../../../queries/Auction";
 import { useGetMarketHistoryQuery } from "../../../queries/NFT.js";
@@ -17,8 +16,6 @@ const BidTabs = ({ isAuction, auctionId, itemId }) => {
   });
 
   const [currentTab, setTab] = useState(0);
-
-  console.log("marketHistory", marketHistory);
 
   return (
     <>
@@ -75,39 +72,8 @@ const BidTabs = ({ isAuction, auctionId, itemId }) => {
               : "highest-bid bid-item"
           }
         >
-          {marketHistory?.map((item) => {
-            console.log(item);
-            return (
-              <div className="author-item mb-0">
-                <div className="author-img ml-0">
-                  <img src={authors1} width="40" alt="" />
-                </div>
-                <div className="author-info">
-                  <p className={isLightMode ? "mb-15 text-dark" : "mb-15"}>
-                    {t("common.listedBy")}
-                    <span className={isLightMode ? "text-dark" : "w-text"}>
-                      {" "}
-                      {item?.user}
-                    </span>
-                  </p>
-                  <p className={isLightMode ? "mb-15 text-dark" : "mb-15"}>
-                    {t("common.price")}
-                    <span
-                      className={
-                        isLightMode ? "text-dark mr-15" : "w-text mr-15"
-                      }
-                    >
-                      {" "}
-                      {item?.price?.toString()}
-                    </span>
-                    <span>
-                      <i className="fa fa-clock-o mr-5p" />
-                      {item?.createdDate} AM
-                    </span>
-                  </p>
-                </div>
-              </div>
-            );
+          {marketHistory?.map((item, i) => {
+            return <HistoryItem item={item} key={i} isMarket />;
           })}
         </div>
       )}

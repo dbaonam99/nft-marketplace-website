@@ -109,6 +109,7 @@ const ProfileContainer = () => {
                       price={item.price}
                       bid={item.bid}
                       seller={ethAddress}
+                      itemId={item.itemId}
                     />
                   ))
                 )}

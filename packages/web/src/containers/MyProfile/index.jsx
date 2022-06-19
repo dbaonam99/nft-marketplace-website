@@ -112,7 +112,9 @@ const ProfileContainer = () => {
       }
       case TABS[1].id: {
         loading = myNFTsLoading;
-        data = myNFTs ? [...myNFTs] : [];
+        data = myNFTs
+          ? [...myNFTs.map((item) => ({ ...item, owned: true }))]
+          : [];
         break;
       }
       case TABS[2].id: {
@@ -141,6 +143,9 @@ const ProfileContainer = () => {
               price={item.price}
               bid={item.bid}
               seller={user?.get("ethAddress")}
+              owned={item.owned}
+              sold={item.sold}
+              itemId={item.itemId}
             />
           ))
         )}
@@ -232,6 +237,7 @@ const ProfileContainer = () => {
                   const isActive = item.id === tab;
                   return (
                     <button
+                      key={item.id}
                       className={clsx(
                         "btn",
                         isActive && "active",

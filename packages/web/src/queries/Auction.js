@@ -215,6 +215,7 @@ export const useGetHighestBidAmountQuery = ({ auctionId }) => {
 
 export const useGetBidHistoryQuery = ({ auctionId }) => {
   return useQuery("bidHistory", async () => {
+    if (!auctionId) return;
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
     );
@@ -239,6 +240,6 @@ export const useGetBidHistoryQuery = ({ auctionId }) => {
         return item;
       })
     );
-    return items;
+    return items.reverse();
   });
 };

@@ -67,42 +67,68 @@ describe("NFT Market", function () {
     await market.connect(addr1).createMarketItem(nft.address, 1, 1000, {
       value: listingPrice,
     });
-    await market.connect(addr1).createMarketItem(nft.address, 2, 1000, {
-      value: listingPrice,
-    });
-    await market.connect(addr1).createMarketItem(nft.address, 3, 1000, {
-      value: listingPrice,
-    });
-    await market.connect(addr1).createMarketItem(nft.address, 4, 1000, {
-      value: listingPrice,
-    });
+    // await market.connect(addr1).createMarketItem(nft.address, 2, 1000, {
+    //   value: listingPrice,
+    // });
+    // await market.connect(addr1).createMarketItem(nft.address, 3, 1000, {
+    //   value: listingPrice,
+    // });
+    // await market.connect(addr1).createMarketItem(nft.address, 4, 1000, {
+    //   value: listingPrice,
+    // });
+    // await nft.connect(addr2).setApprovalForAll(market.address, true);
+    // await market.connect(addr2).createMarketItem(nft.address, 5, 1000, {
+    //   value: listingPrice,
+    // });
+    // await market.connect(addr2).createMarketItem(nft.address, 6, 1000, {
+    //   value: listingPrice,
+    // });
+  });
 
-    await nft.connect(addr2).setApprovalForAll(market.address, true);
-    await market.connect(addr2).createMarketItem(nft.address, 5, 1000, {
-      value: listingPrice,
+  it("Should shown on the market", async function () {
+    const items = await market.fetchMarketItems();
+    items.map(async (i) => {
+      const item = {
+        seller: i.seller,
+        owner: i.owner,
+        tokenId: i.tokenId.toString(),
+      };
+      return item;
     });
-    await market.connect(addr2).createMarketItem(nft.address, 6, 1000, {
-      value: listingPrice,
-    });
+    console.log(items);
   });
 
   it("Should buy a Token", async function () {
-    expect(await getBalance(addr1.address)).to.equal("10000");
-    expect(await getBalance(addr2.address)).to.equal("10000");
+    // expect(await getBalance(addr1.address)).to.equal("10000");
+    // expect(await getBalance(addr2.address)).to.equal("10000");
 
     await token.connect(addr2).approve(market.address, 1000);
     await market.connect(addr2).buyMarketItem(nft.address, 1, {
       value: 1000,
     });
 
-    await token.connect(addr3).approve(market.address, 1000);
-    await market.connect(addr3).buyMarketItem(nft.address, 2, {
-      value: 1000,
-    });
+    // await token.connect(addr3).approve(market.address, 1000);
+    // await market.connect(addr3).buyMarketItem(nft.address, 2, {
+    //   value: 1000,
+    // });
 
-    expect(await getBalance(addr1.address)).to.equal("12000");
-    expect(await getBalance(addr2.address)).to.equal("8900"); // 100 is listing price
-    expect(await getBalance(addr3.address)).to.equal("8900"); // 100 is listing price
+    // expect(await getBalance(addr1.address)).to.equal("12000");
+    // expect(await getBalance(addr2.address)).to.equal("8900"); // 100 is listing price
+    // expect(await getBalance(addr3.address)).to.equal("8900"); // 100 is listing price
+  });
+
+  it("Should hide on the market", async function () {
+    const items = await market.fetchMarketItems();
+    items.map(async (i) => {
+      const item = {
+        seller: i.seller,
+        owner: i.owner,
+        tokenId: i.tokenId.toString(),
+      };
+      return item;
+    });
+    console.log(items);
+    return items;
   });
 
   it("Should put a Token for sale", async function () {
@@ -115,22 +141,37 @@ describe("NFT Market", function () {
     }); // return 7
   });
 
-  it("Should buy a Token", async function () {
-    await token.connect(addr3).approve(market.address, 2000);
-    await market.connect(addr3).buyMarketItem(nft.address, 7, {
-      value: 2000,
+  it("Should shown on the market", async function () {
+    const items = await market.fetchMarketItems();
+    // const result = await items.wait();
+    // console.log(result.events[0].args);
+    items.map(async (i) => {
+      const item = {
+        seller: i.seller,
+        owner: i.owner,
+        tokenId: i.tokenId.toString(),
+      };
+      return item;
     });
+    console.log(items);
   });
 
-  it("Should put a Token for sale", async function () {
-    let listingPrice = await market.getListingPrice();
-    listingPrice = listingPrice.toString();
+  // it("Should buy a Token", async function () {
+  //   await token.connect(addr3).approve(market.address, 2000);
+  //   await market.connect(addr3).buyMarketItem(nft.address, 7, {
+  //     value: 2000,
+  //   });
+  // });
 
-    await nft.connect(addr3).setApprovalForAll(market.address, true);
-    await market.connect(addr3).createMarketItem(nft.address, 1, 3000, {
-      value: listingPrice,
-    });
-  });
+  // it("Should put a Token for sale", async function () {
+  //   let listingPrice = await market.getListingPrice();
+  //   listingPrice = listingPrice.toString();
+
+  //   await nft.connect(addr3).setApprovalForAll(market.address, true);
+  //   await market.connect(addr3).createMarketItem(nft.address, 1, 3000, {
+  //     value: listingPrice,
+  //   });
+  // });
 
   it("Should addr2 own a Token", async function () {
     const items = await market.fetchMyNFTs(addr2.address);
@@ -142,6 +183,7 @@ describe("NFT Market", function () {
       };
       return item;
     });
+    // console.log(items);
     return items;
   });
 
@@ -163,27 +205,27 @@ describe("NFT Market", function () {
 
   it("Should get history market", async function () {
     const items = await market.getMarketHistory(1);
-    console.log(
-      items.map(async (i) => {
-        const item = {
-          tokenId: i.tokenId.toString(),
-          price: i.price.toString(),
-          message: i.message.toString(),
-        };
-        return item;
-      })
-    );
-    const items2 = await market.getMarketHistory(2);
-    console.log(
-      items2.map(async (i) => {
-        const item = {
-          tokenId: i.tokenId.toString(),
-          price: i.price.toString(),
-          message: i.message.toString(),
-        };
-        return item;
-      })
-    );
+    // console.log(
+    //   items.map(async (i) => {
+    //     const item = {
+    //       tokenId: i.tokenId.toString(),
+    //       price: i.price.toString(),
+    //       message: i.message.toString(),
+    //     };
+    //     return item;
+    //   })
+    // );
+    // const items2 = await market.getMarketHistory(2);
+    // console.log(
+    //   items2.map(async (i) => {
+    //     const item = {
+    //       tokenId: i.tokenId.toString(),
+    //       price: i.price.toString(),
+    //       message: i.message.toString(),
+    //     };
+    //     return item;
+    //   })
+    // );
   });
 });
 

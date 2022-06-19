@@ -3,6 +3,7 @@ import Modal from "react-modal";
 const ModalComponent = ({ isOpen, setIsOpen, children, customsStyle }) => {
   return (
     <Modal
+      ariaHideApp={false}
       isOpen={isOpen}
       onRequestClose={() => setIsOpen(false)}
       style={{

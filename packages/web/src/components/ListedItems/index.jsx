@@ -29,12 +29,11 @@ function ListedItemsContainer() {
           titleLg={t("common.newNFTList")}
         />
         <div className="row">
-          {isLoading ?
-            <div
-              className="d-flex align-items-center justify-content-center w-100"
-            >
+          {isLoading ? (
+            <div className="d-flex align-items-center justify-content-center w-100">
               <LoadingIndicator />
-            </div> :
+            </div>
+          ) : (
             <>
               {NFTs?.map((item) => (
                 <ListedItemsItem
@@ -46,10 +45,11 @@ function ListedItemsContainer() {
                   title={item.name}
                   price={item.price}
                   bid={item.bid}
+                  itemId={item.itemId}
                 />
               ))}
             </>
-          }
+          )}
           <div className="col-12 col-lg-12 text-center">
             <NavLink className="btn more-btn" to="/discover">
               {t("common.loadmore")}

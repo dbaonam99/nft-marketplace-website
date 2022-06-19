@@ -60,7 +60,7 @@ function ListedItemsItem({
           </div>
           <div className="admire">
             <div className={isLightMode ? "adm text-muted" : "adm"}>
-              <i className="fa fa-clock-o"></i> 6 Hours Ago
+              <i className="fa fa-clock-o"></i> 6 Hours Ago zxc
             </div>
             <div className={isLightMode ? "adm text-muted" : "adm"}>
               <i className="fa fa-heart-o"></i>134 {t("common.like")}

@@ -282,11 +282,8 @@ export const useGetMyNFTsQuery = (ethAddress) => {
         NFTMarket_ABI,
         provider
       );
-      console.log(ethAddress);
 
       const data = await marketContract.fetchMyNFTs(ethAddress);
-
-      console.log(data);
 
       const items = await Promise.all(
         data.map(async (i) => {
@@ -300,6 +297,8 @@ export const useGetMyNFTsQuery = (ethAddress) => {
             image: meta.data.image,
             name: meta.data.name,
             description: meta.data.description,
+            sold: i.sold,
+            itemId: i.itemId.toNumber(),
           };
           return item;
         })
@@ -361,6 +360,7 @@ export const useGetMarketHistoryQuery = ({ itemId }) => {
   return useQuery(
     "marketHistory",
     async () => {
+      if (!itemId) return;
       const provider = new ethers.providers.JsonRpcProvider(
         "http://localhost:8545"
       );
@@ -373,21 +373,20 @@ export const useGetMarketHistoryQuery = ({ itemId }) => {
 
       const data = await marketContract.getMarketHistory(itemId);
 
-      console.log(data);
       const items = await Promise.all(
         data.map(async (i) => {
-          let price = Number(i.price.toString()) * 10 ** 10;
+          let price = Number(i.price.toString()) / 10 ** 10;
           let item = {
             price,
             tokenId: i.tokenId.toNumber(),
             user: i.user,
             message: i.message,
-            // createdDate: i.createdDate,
+            createdDate: i.createdDate.toString(),
           };
           return item;
         })
       );
-      return items;
+      return items.reverse();
     },
     {
       refetchInterval: 2000,
