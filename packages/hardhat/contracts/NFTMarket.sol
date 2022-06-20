@@ -166,16 +166,17 @@ contract NFTMarket is ReentrancyGuard {
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
     _itemsSold.increment();
+    uint itemSold = _itemsSold.current();
 
     createHistory(msg.sender, block.timestamp, "Buy a token!", "User buy a token!");
     createHistory(idToMarketItem[itemId].seller, block.timestamp, "Buy a token!", "User buy a token!");
 
-    sellCount[itemId] = UserCount(
+    sellCount[itemSold] = UserCount(
       idToMarketItem[itemId].seller,
       price
     );
 
-    boughtCount[itemId] = UserCount(
+    boughtCount[itemSold] = UserCount(
       msg.sender,
       price
     );
@@ -202,43 +203,43 @@ contract NFTMarket is ReentrancyGuard {
   }
 
   function getTopSeller() public view returns (UserCount[] memory) {
-    uint currentIndex = 0;
-    uint256 soldAmount = _itemsSold.current();
+    uint soldAmount = _itemsSold.current();
 
     UserCount[] memory addresses = new UserCount[](soldAmount);
     for (uint i = 0; i < soldAmount; i++) {
       uint currentId = i + 1;
-      addresses[currentIndex] = sellCount[currentId];
-      currentIndex += 1;
+      addresses[i] = sellCount[currentId];
     }
     return addresses;
   }
 
   function getTopBuyer() public view returns (UserCount[] memory) {
-    uint currentIndex = 0;
-    uint256 soldAmount = _itemsSold.current();
+    uint soldAmount = _itemsSold.current();
 
     UserCount[] memory addresses = new UserCount[](soldAmount);
     for (uint i = 0; i < soldAmount; i++) {
       uint currentId = i + 1;
-      addresses[currentIndex] = boughtCount[currentId];
-      currentIndex += 1;
+      addresses[i] = boughtCount[currentId];
     }
     return addresses;
   } 
 
   function fetchMarketItems() public view returns (MarketItem[] memory) {
     uint itemCount = _itemIds.current();
-    uint unsoldItemCount = _itemIds.current() - _itemsSold.current();
-    uint currentIndex = 0;
+    uint unsoldItemCount = 0;
+
+    for (uint i = 0; i < itemCount; i++) {
+      if (idToMarketItem[i + 1].sold == false) {
+        unsoldItemCount += 1;
+      }
+    }
 
     MarketItem[] memory items = new MarketItem[](unsoldItemCount);
     for (uint i = 0; i < itemCount; i++) {
       if (idToMarketItem[i + 1].sold == false) {
         uint currentId = i + 1;
         MarketItem storage currentItem = idToMarketItem[currentId];
-        items[currentIndex] = currentItem;
-        currentIndex += 1;
+        items[i] = currentItem;
       }
     }
     return items;

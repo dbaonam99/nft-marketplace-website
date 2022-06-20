@@ -60,8 +60,6 @@ export const useCreateNFTMarketItemMutation = () => {
 
       const _price = price * 10 ** 10;
 
-      console.log(itemId);
-
       const transaction = await marketContract.createMarketItem(
         NFT_ADDRESS,
         tokenId,
@@ -109,7 +107,6 @@ export const useBuyNFTMutation = () => {
       );
 
       const _price = price * 10 ** 10;
-      console.log(_price);
 
       await tokenContract.approve(MARKET_ADDRESS, _price);
       const transaction = await marketContract.buyMarketItem(
@@ -119,8 +116,7 @@ export const useBuyNFTMutation = () => {
           value: _price,
         }
       );
-      console.log("transaction", transaction);
-      // return await transaction.wait();
+      return await transaction.wait();
     },
     {
       onError: (error) => {
@@ -243,8 +239,6 @@ export const useGetCreatedNFTsQuery = (ethAddress) => {
 
       const data = await marketContract.fetchItemsCreated(ethAddress);
 
-      console.log("react-query", data);
-
       const items = await Promise.all(
         data.map(async (i) => {
           const tokenUri = await tokenContract.tokenURI(i.tokenId);
@@ -303,7 +297,6 @@ export const useGetMyNFTsQuery = (ethAddress) => {
             sold: i.sold,
             itemId: i.itemId.toNumber(),
           };
-          console.log("item", item);
           return item;
         })
       );
@@ -329,10 +322,12 @@ export const useTopSellerQuery = () => {
     );
 
     const data = await marketContract.getTopSeller();
-    const items = data.map((i) => ({
-      user: i.user,
-      count: i.count,
-    }));
+    const items = data.map((i) => {
+      return {
+        user: i.user,
+        count: Number(i.count.toString()) / 10 ** 10,
+      };
+    });
 
     return items;
   });
@@ -353,7 +348,7 @@ export const useTopBuyerQuery = () => {
     const data = await marketContract.getTopBuyer();
     const items = data.map((i) => ({
       user: i.user,
-      count: i.count,
+      count: Number(i.count.toString()) / 10 ** 10,
     }));
 
     return items;

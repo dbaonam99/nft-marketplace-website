@@ -1,8 +1,7 @@
-import useThemeMode from "../../hooks/useThemeMode";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
+import clsx from "clsx";
 import { getUserInfo } from "../../queries/User";
-// import { useGetUserInfoQuery } from "../../queries/User";
+import useThemeMode from "../../hooks/useThemeMode";
 
 function TopSellersItem({ rank, user, price }) {
   const isLightMode = useThemeMode();
@@ -19,23 +18,42 @@ function TopSellersItem({ rank, user, price }) {
     <div className="author-item">
       <div className="author-rank">{rank}</div>
       <div className="author-img">
-        <img
-          src={
-            userInfo?.avatar ||
-            "https://cdn.pixabay.com/photo/2015/04/23/22/00/tree-736885__480.jpg"
-          }
-          width="70"
-          alt=""
-        />
+        {userInfo?.avatar ? (
+          <img
+            src={userInfo?.avatar}
+            style={{
+              height: "70px",
+              width: "70px",
+            }}
+            alt=""
+          />
+        ) : (
+          <div
+            style={{
+              height: "70px",
+              width: "70px",
+              background: "#DDD",
+              borderRadius: "50%",
+            }}
+          />
+        )}
       </div>
       <div className="author-info">
-        <a href={`/profile/${userInfo.ethAddress}`}>
-          <h5 className={clsx("author-name", isLightMode && "text-dark")}>
-            {userInfo?.username}
-          </h5>
-        </a>
+        {userInfo?.username ? (
+          <a href={`/profile/${userInfo?.ethAddress}`}>
+            <h5 className={clsx("author-name", isLightMode && "text-dark")}>
+              {userInfo?.username}
+            </h5>
+          </a>
+        ) : (
+          <a>
+            <h5 className={clsx("author-name", isLightMode && "text-dark")}>
+              ...
+            </h5>
+          </a>
+        )}
         <p className={clsx("author-earn mb-0", isLightMode && "text-muted")}>
-          {price} ETH
+          {price ? `${price} UIT` : "..."}
         </p>
       </div>
     </div>

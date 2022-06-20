@@ -7,7 +7,8 @@ import "../../assets/css/home.css";
 import { useTopBuyerQuery, useTopSellerQuery } from "../../queries/NFT";
 
 const HomeContainer = () => {
-  const { data: topSellers, isLoading: isTopSellersLoading } = useTopSellerQuery();
+  const { data: topSellers, isLoading: isTopSellersLoading } =
+    useTopSellerQuery();
   const { data: topBuyers, isLoading: isTopBuyerLoading } = useTopBuyerQuery();
 
   return (

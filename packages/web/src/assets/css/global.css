@@ -874,6 +874,9 @@ body .bt-dropdown-menu .dropdown-item.active {
   object-fit: cover;
   border-radius: 50%;
 }
+.top-seller .creator-sec {
+  padding: 30px 20px !important;
+}
 .author-item {
   display: flex;
   align-items: center;
@@ -882,7 +885,6 @@ body .bt-dropdown-menu .dropdown-item.active {
 .author-item:last-child {
   margin-bottom: 0;
 }
-
 
 .author-item .author-info h5 {
   overflow: hidden;

@@ -258,7 +258,23 @@ function Head({ Title }) {
           <div className="menu-actions">
             {isAuthenticated ? (
               <NavLink to={isAuthenticated ? "/my-profile" : "/connectwallet"}>
-                <img src={userInfo?.avatar} alt="" width="40px" height="40px" />
+                {userInfo?.avatar ? (
+                  <img
+                    src={userInfo?.avatar}
+                    alt=""
+                    width="40px"
+                    height="40px"
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: "40px",
+                      height: "40px",
+                      borderRadius: "100%",
+                      background: "#DDD",
+                    }}
+                  />
+                )}
               </NavLink>
             ) : (
               <NavLink
