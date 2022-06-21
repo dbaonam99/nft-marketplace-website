@@ -47,60 +47,28 @@ export const useCreateAuctionMutation = () => {
 
       callback();
       return await transaction.wait();
-    },
-    {
-      onError: (error) => {
-        if (error instanceof Error) {
-          // toast.error(error.message);
-        }
-      },
-
-      onSuccess: (data) => {
-        // toast.success(data);
-      },
     }
   );
 };
 
 export const useBidMutation = () => {
-  return useMutation(
-    async ({ auctionId, price }) => {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+  return useMutation(async ({ auctionId, price }) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-      const contract = new ethers.Contract(
-        AUCTION_ADDRESS,
-        AUCTION_ABI,
-        signer
-      );
+    const contract = new ethers.Contract(AUCTION_ADDRESS, AUCTION_ABI, signer);
 
-      const tokenContract = new ethers.Contract(
-        TOKEN_ADDRESS,
-        Token_ABI,
-        signer
-      );
+    const tokenContract = new ethers.Contract(TOKEN_ADDRESS, Token_ABI, signer);
 
-      await tokenContract.approve(AUCTION_ADDRESS, price);
-      let transaction = await contract.bid(auctionId, {
-        value: price,
-      });
+    await tokenContract.approve(AUCTION_ADDRESS, price);
+    let transaction = await contract.bid(auctionId, {
+      value: price,
+    });
 
-      return await transaction.wait();
-    },
-    {
-      onError: (error) => {
-        if (error instanceof Error) {
-          // toast.error(error.message);
-        }
-      },
-
-      onSuccess: (data) => {
-        // toast.success(data);
-      },
-    }
-  );
+    return await transaction.wait();
+  });
 };
 
 export const useGetAuctionItemsQuery = () => {
@@ -196,50 +164,112 @@ export const useGetHighestBidderQuery = ({ auctionId }) => {
 };
 
 export const useGetHighestBidAmountQuery = ({ auctionId }) => {
-  return useQuery("highestBidAmount", async () => {
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:8545"
-    );
+  return useQuery(
+    "highestBidAmount",
+    async () => {
+      if (!auctionId) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
 
-    const auctionContract = new ethers.Contract(
-      AUCTION_ADDRESS,
-      AUCTION_ABI,
-      provider
-    );
+      const auctionContract = new ethers.Contract(
+        AUCTION_ADDRESS,
+        AUCTION_ABI,
+        provider
+      );
 
-    const data = await auctionContract.getCurrentBidAmount(auctionId);
+      console.log(auctionId);
+      const data = await auctionContract.getCurrentBidAmount(auctionId);
 
-    return data.toString();
-  });
+      return data.toString();
+    },
+    {
+      refetchInterval: 2000,
+    }
+  );
 };
 
 export const useGetBidHistoryQuery = ({ auctionId }) => {
-  return useQuery("bidHistory", async () => {
-    if (!auctionId) return;
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:8545"
-    );
+  return useQuery(
+    "bidHistory",
+    async () => {
+      if (!auctionId) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
 
-    const auctionContract = new ethers.Contract(
-      AUCTION_ADDRESS,
-      AUCTION_ABI,
-      provider
-    );
+      const auctionContract = new ethers.Contract(
+        AUCTION_ADDRESS,
+        AUCTION_ABI,
+        provider
+      );
 
-    const data = await auctionContract.getAuctionHistory(auctionId);
+      const data = await auctionContract.getAuctionHistory(auctionId);
 
-    const items = await Promise.all(
-      data.map(async (i) => {
-        let price = ethers.utils.formatUnits(i.price.toString(), "ether");
-        let item = {
-          price,
-          auctionId: i.auctionId.toNumber(),
-          bidder: i.bidder,
-          bidDate: i.bidDate,
-        };
-        return item;
-      })
-    );
-    return items.reverse();
-  });
+      const items = await Promise.all(
+        data.map(async (i) => {
+          let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+          let item = {
+            price,
+            auctionId: i.auctionId.toNumber(),
+            bidder: i.bidder,
+            bidDate: i.bidDate,
+          };
+          return item;
+        })
+      );
+      return items.reverse();
+    },
+    {
+      refetchInterval: 2000,
+    }
+  );
+};
+
+export const useGetMyAuctionItemsQuery = (ethAddress) => {
+  return useQuery(
+    "myAuctionItems",
+    async () => {
+      if (!ethAddress) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
+
+      const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+      const auctionContract = new ethers.Contract(
+        AUCTION_ADDRESS,
+        AUCTION_ABI,
+        provider
+      );
+
+      const data = await auctionContract.fetchMyAuctionItems(ethAddress);
+
+      const items = await Promise.all(
+        data.map(async (i) => {
+          const tokenUri = await tokenContract.tokenURI(i.tokenId);
+          const meta = await axios.get(tokenUri);
+          let item = {
+            auctionId: i.auctionId.toString(),
+            owner: i.owner,
+            tokenId: i.tokenId.toString(),
+            startingPrice: i.startingPrice.toString(),
+            startTime: i.startTime.toString(),
+            duration: i.duration.toString(),
+            biddingStep: i.biddingStep.toString(),
+            highestBidAmount: i.highestBidAmount.toString(),
+            image: meta.data.image,
+            name: meta.data.name,
+            description: meta.data.description,
+            createdDate: i.createdDate.toString(),
+          };
+          return item;
+        })
+      );
+
+      return items || [];
+    },
+    {
+      refetchInterval: 5000,
+    }
+  );
 };

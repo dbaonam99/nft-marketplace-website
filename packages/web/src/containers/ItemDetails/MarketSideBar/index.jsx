@@ -6,6 +6,7 @@ import { useBuyNFTMutation } from "../../../queries/NFT";
 import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
+import Avatar from "../../../components/Avatar/Avatar";
 
 const MarketSideBar = ({
   name,
@@ -78,7 +79,7 @@ const MarketSideBar = ({
             </div>
             <div className="author-item mb-30">
               <div className="author-img ml-0">
-                <img src={userInfo?.avatar} width="70" alt="" />
+                <Avatar src={userInfo?.avatar} size="60px" />
               </div>
               <div className="author-info">
                 <NavLink to="/profile">

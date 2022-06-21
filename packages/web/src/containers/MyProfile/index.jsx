@@ -12,9 +12,10 @@ import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import "../../assets/css/profile.css";
 import useThemeMode from "../../hooks/useThemeMode";
-import ListedItemsItem from "../../components/ListedItemsItem";
+import NftCard from "../../components/NftCard";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import clsx from "clsx";
+import { useGetMyAuctionItemsQuery } from "../../queries/Auction";
 
 export const createShortAddress = (string) => {
   if (string) {
@@ -54,6 +55,8 @@ const ProfileContainer = () => {
   );
   const { data: onSaleNFTs, isLoading: onSaleNFTsLoading } =
     useGetMarketItemsQuery(user?.get("ethAddress"));
+  const { data: onAuctionNFTs, isLoading: onAuctionNFTsLoading } =
+    useGetMyAuctionItemsQuery(user?.get("ethAddress"));
 
   const { saveFile, isUploading } = useMoralisFile();
 
@@ -98,7 +101,7 @@ const ProfileContainer = () => {
     let loading;
     switch (type) {
       case TABS[0].id: {
-        loading = onSaleNFTsLoading;
+        loading = onSaleNFTsLoading || onAuctionNFTsLoading;
         data = onSaleNFTs
           ? [
               ...onSaleNFTs.filter(
@@ -108,6 +111,7 @@ const ProfileContainer = () => {
               ),
             ]
           : [];
+        data = onAuctionNFTs ? [...data, ...onAuctionNFTs] : [];
         break;
       }
       case TABS[1].id: {
@@ -126,8 +130,6 @@ const ProfileContainer = () => {
         break;
     }
 
-    console.log(data);
-
     return (
       <>
         {loading ? (
@@ -135,20 +137,8 @@ const ProfileContainer = () => {
             <LoadingIndicator />
           </div>
         ) : (
-          data?.map((item) => (
-            <ListedItemsItem
-              key={item.tokenId}
-              tokenId={item.tokenId}
-              imgBig={item.image}
-              imgSm={item.image}
-              title={item.name}
-              price={item.price}
-              bid={item.bid}
-              seller={user?.get("ethAddress")}
-              owned={item.owned}
-              sold={item.sold}
-              itemId={item.itemId}
-            />
+          data?.map((item, index) => (
+            <NftCard {...item} key={index} seller={user?.get("ethAddress")} />
           ))
         )}
       </>

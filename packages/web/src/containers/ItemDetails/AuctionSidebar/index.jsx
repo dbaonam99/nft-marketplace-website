@@ -12,6 +12,7 @@ import {
 import BiddingBox from "./BiddingBox";
 import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
+import Avatar from "../../../components/Avatar/Avatar";
 
 const AuctionSidebar = ({
   name,
@@ -109,7 +110,7 @@ const AuctionSidebar = ({
             </div>
             <div className="author-item mb-30">
               <div className="author-img ml-0">
-                <img src={userInfo?.avatar} width="60" alt="" />
+                <Avatar src={userInfo?.avatar} size="60px" />
               </div>
               <div className="author-info">
                 <NavLink to="/profile">

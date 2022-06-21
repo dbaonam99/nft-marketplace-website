@@ -34,6 +34,7 @@ const ContactForm = (props) => {
     onFileChange,
     fileUrl,
     fileLoading,
+    buttonLoading,
   } = props;
 
   const inputFile = useRef();
@@ -286,7 +287,7 @@ const ContactForm = (props) => {
               className="more-btn mb-15"
               onClick={() => createMarket(currentMarketplaceType)}
             >
-              {t("header.createItem")}
+              {buttonLoading ? <LoadingIndicator /> : t("header.createItem")}
             </button>
           </div>
         </div>

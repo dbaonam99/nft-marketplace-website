@@ -2,7 +2,6 @@ import React from "react";
 import clsx from "clsx";
 import { NavLink } from "react-router-dom";
 import InfoComponent from "../InfoComponent";
-import ListedItemsItem from "../ListedItemsItem";
 
 import "./listedItems.css";
 
@@ -10,6 +9,7 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useGetMarketItemsQuery } from "../../queries/NFT";
 import { useTranslation } from "react-i18next";
 import LoadingIndicator from "../LoadingIndicator";
+import NftCard from "../NftCard";
 
 function ListedItemsContainer() {
   const isLightMode = useThemeMode();
@@ -35,18 +35,8 @@ function ListedItemsContainer() {
             </div>
           ) : (
             <>
-              {NFTs?.map((item) => (
-                <ListedItemsItem
-                  key={item.tokenId}
-                  seller={item.seller}
-                  tokenId={item.tokenId}
-                  imgBig={item.image}
-                  imgSm={item.image}
-                  title={item.name}
-                  price={item.price}
-                  bid={item.bid}
-                  itemId={item.itemId}
-                />
+              {NFTs?.map((item, index) => (
+                <NftCard key={index} {...item} />
               ))}
             </>
           )}

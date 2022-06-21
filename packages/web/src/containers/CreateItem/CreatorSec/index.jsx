@@ -9,6 +9,7 @@ const CreatorSec = ({
   onFileChange,
   fileUrl,
   fileLoading,
+  buttonLoading,
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ const CreatorSec = ({
           onFileChange={onFileChange}
           fileUrl={fileUrl}
           fileLoading={fileLoading}
+          buttonLoading={buttonLoading}
         />
       </div>
     </>

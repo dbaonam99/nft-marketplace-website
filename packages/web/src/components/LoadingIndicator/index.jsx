@@ -1,6 +1,6 @@
 import "./index.css";
 
-function LoadingIndicator({ imgBig, imgSm, title, text }) {
+function LoadingIndicator() {
   return (
     <div className="lds-ripple">
       <div></div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { create as ipfsHttpClient } from "ipfs-http-client";
+// import { toast } from "react-toastify";
 import Breadcrumb from "../../components/Breadcrumb";
 import CreatorSec from "./CreatorSec";
 import {
@@ -12,7 +13,6 @@ import clsx from "clsx";
 import "../../assets/css/createItem.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
-// import { toast } from "react-toastify";
 import PreviewItem from "./PreviewItem";
 import { useCreateAuctionMutation } from "../../queries/Auction";
 
@@ -29,6 +29,7 @@ const CreateItemContainer = () => {
     durationType: "",
   });
   const [fileLoading, setFileLoading] = useState(false);
+  const [buttonLoading, setButtonLoading] = useState(false);
 
   const createNFTMutation = useCreateNFTMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
@@ -51,6 +52,7 @@ const CreateItemContainer = () => {
   };
 
   const createMarket = async (type) => {
+    setButtonLoading(true);
     switch (type) {
       case "fixed_price": {
         createSale();
@@ -70,7 +72,10 @@ const CreateItemContainer = () => {
 
   const createSale = async () => {
     const { name, description, price } = formInput;
-    if (!name || !description || !price || !fileUrl) return;
+    if (!name || !description || !price || !fileUrl) {
+      setButtonLoading(false);
+      return;
+    }
     /* first, upload to IPFS */
     const data = JSON.stringify({
       name,
@@ -98,12 +103,23 @@ const CreateItemContainer = () => {
                   description: "",
                 }));
                 setFileUrl(null);
+                setButtonLoading(false);
+                // toast("🦄 Wow so easy!", {
+                //   position: "top-right",
+                //   autoClose: 5000,
+                //   hideProgressBar: false,
+                //   closeOnClick: true,
+                //   pauseOnHover: true,
+                //   draggable: true,
+                //   progress: undefined,
+                // });
               },
             });
           },
         }
       );
     } catch (error) {
+      setButtonLoading(false);
       console.log("Error uploading file: ", error);
     } finally {
       setFileLoading(false);
@@ -129,8 +145,10 @@ const CreateItemContainer = () => {
       !duration ||
       !biddingStep ||
       !durationType
-    )
+    ) {
+      setButtonLoading(false);
       return;
+    }
 
     let durationTimestamp = 0;
 
@@ -179,6 +197,7 @@ const CreateItemContainer = () => {
                   biddingStep: "",
                 }));
                 setFileUrl(null);
+                setButtonLoading(false);
               },
             });
           },
@@ -186,6 +205,7 @@ const CreateItemContainer = () => {
       );
     } catch (error) {
       console.log("Error uploading file: ", error);
+      setButtonLoading(false);
     } finally {
       setFileLoading(false);
     }
@@ -213,6 +233,7 @@ const CreateItemContainer = () => {
                 onFileChange={onFileChange}
                 fileUrl={fileUrl}
                 fileLoading={fileLoading}
+                buttonLoading={buttonLoading}
               />
             </div>
             <div className="d-none d-lg-block col-lg-4">

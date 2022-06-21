@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { getUserInfo } from "../../../queries/User";
 import moment from "moment";
+import Avatar from "../../../components/Avatar/Avatar";
 
 const HistoryItem = ({ item, isMarket }) => {
   const isLightMode = useThemeMode();
@@ -19,13 +20,12 @@ const HistoryItem = ({ item, isMarket }) => {
   return (
     <div className={`author-item ${item.addMargin && "mb-0"}`}>
       <div className="author-img ml-0">
-        <img src={userInfo?.avatar} width="40" height="40px" alt="" />
+        <Avatar src={userInfo?.avatar} size="40px" />
       </div>
       <div className="author-info">
         <p className={isLightMode ? "text-muted" : ""}>
           {t(`common.${item.message}By`)}
           <span className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}>
-            {" "}
             {userInfo?.username}
           </span>
         </p>

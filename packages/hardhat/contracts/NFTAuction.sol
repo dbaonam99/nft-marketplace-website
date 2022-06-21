@@ -76,6 +76,7 @@ contract NFTAuction is ReentrancyGuard {
     mapping(uint256 => Auction) public idToAuction;
     mapping(address => uint) public bids;
     mapping(uint256 => BidInfo) public bidHistory;
+    mapping(address => uint256) public userAuctionCount;
 
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
@@ -111,6 +112,7 @@ contract NFTAuction is ReentrancyGuard {
         );
 
         ERC721(nftContract).transferFrom(msg.sender, contractOwner, tokenId);
+        userAuctionCount[msg.sender] += 1;
         
         emit AuctionCreated(
             auctionId,
@@ -127,16 +129,16 @@ contract NFTAuction is ReentrancyGuard {
     }
 
     function bid(uint256 auctionId) public payable nonReentrant returns (bool) {
-        // uint256 startDate = idToAuction[auctionId].startTime;
-        // uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
+        uint256 startDate = idToAuction[auctionId].startTime;
+        uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
         uint256 price = msg.value;
 
         _bidIds.increment();
         uint256 bidId = _bidIds.current();
 
-        // require(block.timestamp >= startDate && block.timestamp < endDate,  
-        //     "Auction is finished or not started yet"
-        // );
+        require(block.timestamp >= startDate && block.timestamp < endDate,  
+            "Auction is finished or not started yet"
+        );
 
         if (idToAuction[auctionId].status == CREATED) {
             require(price >= idToAuction[auctionId].startingPrice, 
@@ -219,11 +221,7 @@ contract NFTAuction is ReentrancyGuard {
         return idToAuction[auctionId].highestBidder;
     }
 
-    function getCurrentBidAmount(uint256 auctionId)
-        public
-        view
-        returns (uint256)
-    {
+    function getCurrentBidAmount(uint256 auctionId) public view returns (uint256) {
         return idToAuction[auctionId].highestBidAmount;
     }
 
@@ -294,16 +292,29 @@ contract NFTAuction is ReentrancyGuard {
 
     function fetchAuctionItems() public view returns (Auction[] memory) {
         uint itemCount = _auctionIds.current();
-        uint unsoldItemCount = _auctionIds.current();
-        uint currentIndex = 0;
 
-        Auction[] memory items = new Auction[](unsoldItemCount);
+        Auction[] memory items = new Auction[](itemCount);
         for (uint i = 0; i < itemCount; i++) {
             if (idToAuction[i + 1].status != FINISHED) {
                 uint currentId = i + 1;
                 Auction storage currentItem = idToAuction[currentId];
+                items[i] = currentItem;
+            }
+        }
+        return items;
+    }
+
+    function fetchMyAuctionItems(address userAddress) public view returns (Auction[] memory) {
+        uint itemCount = _auctionIds.current();
+        uint _userAuctionCount = userAuctionCount[userAddress];
+        uint currentIndex = 0;
+
+        Auction[] memory items = new Auction[](_userAuctionCount);
+        for (uint i = 0; i < itemCount; i++) {
+            if (idToAuction[i + 1].owner == userAddress) {
+                uint currentId = i + 1;
+                Auction storage currentItem = idToAuction[currentId];
                 items[currentIndex] = currentItem;
-                currentIndex += 1;
             }
         }
         return items;

@@ -3,6 +3,7 @@ import { useMoralis } from "react-moralis";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Helmet } from "react-helmet";
 import { Switch, Route } from "react-router-dom";
+
 import Aos from "aos";
 import Modal from "./components/Modal";
 

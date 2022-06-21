@@ -23,6 +23,8 @@ const BiddingBox = ({
     })();
   }, [highestBidder]);
 
+  console.log("highestBidAmount", highestBidAmount);
+
   return (
     <div
       style={{
@@ -33,6 +35,25 @@ const BiddingBox = ({
       }}
     >
       <div className={isLightMode ? "biding-end" : "biding-end"}>
+        <div className="sides">
+          <p
+            className={
+              isLightMode ? "biding-end-title-light" : "biding-end-title"
+            }
+          >
+            {t("common.highestBid")}:
+          </p>
+          <div className="count-down titled circled text-center flex-1">
+            <div className="auction-countdown">
+              <div className="auction-countdown-item">
+                <p className={isLightMode ? "text-dark" : ""}>
+                  {highestBidAmount} UIT
+                </p>
+                <p>{userInfo?.username}</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div className="sides">
           <p
             className={
@@ -82,25 +103,6 @@ const BiddingBox = ({
                 }
               }}
             />
-          </div>
-        </div>
-        <div className="sides">
-          <p
-            className={
-              isLightMode ? "biding-end-title-light" : "biding-end-title"
-            }
-          >
-            {t("common.highestBid")}:
-          </p>
-          <div className="count-down titled circled text-center flex-1">
-            <div className="auction-countdown">
-              <div className="auction-countdown-item">
-                <p className={isLightMode ? "text-dark" : ""}>
-                  {highestBidAmount} UIT
-                </p>
-                <p>{userInfo?.username}</p>
-              </div>
-            </div>
           </div>
         </div>
       </div>
