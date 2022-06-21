@@ -315,7 +315,7 @@ describe("NFT Auction", function () {
       1,
       1, // starting price
       startDate,
-      new Date().getTime(),
+      3600,
       1,
       {
         value: listingPrice,
@@ -325,36 +325,51 @@ describe("NFT Auction", function () {
     auctionId = result.events[2].args.auctionId;
   });
 
-  it("Should addr2 start a Auction", async function () {
-    const date = new Date();
-    date.setDate(date.getDate());
-    const startDate = Math.floor(date.getTime() / 1000);
-    await nft.connect(addr2).setApprovalForAll(auction.address, true);
-    trans = await auction.connect(addr2).startAuction(
-      nft.address,
-      2,
-      1, // starting price
-      startDate,
-      new Date().getTime(),
-      1, // bidding step
-      {
-        value: listingPrice,
-      }
-    );
+  // it("Should addr2 start a Auction", async function () {
+  //   const date = new Date();
+  //   date.setDate(date.getDate());
+  //   const startDate = Math.floor(date.getTime() / 1000);
+  //   await nft.connect(addr2).setApprovalForAll(auction.address, true);
+  //   trans = await auction.connect(addr2).startAuction(
+  //     nft.address,
+  //     2,
+  //     1, // starting price
+  //     startDate,
+  //     3600,
+  //     1, // bidding step
+  //     {
+  //       value: listingPrice,
+  //     }
+  //   );
+  //   result = await trans.wait();
+  //   auctionId2 = result.events[2].args.auctionId;
+  // });
+
+  it("Should addr2 bid a Auction", async function () {
+    await token.connect(owner).approve(auction.address, 1000000);
+    await token.connect(addr2).approve(auction.address, 1000);
+
+    trans = await auction.connect(addr2).bid(auctionId, {
+      value: 1000,
+    });
     result = await trans.wait();
-    auctionId2 = result.events[2].args.auctionId;
+    console.log(result.events[0]);
+
+    // expect(await getBalance(addr2.address)).to.equal("9000");
   });
 
-  // it("Should addr2 bid a Auction", async function () {
-  //   await token.connect(owner).approve(auction.address, 1000000);
-  //   await token.connect(addr2).approve(auction.address, 1000);
-
-  //   await auction.connect(addr2).bid(auctionId, {
-  //     value: 1000,
-  //   });
-
-  //   expect(await getBalance(addr2.address)).to.equal("9000");
-  // });
+  it("Should addr2 bid a Auction", async function () {
+    await token.connect(owner).approve(auction.address, 1000000);
+    await token.connect(addr2).approve(auction.address, 2000);
+    await token.connect(addr3).approve(auction.address, 5000);
+    await auction.connect(addr2).bid(auctionId, {
+      value: 2000,
+    });
+    await auction.connect(addr3).bid(auctionId, {
+      value: 5000,
+    });
+    // expect(await getBalance(addr2.address)).to.equal("9000");
+  });
 
   // it("Should addr3 bid a Auction", async function () {
   //   expect(await getBalance(addr2.address)).to.equal("9000");
@@ -370,59 +385,59 @@ describe("NFT Auction", function () {
   //   expect(await getBalance(addr3.address)).to.equal("8000");
   // });
 
-  it("Should get all item are on the auction", async function () {
-    const items = await auction.fetchAuctionItems();
+  // it("Should get all item are on the auction", async function () {
+  //   const items = await auction.fetchAuctionItems();
 
-    items.map(async (i) => {
-      const item = {
-        auctionId: i.auctionId.toString(),
-        owner: i.owner,
-        tokenId: i.tokenId.toString(),
-        startingPrice: i.startingPrice.toString(),
-        startTime: i.startTime.toString(),
-        duration: i.duration.toString(),
-        biddingStep: i.biddingStep.toString(),
-      };
-      return item;
-    });
-    console.log(items);
-  });
+  //   items.map(async (i) => {
+  //     const item = {
+  //       auctionId: i.auctionId.toString(),
+  //       owner: i.owner,
+  //       tokenId: i.tokenId.toString(),
+  //       startingPrice: i.startingPrice.toString(),
+  //       startTime: i.startTime.toString(),
+  //       duration: i.duration.toString(),
+  //       biddingStep: i.biddingStep.toString(),
+  //     };
+  //     return item;
+  //   });
+  //   console.log(items);
+  // });
 
-  it("Should get addr1 item on the auction", async function () {
-    const items = await auction.fetchMyAuctionItems(addr1.address);
+  // it("Should get addr1 item on the auction", async function () {
+  //   const items = await auction.fetchMyAuctionItems(addr1.address);
 
-    items.map(async (i) => {
-      const item = {
-        auctionId: i.auctionId.toString(),
-        owner: i.owner,
-        tokenId: i.tokenId.toString(),
-        startingPrice: i.startingPrice.toString(),
-        startTime: i.startTime.toString(),
-        duration: i.duration.toString(),
-        biddingStep: i.biddingStep.toString(),
-      };
-      return item;
-    });
-    console.log(items);
-  });
+  //   items.map(async (i) => {
+  //     const item = {
+  //       auctionId: i.auctionId.toString(),
+  //       owner: i.owner,
+  //       tokenId: i.tokenId.toString(),
+  //       startingPrice: i.startingPrice.toString(),
+  //       startTime: i.startTime.toString(),
+  //       duration: i.duration.toString(),
+  //       biddingStep: i.biddingStep.toString(),
+  //     };
+  //     return item;
+  //   });
+  //   console.log(items);
+  // });
 
-  it("Should get addr2 item on the auction", async function () {
-    const items = await auction.fetchMyAuctionItems(addr2.address);
+  // it("Should get addr2 item on the auction", async function () {
+  //   const items = await auction.fetchMyAuctionItems(addr2.address);
 
-    items.map(async (i) => {
-      const item = {
-        auctionId: i.auctionId.toString(),
-        owner: i.owner,
-        tokenId: i.tokenId.toString(),
-        startingPrice: i.startingPrice.toString(),
-        startTime: i.startTime.toString(),
-        duration: i.duration.toString(),
-        biddingStep: i.biddingStep.toString(),
-      };
-      return item;
-    });
-    console.log(items);
-  });
+  //   items.map(async (i) => {
+  //     const item = {
+  //       auctionId: i.auctionId.toString(),
+  //       owner: i.owner,
+  //       tokenId: i.tokenId.toString(),
+  //       startingPrice: i.startingPrice.toString(),
+  //       startTime: i.startTime.toString(),
+  //       duration: i.duration.toString(),
+  //       biddingStep: i.biddingStep.toString(),
+  //     };
+  //     return item;
+  //   });
+  //   console.log(items);
+  // });
 
   // it("Should get auction detail", async function () {
   //   await auction.getAuctionDetail(auctionId);
@@ -436,9 +451,9 @@ describe("NFT Auction", function () {
   //   expect(await getBalance(addr1.address)).to.equal("12000");
   // });
 
-  // it("Should get auction history", async function () {
-  //   console.log(await auction.getAuctionHistory(1));
-  // });
+  it("Should get auction history", async function () {
+    console.log(await auction.getAuctionHistory(1));
+  });
 });
 
 // describe("NFT Market", function () {

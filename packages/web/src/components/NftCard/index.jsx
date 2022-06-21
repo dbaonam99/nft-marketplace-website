@@ -87,7 +87,7 @@ function NftCard(props) {
                     <p className={isLightMode ? "b-text" : "w-text"}>
                       {startingPrice === highestBidAmount
                         ? t("common.noBidYet")
-                        : `${price} UIT`}
+                        : `${highestBidAmount} UIT`}
                     </p>
                   )}
                 </p>

@@ -33,8 +33,6 @@ function ListedItemsItem({
     })();
   }, [seller]);
 
-  console.log("check", tokenId);
-
   return (
     <>
       <SaleModal

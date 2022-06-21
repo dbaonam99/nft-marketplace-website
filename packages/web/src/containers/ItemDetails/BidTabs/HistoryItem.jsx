@@ -24,7 +24,7 @@ const HistoryItem = ({ item, isMarket }) => {
       </div>
       <div className="author-info">
         <p className={isLightMode ? "text-muted" : ""}>
-          {t(`common.${item.message}By`)}
+          {t(`common.${item.message}By`)}{" "}
           <span className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}>
             {userInfo?.username}
           </span>

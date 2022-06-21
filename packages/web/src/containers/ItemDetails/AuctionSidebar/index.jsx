@@ -14,25 +14,24 @@ import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
 import Avatar from "../../../components/Avatar/Avatar";
 
-const AuctionSidebar = ({
-  name,
-  price,
-  owner,
-  seller,
-  auctionId,
-  description,
-  startingPrice,
-  duration,
-  startTime,
-  createdDate,
-}) => {
+const AuctionSidebar = (props) => {
+  const {
+    name,
+    price,
+    owner,
+    seller,
+    auctionId,
+    description,
+    startingPrice,
+    duration,
+    startTime,
+    createdDate,
+    highestBidAmount,
+  } = props;
   const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const { data: highestBidder } = useGetHighestBidderQuery({
-    auctionId,
-  });
-  const { data: highestBidAmount } = useGetHighestBidAmountQuery({
     auctionId,
   });
   const [userInfo, setUserInfo] = useState({});

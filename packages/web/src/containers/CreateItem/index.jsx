@@ -154,11 +154,11 @@ const CreateItemContainer = () => {
 
     switch (durationType) {
       case "hour": {
-        durationTimestamp = duration * 3600 * 1000;
+        durationTimestamp = duration * 3600;
         break;
       }
       case "day": {
-        durationTimestamp = duration * 24 * 3600 * 1000;
+        durationTimestamp = duration * 24 * 3600;
         break;
       }
       default:

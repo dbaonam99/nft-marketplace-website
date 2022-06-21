@@ -18,6 +18,7 @@ contract NFTAuction is ReentrancyGuard {
     using Counters for Counters.Counter;
     Counters.Counter private _auctionIds;
     Counters.Counter private _bidIds;
+    Counters.Counter private _auctionHistoryCount;
 
     IERC20 uit;
     address contractOwner;
@@ -55,6 +56,15 @@ contract NFTAuction is ReentrancyGuard {
         address bidder;
         uint256 bidDate;
         uint256 price;
+        string message;
+    }
+
+    struct AuctionHistory {
+        uint256 tokenId;
+        address user;
+        uint256 createdDate;
+        uint256 price;
+        string message;
     }
 
     event AuctionCreated(
@@ -76,7 +86,10 @@ contract NFTAuction is ReentrancyGuard {
     mapping(uint256 => Auction) public idToAuction;
     mapping(address => uint) public bids;
     mapping(uint256 => BidInfo) public bidHistory;
+    mapping(uint256 => uint) public bidHistoryCount;
     mapping(address => uint256) public userAuctionCount;
+    mapping (uint256 => mapping(uint => AuctionHistory)) public auctionHistory;
+    mapping (uint256 => uint256) public historyCount;
 
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
@@ -113,7 +126,17 @@ contract NFTAuction is ReentrancyGuard {
 
         ERC721(nftContract).transferFrom(msg.sender, contractOwner, tokenId);
         userAuctionCount[msg.sender] += 1;
-        
+
+        _auctionHistoryCount.increment();
+        historyCount[tokenId]++;
+        auctionHistory[tokenId][historyCount[tokenId]] = AuctionHistory(
+            tokenId,
+            msg.sender,
+            block.timestamp,
+            startingPrice,
+            "sell"
+        );
+
         emit AuctionCreated(
             auctionId,
             nftContract,
@@ -128,6 +151,7 @@ contract NFTAuction is ReentrancyGuard {
         return auctionId;
     }
 
+    event EventTest(uint256 start, uint256 end, uint current);
     function bid(uint256 auctionId) public payable nonReentrant returns (bool) {
         uint256 startDate = idToAuction[auctionId].startTime;
         uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
@@ -136,6 +160,7 @@ contract NFTAuction is ReentrancyGuard {
         _bidIds.increment();
         uint256 bidId = _bidIds.current();
 
+        emit EventTest(startDate, endDate, block.timestamp);
         require(block.timestamp >= startDate && block.timestamp < endDate,  
             "Auction is finished or not started yet"
         );
@@ -157,8 +182,10 @@ contract NFTAuction is ReentrancyGuard {
                 auctionId,
                 msg.sender,
                 block.timestamp,
-                price
+                price,
+                "bid"
             );
+            bidHistoryCount[auctionId] += 1;
 
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
@@ -192,8 +219,10 @@ contract NFTAuction is ReentrancyGuard {
                 auctionId,
                 msg.sender,
                 block.timestamp,
-                price
+                price,
+                "bid"
             );
+            bidHistoryCount[auctionId] += 1;
 
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
@@ -204,10 +233,11 @@ contract NFTAuction is ReentrancyGuard {
     function getAuctionHistory(uint256 auctionId) public view returns (BidInfo[] memory) {
         uint bidCount = _bidIds.current();
         uint currentIndex = 0;
+        uint historyCount = bidHistoryCount[auctionId];
 
-        BidInfo[] memory items = new BidInfo[](bidCount);
+        BidInfo[] memory items = new BidInfo[](historyCount);
         for (uint i = 0; i < bidCount; i++) {
-            if (idToAuction[i + 1].auctionId == auctionId) {
+            if (bidHistory[i + 1].auctionId == auctionId) {
                 uint currentId = i + 1;
                 BidInfo storage currentItem = bidHistory[currentId];
                 items[currentIndex] = currentItem;

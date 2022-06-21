@@ -35,11 +35,15 @@ export const useCreateAuctionMutation = () => {
       const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
       await nftContract.setApprovalForAll(AUCTION_ADDRESS, true);
 
+      const date = new Date();
+      date.setDate(date.getDate());
+      const startDate = Math.floor(date.getTime() / 1000);
+
       let transaction = await contract.startAuction(
         NFT_ADDRESS,
         tokenId,
         price,
-        new Date().getTime(),
+        startDate,
         duration,
         biddingStep,
         { value: listingPrice }
@@ -62,9 +66,10 @@ export const useBidMutation = () => {
 
     const tokenContract = new ethers.Contract(TOKEN_ADDRESS, Token_ABI, signer);
 
-    await tokenContract.approve(AUCTION_ADDRESS, price);
+    const _price = price * 10 ** 10;
+    await tokenContract.approve(AUCTION_ADDRESS, _price);
     let transaction = await contract.bid(auctionId, {
-      value: price,
+      value: _price,
     });
 
     return await transaction.wait();
@@ -101,6 +106,7 @@ export const useGetAuctionItemsQuery = () => {
           image: meta.data.image,
           name: meta.data.name,
           description: meta.data.description,
+          highestBidAmount: Number(i.highestBidAmount.toString()) / 10 ** 10,
         };
         return item;
       })
@@ -124,6 +130,8 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       provider
     );
 
+    console.log("tokenId", tokenId);
+
     const data = await auctionContract.getAuctionDetail(tokenId);
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
     const meta = await axios.get(tokenUri);
@@ -140,6 +148,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       name: meta.data.name,
       description: meta.data.description,
       createdDate: data.createdDate.toString(),
+      highestBidAmount: Number(data.highestBidAmount.toString()) / 10 ** 10,
     };
     return item;
   });
@@ -178,7 +187,6 @@ export const useGetHighestBidAmountQuery = ({ auctionId }) => {
         provider
       );
 
-      console.log(auctionId);
       const data = await auctionContract.getCurrentBidAmount(auctionId);
 
       return data.toString();
@@ -208,12 +216,13 @@ export const useGetBidHistoryQuery = ({ auctionId }) => {
 
       const items = await Promise.all(
         data.map(async (i) => {
-          let price = ethers.utils.formatUnits(i.price.toString(), "ether");
+          console.log(i);
           let item = {
-            price,
+            price: Number(i.price.toString()) / 10 ** 10,
             auctionId: i.auctionId.toNumber(),
             bidder: i.bidder,
             bidDate: i.bidDate,
+            message: i.message,
           };
           return item;
         })

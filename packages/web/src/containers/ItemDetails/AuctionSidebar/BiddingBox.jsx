@@ -23,7 +23,7 @@ const BiddingBox = ({
     })();
   }, [highestBidder]);
 
-  console.log("highestBidAmount", highestBidAmount);
+  console.log(highestBidAmount);
 
   return (
     <div
@@ -64,7 +64,9 @@ const BiddingBox = ({
           </p>
           <div className="count-down titled circled text-center flex-1">
             <Countdown
-              date={new Date(Number(duration) + Number(startTime))}
+              date={
+                new Date(Number(duration * 1000) + Number(startTime * 1000))
+              }
               renderer={(props) => {
                 if (props.completed) {
                   setEnded(true);
