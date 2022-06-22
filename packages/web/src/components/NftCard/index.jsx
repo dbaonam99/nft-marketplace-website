@@ -6,6 +6,8 @@ import { useTranslation } from "react-i18next";
 import { getUserInfo } from "../../queries/User";
 import Avatar from "../Avatar/Avatar";
 import "./nftCard.css";
+import SaleModal from "./SaleModal";
+import { useGetListingPriceQuery } from "../../queries/NFT";
 
 function NftCard(props) {
   const {
@@ -17,11 +19,14 @@ function NftCard(props) {
     auctionId,
     startingPrice,
     highestBidAmount,
+    itemId,
   } = props;
   const isLightMode = useThemeMode();
 
   const { t } = useTranslation();
   const [userInfo, setUserInfo] = useState({});
+  const [modalIsOpen, setIsOpen] = useState(false);
+  const { data: listingPrice } = useGetListingPriceQuery();
 
   useEffect(() => {
     (async () => {
@@ -30,104 +35,122 @@ function NftCard(props) {
     })();
   }, [seller]);
 
+  console.log("itemId", tokenId, itemId);
+
   return (
-    <div className="col-lg-3 col-sm-6 col-xs-12 nft-card">
-      <div className={clsx(isLightMode && "l-bg bt-border", "pricing-item")}>
-        <div className="wraper">
-          <div className="relative">
-            <NavLink
-              to={
-                auctionId
-                  ? `/item-details/${auctionId}?auction=true`
-                  : `/item-details/${tokenId}`
-              }
-            >
-              <img src={image} alt="" className="nft-img" />
-              <div className="nft-img-overlay" />
-            </NavLink>
-            <div className={clsx("owner-info", isLightMode && "bg-light")}>
-              <Avatar src={userInfo?.avatar} size="40px" />
-
-              <NavLink to={`/profile/${seller}`}>
-                <h3 className={isLightMode ? "text-dark" : ""}>
-                  {userInfo?.username}
-                </h3>
-              </NavLink>
-            </div>
-          </div>
-          <div className="info">
-            <NavLink
-              to={
-                auctionId
-                  ? `/item-details/${auctionId}?auction=true`
-                  : `/item-details/${tokenId}`
-              }
-            >
-              <h4 className={isLightMode ? "text-dark" : ""}>{name}</h4>
-            </NavLink>
-          </div>
-          {auctionId ? (
-            <div
-              className={clsx("d-flex", isLightMode ? "price-light" : "price")}
-            >
-              <div className="price-box">
-                <p className={isLightMode ? "text-muted" : "g-text"}>
-                  {t("common.from")}
-                </p>
-                <p className={isLightMode ? "b-text" : "w-text"}>
-                  {startingPrice} UIT
-                </p>
-              </div>
-              <div className="price-box">
-                <p className={isLightMode ? "text-muted" : "g-text"}>
-                  {t("common.highestBid")}
-                </p>
-                <p className={isLightMode ? "b-text" : "w-text"}>
-                  {highestBidAmount && (
-                    <p className={isLightMode ? "b-text" : "w-text"}>
-                      {startingPrice === highestBidAmount
-                        ? t("common.noBidYet")
-                        : `${highestBidAmount} UIT`}
-                    </p>
-                  )}
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div
-              className={clsx("d-flex", isLightMode ? "price-light" : "price")}
-            >
-              <div className="price-box">
-                <p className={isLightMode ? "text-muted" : "g-text"}>
-                  {t("common.price")}
-                </p>
-                <p className={isLightMode ? "b-text" : "w-text"}>{price} UIT</p>
-              </div>
-              <div className="price-box">
-                <p className={isLightMode ? "text-muted" : "g-text"}>
-                  {t("common.highestBid")}
-                </p>
-                <p className={isLightMode ? "b-text" : "w-text"}>
-                  {t("common.notForBid")}
-                </p>
-              </div>
-            </div>
-          )}
-
-          {/* <div className="count-down titled circled text-center">
-            <div className="simple_timer"></div>
-            <div className="admire">
+    <>
+      <SaleModal
+        modalIsOpen={modalIsOpen}
+        setIsOpen={setIsOpen}
+        itemId={itemId}
+        tokenId={tokenId}
+        listingPrice={listingPrice}
+      />
+      <div className="col-lg-3 col-sm-6 col-xs-12 nft-card">
+        <div className={clsx(isLightMode && "l-bg bt-border", "pricing-item")}>
+          <div className="wraper">
+            <div className="relative">
               <NavLink
-                className="btn more-btn w-100 text-center my-0 mx-auto "
-                to={`/item-details/${tokenId}?auction=true`}
+                to={
+                  auctionId
+                    ? `/item-details/${tokenId}?auction=true`
+                    : `/item-details/${tokenId}`
+                }
               >
-                {t("common.placeBid")}
+                <img src={image} alt="" className="nft-img" />
+                <div className="nft-img-overlay" />
+              </NavLink>
+              <div className={clsx("owner-info", isLightMode && "bg-light")}>
+                <Avatar src={userInfo?.avatar} size="40px" />
+
+                <NavLink to={`/profile/${seller}`}>
+                  <h3 className={isLightMode ? "text-dark" : ""}>
+                    {userInfo?.username}
+                  </h3>
+                </NavLink>
+              </div>
+            </div>
+            <div className="info">
+              <NavLink
+                to={
+                  auctionId
+                    ? `/item-details/${tokenId}?auction=true`
+                    : `/item-details/${tokenId}`
+                }
+              >
+                <h4 className={isLightMode ? "text-dark" : ""}>{name}</h4>
               </NavLink>
             </div>
-          </div> */}
+            {auctionId ? (
+              <div
+                className={clsx(
+                  "d-flex",
+                  isLightMode ? "price-light" : "price"
+                )}
+              >
+                <div className="price-box">
+                  <p className={isLightMode ? "text-muted" : "g-text"}>
+                    {t("common.from")}
+                  </p>
+                  <p className={isLightMode ? "b-text" : "w-text"}>
+                    {startingPrice} UIT
+                  </p>
+                </div>
+                <div className="price-box">
+                  <p className={isLightMode ? "text-muted" : "g-text"}>
+                    {t("common.highestBid")}
+                  </p>
+                  <p className={isLightMode ? "b-text" : "w-text"}>
+                    {highestBidAmount && (
+                      <p className={isLightMode ? "b-text" : "w-text"}>
+                        {startingPrice === highestBidAmount
+                          ? t("common.noBidYet")
+                          : `${highestBidAmount} UIT`}
+                      </p>
+                    )}
+                  </p>
+                </div>
+              </div>
+            ) : (
+              <div
+                className={clsx(
+                  "d-flex",
+                  isLightMode ? "price-light" : "price"
+                )}
+              >
+                <div className="price-box">
+                  <p className={isLightMode ? "text-muted" : "g-text"}>
+                    {t("common.price")}
+                  </p>
+                  <p className={isLightMode ? "b-text" : "w-text"}>
+                    {price} UIT
+                  </p>
+                </div>
+                <div className="price-box">
+                  <p className={isLightMode ? "text-muted" : "g-text"}>
+                    {t("common.highestBid")}
+                  </p>
+                  <p className={isLightMode ? "b-text" : "w-text"}>
+                    {t("common.notForBid")}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            <div className="admire">
+              <div
+                className={isLightMode ? "adm text-muted w-100" : "w-100 adm"}
+                onClick={() => setIsOpen(true)}
+              >
+                <button className="btn btn-explore more-btn w-100">
+                  {t("common.putOnSale")}
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

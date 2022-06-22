@@ -39,10 +39,11 @@ export const useCreateAuctionMutation = () => {
       date.setDate(date.getDate());
       const startDate = Math.floor(date.getTime() / 1000);
 
+      const _price = price * 10 ** 10;
       let transaction = await contract.startAuction(
         NFT_ADDRESS,
         tokenId,
-        price,
+        _price,
         startDate,
         duration,
         biddingStep,
@@ -99,7 +100,7 @@ export const useGetAuctionItemsQuery = () => {
           auctionId: i.auctionId.toString(),
           owner: i.owner,
           tokenId: i.tokenId.toString(),
-          startingPrice: i.startingPrice.toString(),
+          startingPrice: Number(i.startingPrice.toString()) / 10 ** 10,
           startTime: i.startTime.toString(),
           duration: i.duration.toString(),
           biddingStep: i.biddingStep.toString(),
@@ -107,6 +108,7 @@ export const useGetAuctionItemsQuery = () => {
           name: meta.data.name,
           description: meta.data.description,
           highestBidAmount: Number(i.highestBidAmount.toString()) / 10 ** 10,
+          itemId: i.tokenId.toNumber(),
         };
         return item;
       })
@@ -140,7 +142,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       auctionId: data.auctionId.toString(),
       owner: data.owner,
       tokenId: data.tokenId.toString(),
-      startingPrice: data.startingPrice.toString(),
+      startingPrice: Number(data.startingPrice.toString()) / 10 ** 10,
       startTime: data.startTime.toString(),
       duration: data.duration.toString(),
       biddingStep: data.biddingStep.toString(),
@@ -261,7 +263,7 @@ export const useGetMyAuctionItemsQuery = (ethAddress) => {
             auctionId: i.auctionId.toString(),
             owner: i.owner,
             tokenId: i.tokenId.toString(),
-            startingPrice: i.startingPrice.toString(),
+            startingPrice: Number(i.startingPrice.toString()) / 10 ** 10,
             startTime: i.startTime.toString(),
             duration: i.duration.toString(),
             biddingStep: i.biddingStep.toString(),

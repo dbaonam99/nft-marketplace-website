@@ -16,8 +16,8 @@ const MarketSideBar = ({
   description,
   sold,
   itemId,
+  tokenId,
 }) => {
-  const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const [userInfo, setUserInfo] = useState({});
@@ -34,7 +34,7 @@ const MarketSideBar = ({
   const buyNft = () => {
     if (sold) return;
     buyNFTMutation.mutate({
-      tokenId,
+      itemId,
       price: price,
     });
   };

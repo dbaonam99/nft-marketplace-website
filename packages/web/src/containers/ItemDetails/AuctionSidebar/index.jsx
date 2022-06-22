@@ -27,8 +27,8 @@ const AuctionSidebar = (props) => {
     startTime,
     createdDate,
     highestBidAmount,
+    tokenId,
   } = props;
-  const { tokenId } = useParams();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const { data: highestBidder } = useGetHighestBidderQuery({

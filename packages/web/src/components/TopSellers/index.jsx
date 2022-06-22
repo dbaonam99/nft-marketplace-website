@@ -12,12 +12,10 @@ function TopSellersContainer({ data, isTopBuyer, isLoading }) {
   const sortedData = useMemo(() => {
     const counts = {};
     for (let i in data) {
-      if (typeof data[i].user === "number") {
-        counts[data[i].user] += data[i].count;
-      } else {
-        counts[data[i].user] = 0;
-        counts[data[i].user] += data[i].count;
-      }
+      counts[data[i].user] = 0;
+    }
+    for (let i in data) {
+      counts[data[i].user] += data[i].count;
     }
 
     const newData = Object.entries(counts).map((item) => ({

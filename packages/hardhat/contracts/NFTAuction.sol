@@ -351,7 +351,16 @@ contract NFTAuction is ReentrancyGuard {
     }
 
     function getAuctionDetail(uint256 tokenId) public view returns (Auction memory) { 
-        return idToAuction[tokenId];
+        uint itemCount = _auctionIds.current();
+
+        Auction memory item;
+        for (uint i = 0; i < itemCount; i++) {
+        if (idToAuction[i + 1].tokenId == tokenId) {
+            uint currentId = i + 1;
+            item = idToAuction[currentId];
+        }
+        }
+        return item;
     } 
 }
 

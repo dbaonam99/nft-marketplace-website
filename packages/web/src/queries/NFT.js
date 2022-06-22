@@ -71,24 +71,13 @@ export const useCreateNFTMarketItemMutation = () => {
       );
       callback();
       return await transaction.wait();
-    },
-    {
-      onError: (error) => {
-        if (error instanceof Error) {
-          // toast.error(error.message);
-        }
-      },
-
-      onSuccess: (data) => {
-        // toast.success(data);
-      },
     }
   );
 };
 
 export const useBuyNFTMutation = () => {
   return useMutation(
-    async ({ tokenId, price }) => {
+    async ({ itemId, price }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
@@ -111,7 +100,7 @@ export const useBuyNFTMutation = () => {
       await tokenContract.approve(MARKET_ADDRESS, _price);
       const transaction = await marketContract.buyMarketItem(
         NFT_ADDRESS,
-        tokenId,
+        itemId,
         {
           value: _price,
         }
@@ -170,12 +159,13 @@ export const useGetMarketItemsQuery = () => {
           const meta = await axios.get(tokenUri);
           let item = {
             price: Number(i.price.toString()) / 10 ** 10,
-            tokenId: i.itemId.toNumber(),
+            tokenId: i.tokenId.toNumber(),
             seller: i.seller,
             owner: i.owner,
             image: meta.data.image,
             name: meta.data.name,
             description: meta.data.description,
+            itemId: i.itemId.toNumber(),
           };
           return item;
         })
@@ -251,6 +241,7 @@ export const useGetCreatedNFTsQuery = (ethAddress) => {
             image: meta.data.image,
             name: meta.data.name,
             description: meta.data.description,
+            itemId: i.itemId.toNumber(),
           };
           return item;
         })
