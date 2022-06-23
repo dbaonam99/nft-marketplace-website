@@ -1,7 +1,29 @@
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import useThemeMode from "../../hooks/useThemeMode";
+import Avatar from "../Avatar";
+import "./index.css";
 
-function PartProfile({ img1, img2, img3, data, user }) {
+function PartProfile({ cover, avatar, img3, data, user }) {
   const isLightMode = useThemeMode();
+  const { t } = useTranslation();
+
+  const [isCopied, setIsCopied] = useState(false);
+
+  useEffect(() => {
+    if (isCopied) {
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 1000);
+    }
+  }, [isCopied]);
+
+  const handleCopy = (address) => {
+    setIsCopied(true);
+    navigator.clipboard.writeText(address);
+  };
+
+  console.log("isCopied", isCopied);
 
   return (
     <div className="col-12 col-lg-3">
@@ -12,11 +34,11 @@ function PartProfile({ img1, img2, img3, data, user }) {
             : "service_single_content collection-item"
         }
       >
-        <div className={`collection_icon ${!img1 && "mb-5"}`}>
-          <img src={img1} className="center-block" alt="" />
+        <div className="part-profile-cover">
+          <img src={cover} className="center-block" alt="" />
         </div>
         <span className={isLightMode ? "aut-info bt-border" : "aut-info"}>
-          <img src={img2} width="50" alt="" />
+          <Avatar src={avatar} size="50px" />
         </span>
         <div className="collection_info text-center">
           <h6 className={isLightMode ? "text-dark" : ""}>{user?.username}</h6>
@@ -24,22 +46,16 @@ function PartProfile({ img1, img2, img3, data, user }) {
             Creative NFTs Designer <img src={img3} width="20" alt="" />
           </p>
 
-          <div className="search-widget-area mt-15">
-            <form action="#" method="post">
-              <input
-                className={isLightMode ? "bt-border text-dark pr-3" : "pr-5"}
-                type="text"
-                name="wallet"
-                id="wallet"
-                value={user?.ethAddress}
-              />
-              <button className={isLightMode ? "btn text-dark" : "btn"}>
-                <i className="fa fa-copy"></i>
-              </button>
-            </form>
+          <div
+            className="search-widget-area mt-15"
+            onClick={() => handleCopy(user?.ethAddress)}
+          >
+            <p className={isLightMode ? "bt-border text-dark" : ""}>
+              {isCopied ? "Copied!" : user?.ethAddress}
+            </p>
           </div>
 
-          {/* <ul className="social-links mt-30 mb-30">
+          <ul className="social-links mt-30 mb-30">
             {data &&
               data.map((item, i) => (
                 <li key={i}>
@@ -51,7 +67,7 @@ function PartProfile({ img1, img2, img3, data, user }) {
           </ul>
           <a href="profile.html" className="more-btn">
             {t("common.follow")}
-          </a> */}
+          </a>
         </div>
       </div>
     </div>

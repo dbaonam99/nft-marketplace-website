@@ -4,7 +4,7 @@ import clsx from "clsx";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { getUserInfo } from "../../queries/User";
-import Avatar from "../Avatar/Avatar";
+import Avatar from "../Avatar";
 import "./nftCard.css";
 import SaleModal from "./SaleModal";
 import { useGetListingPriceQuery } from "../../queries/NFT";
@@ -20,6 +20,8 @@ function NftCard(props) {
     startingPrice,
     highestBidAmount,
     itemId,
+    sold,
+    owner,
   } = props;
   const isLightMode = useThemeMode();
 
@@ -30,12 +32,12 @@ function NftCard(props) {
 
   useEffect(() => {
     (async () => {
-      const _userInfo = await getUserInfo(seller);
+      const _userInfo = await getUserInfo(owner);
       setUserInfo(_userInfo);
     })();
-  }, [seller]);
+  }, [owner]);
 
-  console.log("itemId", tokenId, itemId);
+  console.log("sold", sold);
 
   return (
     <>
@@ -136,17 +138,18 @@ function NftCard(props) {
                 </div>
               </div>
             )}
-
-            <div className="admire">
-              <div
-                className={isLightMode ? "adm text-muted w-100" : "w-100 adm"}
-                onClick={() => setIsOpen(true)}
-              >
-                <button className="btn btn-explore more-btn w-100">
-                  {t("common.putOnSale")}
-                </button>
+            {sold && (
+              <div className="admire">
+                <div
+                  className={isLightMode ? "adm text-muted w-100" : "w-100 adm"}
+                  onClick={() => setIsOpen(true)}
+                >
+                  <button className="btn btn-explore more-btn w-100">
+                    {t("common.putOnSale")}
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

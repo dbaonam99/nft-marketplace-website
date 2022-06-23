@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { getUserInfo } from "../../../queries/User";
 import moment from "moment";
-import Avatar from "../../../components/Avatar/Avatar";
+import Avatar from "../../../components/Avatar";
 
 const HistoryItem = ({ item, isMarket }) => {
   const isLightMode = useThemeMode();

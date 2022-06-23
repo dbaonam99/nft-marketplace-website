@@ -1,7 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import CollectionItem from "./CollectionItem";
 import Breadcrumb from "../../components/Breadcrumb";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import ListedItemsItem from "./ListedItemsItem";
@@ -15,6 +14,10 @@ import {
   useGetMyNFTsQuery,
 } from "../../queries/NFT.js";
 import { SortingCard } from "../../utils";
+import PartProfile from "../../components/PartProfile";
+
+import CreateItemArtworkfire from "../../assets/img/art-work/fire.png";
+import CreateItemDataIcon from "../../data/data-containers/data-CollectionItem-Profile.json";
 
 const ProfileContainer = () => {
   const isLightMode = useThemeMode();
@@ -61,7 +64,13 @@ const ProfileContainer = () => {
       >
         <div className="container">
           <div className="row">
-            <CollectionItem user={user} />
+            <PartProfile
+              cover={user?.cover}
+              avatar={user?.avatar}
+              img3={CreateItemArtworkfire}
+              data={CreateItemDataIcon}
+              user={user}
+            />
 
             <div className="col-12 col-md-9">
               <div className="row d-flex justify-content-center">

@@ -27,7 +27,7 @@ function TopSellersContainer({ data, isTopBuyer, isLoading }) {
     for (let i = 0; i < emptyLength; i++) {
       newData.push({ user: "", count: 0 });
     }
-    return newData;
+    return newData.sort((a, b) => b.count - a.count);
   }, [data]);
 
   return (

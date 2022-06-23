@@ -1,0 +1,9 @@
+.part-profile-cover {
+  width: 100%;
+  height: 150px;
+  background-color: #ddd;
+  overflow: hidden;
+}
+.part-profile-cover img {
+  object-fit: cover;
+}

@@ -81,13 +81,14 @@ contract NFTMarket is ReentrancyGuard {
     return listingPrice;
   }
 
+  event TestEvent(string test, address test2);
   function createMarketItem(
     address nftContract,
     uint256 tokenId,
     uint256 price,
     uint256 oldItemId
   ) public payable nonReentrant returns (uint256) {
-    require(price > 0, "Price must be at least 1 wei");
+    require(price > 0, "Price must be at least 1 UIT");
     require(msg.value == listingPrice, "Price must be equal to listing price");
 
     uint256 itemId;
@@ -101,6 +102,18 @@ contract NFTMarket is ReentrancyGuard {
         payable(msg.sender),
         payable(msg.sender),
         payable(msg.sender),
+        price,
+        false,
+        block.timestamp
+      );
+
+      emit MarketItemCreated(
+        itemId,
+        nftContract,
+        tokenId,
+        msg.sender,
+        msg.sender,
+        msg.sender,
         price,
         false,
         block.timestamp
@@ -120,6 +133,18 @@ contract NFTMarket is ReentrancyGuard {
         false,
         block.timestamp
       );
+
+      emit MarketItemCreated(
+        itemId,
+        nftContract,
+        tokenId,
+        msg.sender,
+        msg.sender,
+        _creator,
+        price,
+        false,
+        block.timestamp
+      );
     }
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
@@ -134,18 +159,6 @@ contract NFTMarket is ReentrancyGuard {
       block.timestamp,
       price,
       "sell"
-    );
-    
-    emit MarketItemCreated(
-      itemId,
-      nftContract,
-      tokenId,
-      msg.sender,
-      msg.sender,
-      payable(msg.sender),
-      price,
-      false,
-      block.timestamp
     );
 
     return itemId;
@@ -285,7 +298,7 @@ contract NFTMarket is ReentrancyGuard {
     uint currentIndex = 0;
 
     for (uint i = 0; i < totalItemCount; i++) {
-      if (idToMarketItem[i + 1].seller == userAddress) {
+      if (idToMarketItem[i + 1].creator == userAddress) {
         itemCount += 1;
       }
     }

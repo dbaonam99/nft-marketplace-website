@@ -939,6 +939,9 @@ body .bt-dropdown-menu .dropdown-item.active {
   margin: 0 auto;
   margin-top: -35px;
 }
+.aut-info img {
+  border-radius: 100%;
+}
 
 .details-list {
   margin: 30px 0;

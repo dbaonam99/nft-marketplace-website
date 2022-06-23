@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
+import "./History.sol";
 
 contract NFTAuction is ReentrancyGuard {
     bytes32 public constant CREATED = keccak256("CREATED");
@@ -91,6 +92,15 @@ contract NFTAuction is ReentrancyGuard {
     mapping (uint256 => mapping(uint => AuctionHistory)) public auctionHistory;
     mapping (uint256 => uint256) public historyCount;
 
+    function createHistory(
+        address userAddress, 
+        uint date,
+        string memory title, 
+        string memory description
+    ) public {
+        History(historyAddress).createHistory(userAddress, date, title, description);
+    }
+
     function getListingPrice() public view returns (uint256) {
         return listingPrice;
     }
@@ -108,7 +118,7 @@ contract NFTAuction is ReentrancyGuard {
 
         _auctionIds.increment();
         uint256 auctionId = _auctionIds.current();
-
+ 
         idToAuction[auctionId] = Auction(
             auctionId,
             nftContract,
@@ -137,6 +147,8 @@ contract NFTAuction is ReentrancyGuard {
             "sell"
         );
 
+        createHistory(msg.sender, block.timestamp, "Put token to the auction!", "User put token to the auction!");
+
         emit AuctionCreated(
             auctionId,
             nftContract,
@@ -151,7 +163,6 @@ contract NFTAuction is ReentrancyGuard {
         return auctionId;
     }
 
-    event EventTest(uint256 start, uint256 end, uint current);
     function bid(uint256 auctionId) public payable nonReentrant returns (bool) {
         uint256 startDate = idToAuction[auctionId].startTime;
         uint256 endDate = idToAuction[auctionId].startTime + idToAuction[auctionId].duration;
@@ -160,7 +171,6 @@ contract NFTAuction is ReentrancyGuard {
         _bidIds.increment();
         uint256 bidId = _bidIds.current();
 
-        emit EventTest(startDate, endDate, block.timestamp);
         require(block.timestamp >= startDate && block.timestamp < endDate,  
             "Auction is finished or not started yet"
         );
@@ -187,6 +197,7 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
+            createHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -224,6 +235,8 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
+
+            createHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -233,9 +246,9 @@ contract NFTAuction is ReentrancyGuard {
     function getAuctionHistory(uint256 auctionId) public view returns (BidInfo[] memory) {
         uint bidCount = _bidIds.current();
         uint currentIndex = 0;
-        uint historyCount = bidHistoryCount[auctionId];
+        uint _historyCount = bidHistoryCount[auctionId];
 
-        BidInfo[] memory items = new BidInfo[](historyCount);
+        BidInfo[] memory items = new BidInfo[](_historyCount);
         for (uint i = 0; i < bidCount; i++) {
             if (bidHistory[i + 1].auctionId == auctionId) {
                 uint currentId = i + 1;
@@ -350,15 +363,16 @@ contract NFTAuction is ReentrancyGuard {
         return items;
     }
 
+    event EventTest(uint256 test);
     function getAuctionDetail(uint256 tokenId) public view returns (Auction memory) { 
         uint itemCount = _auctionIds.current();
 
         Auction memory item;
         for (uint i = 0; i < itemCount; i++) {
-        if (idToAuction[i + 1].tokenId == tokenId) {
-            uint currentId = i + 1;
-            item = idToAuction[currentId];
-        }
+            if (idToAuction[i + 1].tokenId == tokenId) {
+                uint currentId = i + 1;
+                item = idToAuction[currentId];
+            }
         }
         return item;
     } 

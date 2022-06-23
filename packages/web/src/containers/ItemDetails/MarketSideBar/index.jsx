@@ -6,7 +6,7 @@ import { useBuyNFTMutation } from "../../../queries/NFT";
 import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
-import Avatar from "../../../components/Avatar/Avatar";
+import Avatar from "../../../components/Avatar";
 
 const MarketSideBar = ({
   name,
@@ -82,7 +82,7 @@ const MarketSideBar = ({
                 <Avatar src={userInfo?.avatar} size="60px" />
               </div>
               <div className="author-info">
-                <NavLink to="/profile">
+                <NavLink to={`/profile/${userInfo?.ethAddress}`}>
                   <h5
                     className={
                       isLightMode ? "author-name text-dark" : "author-name"

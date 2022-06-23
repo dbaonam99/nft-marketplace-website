@@ -5,14 +5,11 @@ import { getUserInfo } from "../../../queries/User";
 import moment from "moment";
 
 import BidTabs from "../BidTabs";
-import {
-  useGetHighestBidAmountQuery,
-  useGetHighestBidderQuery,
-} from "../../../queries/Auction";
+import { useGetHighestBidderQuery } from "../../../queries/Auction";
 import BiddingBox from "./BiddingBox";
 import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
-import Avatar from "../../../components/Avatar/Avatar";
+import Avatar from "../../../components/Avatar";
 
 const AuctionSidebar = (props) => {
   const {
