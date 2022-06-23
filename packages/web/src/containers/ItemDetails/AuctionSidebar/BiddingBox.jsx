@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
 import { useTranslation } from "react-i18next";
+import { useMoralis } from "react-moralis";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { getUserInfo } from "../../../queries/User";
 
 const BiddingBox = ({
   onBid,
+  startingPrice,
   highestBidAmount,
   highestBidder,
   duration,
   startTime,
+  endAuction,
+  owner,
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const [userInfo, setUserInfo] = useState({});
   const [ended, setEnded] = useState(false);
+  const { user } = useMoralis();
+  const isOwner =
+    user?.get("ethAddress")?.toLowerCase() === owner?.toLowerCase();
+  const isNoBidYet = highestBidAmount === startingPrice;
 
   useEffect(() => {
     (async () => {
@@ -22,8 +30,6 @@ const BiddingBox = ({
       setUserInfo(_userInfo);
     })();
   }, [highestBidder]);
-
-  console.log(highestBidAmount);
 
   return (
     <div
@@ -47,7 +53,9 @@ const BiddingBox = ({
             <div className="auction-countdown">
               <div className="auction-countdown-item">
                 <p className={isLightMode ? "text-dark" : ""}>
-                  {highestBidAmount} UIT
+                  {isNoBidYet
+                    ? t("common.noBidYet")
+                    : `${highestBidAmount} UIT`}
                 </p>
                 <p>{userInfo?.username}</p>
               </div>
@@ -71,7 +79,9 @@ const BiddingBox = ({
                 if (props.completed) {
                   setEnded(true);
                   return (
-                    <b style={{ color: "red" }}>{t("common.biddingEnded")}</b>
+                    <div>
+                      <b style={{ color: "red" }}>{t("common.biddingEnded")}</b>
+                    </div>
                   );
                 } else {
                   return (
@@ -108,9 +118,18 @@ const BiddingBox = ({
           </div>
         </div>
       </div>
-      {!ended && (
+      {ended ? (
+        isOwner && (
+          <div
+            className="open-popup-link more-btn width-100"
+            onClick={endAuction}
+          >
+            {t("common.endAuction")}
+          </div>
+        )
+      ) : (
         <div className="open-popup-link more-btn width-100" onClick={onBid}>
-          Place a bid
+          {t("common.placeABid")}
         </div>
       )}
     </div>

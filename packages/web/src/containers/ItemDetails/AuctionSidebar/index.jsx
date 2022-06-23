@@ -5,7 +5,10 @@ import { getUserInfo } from "../../../queries/User";
 import moment from "moment";
 
 import BidTabs from "../BidTabs";
-import { useGetHighestBidderQuery } from "../../../queries/Auction";
+import {
+  useEndAuctionMutation,
+  useGetHighestBidderQuery,
+} from "../../../queries/Auction";
 import BiddingBox from "./BiddingBox";
 import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
@@ -14,9 +17,7 @@ import Avatar from "../../../components/Avatar";
 const AuctionSidebar = (props) => {
   const {
     name,
-    price,
     owner,
-    seller,
     auctionId,
     description,
     startingPrice,
@@ -31,6 +32,7 @@ const AuctionSidebar = (props) => {
   const { data: highestBidder } = useGetHighestBidderQuery({
     auctionId,
   });
+  const endAuctionMutation = useEndAuctionMutation();
   const [userInfo, setUserInfo] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
 
@@ -40,6 +42,10 @@ const AuctionSidebar = (props) => {
       setUserInfo(_userInfo);
     })();
   }, [owner]);
+
+  const endAuction = () => {
+    endAuctionMutation.mutate({ auctionId });
+  };
 
   return (
     <>
@@ -131,7 +137,7 @@ const AuctionSidebar = (props) => {
               </div>
             </div>
 
-            <BidTabs isAuction auctionId={auctionId} />
+            <BidTabs isAuction auctionId={auctionId} tokenId={tokenId} />
           </div>
         </div>
         <div
@@ -139,10 +145,13 @@ const AuctionSidebar = (props) => {
         >
           <BiddingBox
             onBid={() => setIsOpen(true)}
+            endAuction={endAuction}
             highestBidder={highestBidder}
             highestBidAmount={highestBidAmount}
+            startingPrice={startingPrice}
             duration={duration}
             startTime={startTime}
+            owner={owner}
           />
         </div>
       </div>

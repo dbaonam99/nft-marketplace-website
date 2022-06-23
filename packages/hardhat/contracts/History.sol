@@ -5,7 +5,16 @@ import "@openzeppelin/contracts/utils/Counters.sol";
 
 contract History {
     using Counters for Counters.Counter;
-    Counters.Counter private _historyIds;
+    Counters.Counter private _userHistoryIds;
+    Counters.Counter private _tokenHistoryIds;
+
+    struct TokenHistory {
+        uint256 tokenId;
+        address user;
+        uint256 createdDate;
+        uint256 price;
+        string description;
+    }
 
     struct UserHistory {
         address user;
@@ -14,29 +23,32 @@ contract History {
         string description;
     }
 
-    mapping(uint256 => UserHistory) public idToHistory;
-    mapping(address => uint) public historyCounter;
+    mapping(uint256 => UserHistory) public idToUserHistory;
+    mapping(uint256 => mapping(uint => TokenHistory)) public idToTokenHistory;
+    mapping(address => uint) public userHistoryCounter;
+    mapping(uint256 => uint) public tokenHistoryCounter;
 
-    event HistoryCreated( address user, uint256 date, string title, string description);
+    event userHistoryCreated(address user, uint256 date, string title, string description);
+    event tokenHistoryCreated(uint256 tokenId, address user, uint256 createdDate, uint256 price, string description);
 
-    function createHistory(
+    function createUserHistory(
         address userAddress,
         uint256 date,
         string memory title,
         string memory description
     ) public returns (uint256) {
-        _historyIds.increment();
-        uint256 historyId = _historyIds.current();
+        _userHistoryIds.increment();
+        uint256 historyId = _userHistoryIds.current();
 
-        idToHistory[historyId] = UserHistory(
+        idToUserHistory[historyId] = UserHistory(
             userAddress,
             date,
             title,
             description
         );
-        historyCounter[userAddress] += 1;
+        userHistoryCounter[userAddress] += 1;
         
-        emit HistoryCreated(
+        emit userHistoryCreated(
             userAddress,
             date,
             title,
@@ -46,17 +58,58 @@ contract History {
     }
 
     function getUserHistory(address userAddress) public view returns (UserHistory[] memory) {
-        uint itemCount = _historyIds.current();
-        uint userHistoryCounter = historyCounter[userAddress];
+        uint itemCount = _userHistoryIds.current();
+        uint useruserHistoryCounter = userHistoryCounter[userAddress];
         uint currentIndex = 0;
 
-        UserHistory[] memory items = new UserHistory[](userHistoryCounter);
+        UserHistory[] memory items = new UserHistory[](useruserHistoryCounter);
         for (uint i = 0; i < itemCount; i++) {
-            if (idToHistory[i + 1].user == userAddress) {
+            if (idToUserHistory[i + 1].user == userAddress) {
                 uint currentId = i + 1;
-                UserHistory storage currentItem = idToHistory[currentId];
+                UserHistory storage currentItem = idToUserHistory[currentId];
                 items[currentIndex] = currentItem;
                 currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+    function createTokenHistory(
+        uint256 tokenId,
+        address userAddressate,
+        uint date,
+        uint256 price,
+        string memory description
+    ) public returns (uint256) {
+        _tokenHistoryIds.increment();
+        tokenHistoryCounter[tokenId]++;
+        idToTokenHistory[tokenId][tokenHistoryCounter[tokenId]] = TokenHistory(
+            tokenId,
+            userAddressate,
+            date,
+            price,
+            description
+        );
+        
+        emit tokenHistoryCreated(
+            tokenId,  
+            userAddressate,  
+            date,  
+            price, 
+            description
+        );
+        return tokenId;
+    }
+
+    function getTokenHistory(uint256 tokenId) public view returns (TokenHistory[] memory) {
+        uint _historyCount = _tokenHistoryIds.current();
+        uint _historyOfTokenCount = tokenHistoryCounter[tokenId];
+
+        TokenHistory[] memory items = new TokenHistory[](_historyOfTokenCount);
+        for (uint i = 0; i < _historyCount; i++) {
+            if (idToTokenHistory[tokenId][i + 1].tokenId == tokenId) {
+                TokenHistory storage currentItem = idToTokenHistory[tokenId][i + 1];
+                items[i] = currentItem;
             }
         }
         return items;

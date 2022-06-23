@@ -2,20 +2,22 @@ import { useTranslation } from "react-i18next";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useState } from "react";
 import { useGetBidHistoryQuery } from "../../../queries/Auction";
-import { useGetMarketHistoryQuery } from "../../../queries/NFT.js";
+import { useGetTokenHistoryQuery } from "../../../queries/NFT.js";
 import HistoryItem from "./HistoryItem";
 
-const BidTabs = ({ isAuction, auctionId, itemId }) => {
+const BidTabs = ({ isAuction, auctionId, tokenId }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const { data: bidHistory } = useGetBidHistoryQuery({
     auctionId,
   });
-  const { data: marketHistory } = useGetMarketHistoryQuery({
-    itemId,
+  const { data: marketHistory } = useGetTokenHistoryQuery({
+    tokenId,
   });
 
   const [currentTab, setTab] = useState(0);
+
+  console.log("tokenId", marketHistory, tokenId);
 
   return (
     <>

@@ -6,10 +6,12 @@ import { useMutation, useQuery } from "react-query";
 import NFT_ABI from "../contracts/contracts/NFT.sol/NFT.json";
 import NFTMarket_ABI from "../contracts/contracts/NFTMarket.sol/NFTMarket.json";
 import Token_ABI from "../contracts/contracts/Token.sol/Token.json";
+import HISTORY_ABI from "../contracts/contracts/History.sol/History.json";
 
 import { TOKEN_ADDRESS } from "../contracts/Token.address";
 import { NFT_ADDRESS } from "../contracts/NFT.address";
 import { MARKET_ADDRESS } from "../contracts/NFTMarket.address";
+import { HISTORY_ADDRESS } from "../contracts/History.address";
 
 export const useCreateNFTMutation = () => {
   return useMutation(
@@ -346,22 +348,22 @@ export const useTopBuyerQuery = () => {
   });
 };
 
-export const useGetMarketHistoryQuery = ({ itemId }) => {
+export const useGetTokenHistoryQuery = ({ tokenId }) => {
   return useQuery(
     "marketHistory",
     async () => {
-      if (!itemId) return;
+      if (!tokenId) return;
       const provider = new ethers.providers.JsonRpcProvider(
         "http://localhost:8545"
       );
 
-      const marketContract = new ethers.Contract(
-        MARKET_ADDRESS,
-        NFTMarket_ABI,
+      const historyContract = new ethers.Contract(
+        HISTORY_ADDRESS,
+        HISTORY_ABI,
         provider
       );
 
-      const data = await marketContract.getMarketHistory(itemId);
+      const data = await historyContract.getTokenHistory(tokenId);
 
       const items = await Promise.all(
         data.map(async (i) => {
@@ -370,7 +372,7 @@ export const useGetMarketHistoryQuery = ({ itemId }) => {
             price,
             tokenId: i.tokenId.toNumber(),
             user: i.user,
-            message: i.message,
+            description: i.description,
             createdDate: i.createdDate.toString(),
           };
           return item;

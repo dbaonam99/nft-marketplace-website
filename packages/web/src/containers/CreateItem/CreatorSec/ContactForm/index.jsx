@@ -226,6 +226,20 @@ const ContactForm = (props) => {
                   </label>
                   <div className="duration-types">
                     <div
+                      onClick={() => setCurrentDurationType("minute")}
+                      className={
+                        currentDurationType === "minute"
+                          ? isLightMode
+                            ? "duration-type duration-type-active"
+                            : "duration-type-dark duration-type-active-dark"
+                          : isLightMode
+                          ? "duration-type"
+                          : "duration-type-dark"
+                      }
+                    >
+                      Minute
+                    </div>
+                    <div
                       onClick={() => setCurrentDurationType("hour")}
                       className={
                         currentDurationType === "hour"

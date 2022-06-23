@@ -104,7 +104,7 @@ const MarketSideBar = ({
               </div>
             </div>
 
-            <BidTabs itemId={itemId} />
+            <BidTabs tokenId={tokenId} />
           </div>
         </div>
         <div

@@ -57,7 +57,7 @@ contract NFTAuction is ReentrancyGuard {
         address bidder;
         uint256 bidDate;
         uint256 price;
-        string message;
+        string description;
     }
 
     struct AuctionHistory {
@@ -65,7 +65,7 @@ contract NFTAuction is ReentrancyGuard {
         address user;
         uint256 createdDate;
         uint256 price;
-        string message;
+        string description;
     }
 
     event AuctionCreated(
@@ -92,13 +92,23 @@ contract NFTAuction is ReentrancyGuard {
     mapping (uint256 => mapping(uint => AuctionHistory)) public auctionHistory;
     mapping (uint256 => uint256) public historyCount;
 
-    function createHistory(
+    function createUserHistory(
         address userAddress, 
         uint date,
         string memory title, 
         string memory description
     ) public {
-        History(historyAddress).createHistory(userAddress, date, title, description);
+        History(historyAddress).createUserHistory(userAddress, date, title, description);
+    }
+
+    function createTokenHistory(
+        uint256 tokenId,
+        address userAddress,
+        uint date,
+        uint256 price, 
+        string memory description
+    ) public {
+        History(historyAddress).createTokenHistory(tokenId, userAddress, date, price, description);
     }
 
     function getListingPrice() public view returns (uint256) {
@@ -147,7 +157,8 @@ contract NFTAuction is ReentrancyGuard {
             "sell"
         );
 
-        createHistory(msg.sender, block.timestamp, "Put token to the auction!", "User put token to the auction!");
+        createUserHistory(msg.sender, block.timestamp, "Put token to the auction!", "User put token to the auction!");
+        createTokenHistory(tokenId, msg.sender, block.timestamp, startingPrice,  "startAuction");
 
         emit AuctionCreated(
             auctionId,
@@ -197,7 +208,7 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
-            createHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
+            createUserHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -235,8 +246,7 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
-
-            createHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
+            createUserHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -317,6 +327,8 @@ contract NFTAuction is ReentrancyGuard {
                 idToAuction[auctionId].tokenId
             );
             idToAuction[auctionId].status == FINISHED;
+            createUserHistory(msg.sender, block.timestamp, "End the aution!", "User End the aution!");
+            createTokenHistory(idToAuction[auctionId].tokenId, msg.sender, block.timestamp, idToAuction[auctionId].highestBidAmount,  "endAuction");
         } else {
             uit.transferFrom(
                 contractOwner, 
@@ -330,6 +342,8 @@ contract NFTAuction is ReentrancyGuard {
                 listingPrice
             );
             idToAuction[auctionId].status == FINISHED;
+            createUserHistory(msg.sender, block.timestamp, "End the aution!", "User End the aution!");
+            createTokenHistory(idToAuction[auctionId].tokenId, msg.sender, block.timestamp, idToAuction[auctionId].highestBidAmount,  "endAuction");
         }
     }
 
@@ -363,7 +377,6 @@ contract NFTAuction is ReentrancyGuard {
         return items;
     }
 
-    event EventTest(uint256 test);
     function getAuctionDetail(uint256 tokenId) public view returns (Auction memory) { 
         uint itemCount = _auctionIds.current();
 

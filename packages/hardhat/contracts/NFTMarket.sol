@@ -68,13 +68,23 @@ contract NFTMarket is ReentrancyGuard {
     uint256 createdDate
   );
 
-  function createHistory(
+  function createUserHistory(
     address userAddress, 
     uint date,
     string memory title, 
     string memory description
   ) public {
-    History(historyAddress).createHistory(userAddress, date, title, description);
+    History(historyAddress).createUserHistory(userAddress, date, title, description);
+  }
+
+  function createTokenHistory(
+    uint256 tokenId,
+    address userAddress,
+    uint date,
+    uint256 price, 
+    string memory description
+  ) public {
+    History(historyAddress).createTokenHistory(tokenId, userAddress, date, price, description);
   }
 
   function getListingPrice() public view returns (uint256) {
@@ -149,17 +159,8 @@ contract NFTMarket is ReentrancyGuard {
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
-    createHistory(msg.sender, block.timestamp, "Put token for sale!", "User put token for sale!");
-
-    _marketHistoryCount.increment();
-    historyCount[tokenId]++;
-    marketHistory[tokenId][historyCount[tokenId]] = MarketHistory(
-      tokenId,
-      msg.sender,
-      block.timestamp,
-      price,
-      "sell"
-    );
+    createUserHistory(msg.sender, block.timestamp, "Put token for sale!", "User put token for sale!");
+    createTokenHistory(tokenId, msg.sender, block.timestamp, price,  "sell");
 
     return itemId;
   }
@@ -181,8 +182,8 @@ contract NFTMarket is ReentrancyGuard {
     _itemsSold.increment();
     uint itemSold = _itemsSold.current();
 
-    createHistory(msg.sender, block.timestamp, "Buy a token!", "User buy a token!");
-    createHistory(idToMarketItem[itemId].seller, block.timestamp, "Buy a token!", "User buy a token!");
+    createUserHistory(msg.sender, block.timestamp, "Buy a token!", "User buy a token!");
+    createUserHistory(idToMarketItem[itemId].seller, block.timestamp, "Buy a token!", "User buy a token!");
 
     sellCount[itemSold] = UserCount(
       idToMarketItem[itemId].seller,
@@ -194,15 +195,7 @@ contract NFTMarket is ReentrancyGuard {
       price
     );
 
-    _marketHistoryCount.increment();
-    historyCount[tokenId]++;
-    marketHistory[tokenId][historyCount[tokenId]] = MarketHistory(
-      tokenId,
-      msg.sender,
-      block.timestamp,
-      price,
-      "buy"
-    );
+    createTokenHistory(tokenId, msg.sender, block.timestamp, price,  "buy");
     
     uit.transferFrom(
       msg.sender,

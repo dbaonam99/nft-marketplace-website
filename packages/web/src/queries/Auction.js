@@ -56,6 +56,23 @@ export const useCreateAuctionMutation = () => {
   );
 };
 
+export const useEndAuctionMutation = () => {
+  return useMutation(async ({ auctionId }) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
+
+    const contract = new ethers.Contract(AUCTION_ADDRESS, AUCTION_ABI, signer);
+    const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
+
+    await nftContract.setApprovalForAll(AUCTION_ADDRESS, true);
+    let transaction = await contract.endAuction(auctionId);
+
+    return await transaction.wait();
+  });
+};
+
 export const useBidMutation = () => {
   return useMutation(async ({ auctionId, price }) => {
     const web3Modal = new Web3Modal();
@@ -131,8 +148,6 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       AUCTION_ABI,
       provider
     );
-
-    console.log("tokenId", tokenId);
 
     const data = await auctionContract.getAuctionDetail(tokenId);
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
@@ -224,7 +239,7 @@ export const useGetBidHistoryQuery = ({ auctionId }) => {
             auctionId: i.auctionId.toNumber(),
             bidder: i.bidder,
             bidDate: i.bidDate,
-            message: i.message,
+            description: i.description,
           };
           return item;
         })
@@ -267,7 +282,7 @@ export const useGetMyAuctionItemsQuery = (ethAddress) => {
             startTime: i.startTime.toString(),
             duration: i.duration.toString(),
             biddingStep: i.biddingStep.toString(),
-            highestBidAmount: i.highestBidAmount.toString(),
+            highestBidAmount: Number(i.highestBidAmount.toString()) / 10 ** 10,
             image: meta.data.image,
             name: meta.data.name,
             description: meta.data.description,

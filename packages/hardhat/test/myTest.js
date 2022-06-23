@@ -1,12 +1,6 @@
 const { ethers } = require("hardhat");
 const { expect } = require("chai");
 
-const ACCOUNTS = {
-  "0x70997970C51812dc3A010C7d01b50e0d17dc79C8": "addr1",
-  "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC": "addr2",
-  "0x90F79bf6EB2c4f870365E785982E1f101E93b906": "addr3",
-};
-
 const getMarketData = (data, type) => {
   if (type === "auction") {
     return data.map((i) => {
@@ -282,12 +276,12 @@ describe("NFT Marketplace", function () {
       });
 
       it("Should get history market", async function () {
-        const data = await market.getMarketHistory(tokenId1);
+        const data = await history.getTokenHistory(tokenId1);
         const items = data.map((i) => {
           const item = {
             tokenId: i.tokenId.toString(),
             price: i.price.toString(),
-            message: i.message.toString(),
+            description: i.description.toString(),
           };
           return item;
         });
@@ -464,12 +458,12 @@ describe("NFT Marketplace", function () {
       });
 
       it("Should get history market", async function () {
-        const data = await market.getMarketHistory(tokenId2);
+        const data = await history.getTokenHistory(tokenId2);
         const items = data.map((i) => {
           const item = {
             tokenId: i.tokenId.toString(),
             price: i.price.toString(),
-            message: i.message.toString(),
+            description: i.description.toString(),
           };
           return item;
         });
@@ -507,7 +501,7 @@ describe("NFT Marketplace", function () {
           tokenId3,
           1, // starting price
           startDate,
-          3600,
+          27,
           1,
           {
             value: listingPrice,
@@ -525,7 +519,6 @@ describe("NFT Marketplace", function () {
         expect(result.events[3].args.owner).to.equal(addr1.address);
         // expect(result.events[3].args.creator).to.equal(addr1.address);
         expect(result.events[3].args.startingPrice).to.equal("1");
-        expect(result.events[3].args.duration).to.equal("3600");
         expect(result.events[3].args.startTime).to.equal(startDate);
         expect(result.events[3].args.biddingStep).to.equal(1);
 
@@ -535,13 +528,12 @@ describe("NFT Marketplace", function () {
         expect(addr1History.length).to.equal(8);
         expect(addr2History.length).to.equal(4);
 
-        // GET TOKEN DETAIL
+        // GET AUCTION DETAIL
         const data = await auction.getAuctionDetail(tokenId3);
         expect(data.auctionId.toString()).to.equal("1");
         expect(data.tokenId.toString()).to.equal("3");
         expect(data.owner).to.equal(addr1.address);
         expect(data.startingPrice).to.equal("1");
-        expect(data.duration).to.equal("3600");
         expect(data.startTime).to.equal(startDate);
         expect(data.biddingStep).to.equal(1);
       });
@@ -557,7 +549,6 @@ describe("NFT Marketplace", function () {
       });
 
       it("Should ADDRESS 2 bid Token3", async function () {
-        await token.connect(owner).approve(auction.address, 1000000);
         await token.connect(addr2).approve(auction.address, 1000);
 
         trans = await auction.connect(addr2).bid(auctionId3, {
@@ -575,21 +566,34 @@ describe("NFT Marketplace", function () {
         const addr2History = await history.getUserHistory(addr2.address);
         expect(addr1History.length).to.equal(8);
         expect(addr2History.length).to.equal(5);
+
+        // GET AUCTION DETAIL
+        const data = await auction.getAuctionDetail(tokenId3);
+        expect(data.auctionId.toString()).to.equal("1");
+        expect(data.tokenId.toString()).to.equal("3");
+        expect(data.owner).to.equal(addr1.address);
+        expect(data.highestBidAmount).to.equal("1000");
+        expect(data.highestBidder).to.equal(addr2.address);
+
+        // GET AUCTION HISTORY
+        const auctionHistory = await auction.getAuctionHistory(auctionId3);
+        expect(auctionHistory.length).to.equal(1);
       });
 
       it("Should ADDRESS 3 bid Token3", async function () {
         await token.connect(owner).approve(auction.address, 1000000);
-        await token.connect(addr3).approve(auction.address, 1000);
+        await token.connect(addr3).approve(auction.address, 2000);
 
         trans = await auction.connect(addr3).bid(auctionId3, {
-          value: 1000,
+          value: 2000,
         });
         result = await trans.wait();
 
-        expect(await getBalance(addr3.address)).to.equal("6800");
-        expect(result.events[2].args.auctionId).to.equal("1");
-        expect(result.events[2].args.bidder).to.equal(addr3.address);
-        expect(result.events[2].args.price).to.equal("1000");
+        expect(await getBalance(addr2.address)).to.equal("7800"); // return money after address 3 bided
+        expect(await getBalance(addr3.address)).to.equal("8000");
+        expect(result.events[4].args.auctionId).to.equal("1");
+        expect(result.events[4].args.bidder).to.equal(addr3.address);
+        expect(result.events[4].args.price).to.equal("2000");
 
         // GET USER HISTORY
         const addr1History = await history.getUserHistory(addr1.address);
@@ -597,93 +601,84 @@ describe("NFT Marketplace", function () {
         const addr3History = await history.getUserHistory(addr3.address);
         expect(addr1History.length).to.equal(8);
         expect(addr2History.length).to.equal(5);
-        expect(addr3History.length).to.equal(5);
+        expect(addr3History.length).to.equal(1);
+
+        // GET AUCTION DETAIL
+        const data = await auction.getAuctionDetail(tokenId3);
+        expect(data.auctionId.toString()).to.equal("1");
+        expect(data.tokenId.toString()).to.equal("3");
+        expect(data.owner).to.equal(addr1.address);
+        expect(data.highestBidAmount).to.equal("2000");
+        expect(data.highestBidder).to.equal(addr3.address);
+
+        // GET AUCTION HISTORY
+        const auctionHistory = await auction.getAuctionHistory(auctionId3);
+        expect(auctionHistory.length).to.equal(2);
+      });
+
+      it("Should ADDRESS 2 bid Token3 again", async function () {
+        await token.connect(addr2).approve(auction.address, 4000);
+
+        trans = await auction.connect(addr2).bid(auctionId3, {
+          value: 4000,
+        });
+        result = await trans.wait();
+
+        expect(await getBalance(addr2.address)).to.equal("3800"); // return money after address 3 bided
+        expect(await getBalance(addr3.address)).to.equal("10000");
+        expect(result.events[4].args.auctionId).to.equal("1");
+        expect(result.events[4].args.bidder).to.equal(addr2.address);
+        expect(result.events[4].args.price).to.equal("4000");
+
+        // GET USER HISTORY
+        const addr1History = await history.getUserHistory(addr1.address);
+        const addr2History = await history.getUserHistory(addr2.address);
+        const addr3History = await history.getUserHistory(addr3.address);
+        expect(addr1History.length).to.equal(8);
+        expect(addr2History.length).to.equal(6);
+        expect(addr3History.length).to.equal(1);
+
+        // GET AUCTION DETAIL
+        const data = await auction.getAuctionDetail(tokenId3);
+        expect(data.auctionId.toString()).to.equal("1");
+        expect(data.tokenId.toString()).to.equal("3");
+        expect(data.owner).to.equal(addr1.address);
+        expect(data.highestBidAmount).to.equal("4000");
+        expect(data.highestBidder).to.equal(addr2.address);
+
+        // GET AUCTION HISTORY
+        const auctionHistory = await auction.getAuctionHistory(auctionId3);
+        expect(auctionHistory.length).to.equal(3);
+      });
+
+      it("Should end a Auction", async function () {
+        await nft.connect(owner).setApprovalForAll(auction.address, true);
+        await token.connect(addr1).approve(auction.address, 1000000);
+        await auction.connect(addr1).endAuction(auctionId3);
+
+        expect(await getBalance(addr1.address)).to.equal("15900"); // 100 for listing price
+        expect(await getBalance(addr2.address)).to.equal("3800");
+        expect(await getBalance(addr3.address)).to.equal("10000");
+
+        // GET USER HISTORY
+        const addr1History = await history.getUserHistory(addr1.address);
+        const addr2History = await history.getUserHistory(addr2.address);
+        const addr3History = await history.getUserHistory(addr3.address);
+        expect(addr1History.length).to.equal(9);
+        expect(addr2History.length).to.equal(6);
+        expect(addr3History.length).to.equal(1);
+
+        // GET AUCTION DETAIL
+        const data = await auction.getAuctionDetail(tokenId3);
+        expect(data.auctionId.toString()).to.equal("1");
+        expect(data.tokenId.toString()).to.equal("3");
+        expect(data.owner).to.equal(addr1.address);
+        expect(data.highestBidAmount).to.equal("4000");
+        expect(data.highestBidder).to.equal(addr2.address);
       });
     });
   });
 });
-
-// describe("NFT Auction", function () {
-
-//   it("Should addr1 start a Auction", async function () {
-//     const date = new Date();
-//     date.setDate(date.getDate());
-//     const startDate = Math.floor(date.getTime() / 1000);
-//     await nft.connect(addr1).setApprovalForAll(auction.address, true);
-//     trans = await auction.connect(addr1).startAuction(
-//       nft.address,
-//       1,
-//       1, // starting price
-//       startDate,
-//       3600,
-//       1,
-//       {
-//         value: listingPrice,
-//       }
-//     );
-//     result = await trans.wait();
-//     auctionId = result.events[2].args.auctionId;
-//   });
-
-//   // it("Should addr2 start a Auction", async function () {
-//   //   const date = new Date();
-//   //   date.setDate(date.getDate());
-//   //   const startDate = Math.floor(date.getTime() / 1000);
-//   //   await nft.connect(addr2).setApprovalForAll(auction.address, true);
-//   //   trans = await auction.connect(addr2).startAuction(
-//   //     nft.address,
-//   //     2,
-//   //     1, // starting price
-//   //     startDate,
-//   //     3600,
-//   //     1, // bidding step
-//   //     {
-//   //       value: listingPrice,
-//   //     }
-//   //   );
-//   //   result = await trans.wait();
-//   //   auctionId2 = result.events[2].args.auctionId;
-//   // });
-
-//   it("Should addr2 bid a Auction", async function () {
-//     await token.connect(owner).approve(auction.address, 1000000);
-//     await token.connect(addr2).approve(auction.address, 1000);
-
-//     trans = await auction.connect(addr2).bid(auctionId, {
-//       value: 1000,
-//     });
-//     result = await trans.wait();
-//     console.log(result.events[0]);
-
-//     // expect(await getBalance(addr2.address)).to.equal("9000");
-//   });
-
-//   it("Should addr2 bid a Auction", async function () {
-//     await token.connect(owner).approve(auction.address, 1000000);
-//     await token.connect(addr2).approve(auction.address, 2000);
-//     await token.connect(addr3).approve(auction.address, 5000);
-//     await auction.connect(addr2).bid(auctionId, {
-//       value: 2000,
-//     });
-//     await auction.connect(addr3).bid(auctionId, {
-//       value: 5000,
-//     });
-//     // expect(await getBalance(addr2.address)).to.equal("9000");
-//   });
-
-//   // it("Should addr3 bid a Auction", async function () {
-//   //   expect(await getBalance(addr2.address)).to.equal("9000");
-//   //   expect(await getBalance(addr3.address)).to.equal("10000");
-
-//   //   await token.connect(addr3).approve(auction.address, 2000);
-//   //   await auction.connect(addr3).bid(auctionId, {
-//   //     value: 2000,
-//   //   });
-
-//   //   // When addr3 make a bid, addr2 will received money that bid before
-//   //   expect(await getBalance(addr2.address)).to.equal("10000");
-//   //   expect(await getBalance(addr3.address)).to.equal("8000");
-//   // });
 
 //   // it("Should get all item are on the auction", async function () {
 //   //   const items = await auction.fetchAuctionItems();
@@ -738,22 +733,6 @@ describe("NFT Marketplace", function () {
 //   //   });
 //   //   console.log(items);
 //   // });
-
-//   // it("Should get auction detail", async function () {
-//   //   await auction.getAuctionDetail(auctionId);
-//   // });
-
-//   // it("Should end a Auction", async function () {
-//   //   await nft.connect(owner).setApprovalForAll(auction.address, true);
-
-//   //   expect(await getBalance(addr1.address)).to.equal("10000");
-//   //   await auction.connect(addr1).endAuction(auctionId);
-//   //   expect(await getBalance(addr1.address)).to.equal("12000");
-//   // });
-
-//   it("Should get auction history", async function () {
-//     console.log(await auction.getAuctionHistory(1));
-//   });
 // });
 
 // // describe("NFT Market", function () {

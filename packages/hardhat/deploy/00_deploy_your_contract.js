@@ -11,8 +11,8 @@ module.exports = async () => {
   await history.deployed();
   console.log("History deployed to:", history.address);
   fs.writeFileSync(
-    "../web/src/contracts/Token.address.js",
-    `export const TOKEN_ADDRESS = "${history.address}";`
+    "../web/src/contracts/History.address.js",
+    `export const HISTORY_ADDRESS = "${history.address}";`
   );
 
   /* ----------------- Token Contract ----------------- */
