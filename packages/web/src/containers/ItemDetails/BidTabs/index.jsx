@@ -17,30 +17,12 @@ const BidTabs = ({ isAuction, auctionId, tokenId }) => {
 
   const [currentTab, setTab] = useState(0);
 
-  console.log("tokenId", marketHistory, tokenId);
-
   return (
     <>
       <div className={isLightMode ? "bid-tab-items-light" : "bid-tab-items"}>
-        {isAuction && (
-          <p
-            className={
-              currentTab === 0
-                ? isLightMode
-                  ? "bid-tab-item-active-light"
-                  : "bid-tab-item-active"
-                : isLightMode
-                ? "bid-tab-item-light"
-                : "bid-tab-item"
-            }
-            onClick={() => setTab(0)}
-          >
-            {t("common.latestBids")}
-          </p>
-        )}
         <p
           className={
-            currentTab === 1 || !isAuction
+            currentTab === 0 || !isAuction
               ? isLightMode
                 ? "bid-tab-item-active-light"
                 : "bid-tab-item-active"
@@ -48,25 +30,28 @@ const BidTabs = ({ isAuction, auctionId, tokenId }) => {
               ? "bid-tab-item-light"
               : "bid-tab-item"
           }
-          onClick={() => setTab(1)}
+          onClick={() => setTab(0)}
         >
           {t("common.history")}
         </p>
+        {bidHistory?.length > 0 && isAuction && (
+          <p
+            className={
+              currentTab === 1
+                ? isLightMode
+                  ? "bid-tab-item-active-light"
+                  : "bid-tab-item-active"
+                : isLightMode
+                ? "bid-tab-item-light"
+                : "bid-tab-item"
+            }
+            onClick={() => setTab(1)}
+          >
+            {t("common.latestBids")}
+          </p>
+        )}
       </div>
-      {currentTab === 0 && isAuction && (
-        <div
-          className={
-            isLightMode
-              ? "highest-bid bid-item bt-bg-light"
-              : "highest-bid bid-item"
-          }
-        >
-          {bidHistory?.map((item, i) => (
-            <HistoryItem item={item} key={i} />
-          ))}
-        </div>
-      )}
-      {(currentTab === 1 || !isAuction) && (
+      {(currentTab === 0 || !isAuction) && (
         <div
           className={
             isLightMode
@@ -77,6 +62,19 @@ const BidTabs = ({ isAuction, auctionId, tokenId }) => {
           {marketHistory?.map((item, i) => {
             return <HistoryItem item={item} key={i} isMarket />;
           })}
+        </div>
+      )}
+      {currentTab === 1 && isAuction && (
+        <div
+          className={
+            isLightMode
+              ? "highest-bid bid-item bt-bg-light"
+              : "highest-bid bid-item"
+          }
+        >
+          {bidHistory?.map((item, i) => (
+            <HistoryItem item={item} key={i} />
+          ))}
         </div>
       )}
     </>

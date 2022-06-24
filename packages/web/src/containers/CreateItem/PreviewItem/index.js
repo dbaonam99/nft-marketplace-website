@@ -1,9 +1,30 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useMoralis } from "react-moralis";
 import useThemeMode from "../../../hooks/useThemeMode";
+import { getUserInfo } from "../../../queries/User";
 import "./index.css";
 
-export default function PreviewItem({ image, name, price }) {
+export default function PreviewItem({
+  image,
+  name,
+  price,
+  currentMarketplaceType,
+}) {
   const isLightMode = useThemeMode();
+  const { user } = useMoralis();
+  const { t } = useTranslation();
+
+  const [userInfo, setUserInfo] = useState({});
+
+  const isFixedPrice = currentMarketplaceType === "fixed_price";
+
+  useEffect(() => {
+    (async () => {
+      const _userInfo = await getUserInfo(user?.get("ethAddress"));
+      setUserInfo(_userInfo);
+    })();
+  }, [user]);
 
   return (
     <div
@@ -41,22 +62,42 @@ export default function PreviewItem({ image, name, price }) {
               <div className={isLightMode ? "price-box bg-light" : "price-box"}>
                 <div className="item">
                   <span
-                    className={isLightMode ? "text-muted" : "text-white-50"}
+                    className={
+                      isLightMode
+                        ? "text-muted text-bold"
+                        : "text-white-50 text-bold"
+                    }
                   >
-                    Price
+                    {isFixedPrice
+                      ? t("common.price")
+                      : t("common.itemStartPrice")}
                   </span>
-                  <span className={isLightMode ? "text-dark" : "w-text"}>
-                    {price || "Not for sale"}
+                  <span
+                    className={
+                      isLightMode ? "text-dark text-bold" : "w-text text-bold"
+                    }
+                  >
+                    {`${price || 0} UIT`}
                   </span>
                 </div>
                 <div className="item">
                   <span
-                    className={isLightMode ? "text-muted" : "text-white-50"}
+                    className={
+                      isLightMode
+                        ? "text-muted text-bold"
+                        : "text-white-50 text-bold"
+                    }
                   >
-                    Highest bid
+                    {t("common.highestBid")}
                   </span>
-                  <span className={isLightMode ? "text-dark" : "w-text"}>
-                    No bids yet
+                  <span
+                    className={
+                      isLightMode ? "text-dark text-bold" : "w-text text-bold"
+                    }
+                  >
+                    {isFixedPrice
+                      ? t("common.notForBid")
+                      : t("common.noBidYet")}
                   </span>
                 </div>
               </div>

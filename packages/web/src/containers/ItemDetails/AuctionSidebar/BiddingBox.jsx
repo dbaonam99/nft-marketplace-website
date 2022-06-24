@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
 import { useTranslation } from "react-i18next";
-import { useMoralis } from "react-moralis";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { getUserInfo } from "../../../queries/User";
 
@@ -13,15 +12,14 @@ const BiddingBox = ({
   duration,
   startTime,
   endAuction,
-  owner,
+  isOwner,
+  overTime,
+  setOverTime,
+  ended,
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const [userInfo, setUserInfo] = useState({});
-  const [ended, setEnded] = useState(false);
-  const { user } = useMoralis();
-  const isOwner =
-    user?.get("ethAddress")?.toLowerCase() === owner?.toLowerCase();
   const isNoBidYet = highestBidAmount === startingPrice;
 
   useEffect(() => {
@@ -68,7 +66,7 @@ const BiddingBox = ({
               isLightMode ? "biding-end-title-light" : "biding-end-title"
             }
           >
-            {!ended && t("common.biddingEndIn")}
+            {!overTime && t("common.biddingEndIn")}
           </p>
           <div className="count-down titled circled text-center flex-1">
             <Countdown
@@ -77,7 +75,7 @@ const BiddingBox = ({
               }
               renderer={(props) => {
                 if (props.completed) {
-                  setEnded(true);
+                  setOverTime(true);
                   return (
                     <div>
                       <b style={{ color: "red" }}>{t("common.biddingEnded")}</b>
@@ -118,20 +116,22 @@ const BiddingBox = ({
           </div>
         </div>
       </div>
-      {ended ? (
-        isOwner && (
-          <div
-            className="open-popup-link more-btn width-100"
-            onClick={endAuction}
-          >
-            {t("common.endAuction")}
-          </div>
-        )
-      ) : (
-        <div className="open-popup-link more-btn width-100" onClick={onBid}>
-          {t("common.placeABid")}
-        </div>
-      )}
+
+      {isOwner
+        ? overTime &&
+          ended && (
+            <div
+              className="open-popup-link more-btn width-100"
+              onClick={endAuction}
+            >
+              {t("common.endAuction")}
+            </div>
+          )
+        : !overTime && (
+            <div className="open-popup-link more-btn width-100" onClick={onBid}>
+              {t("common.placeABid")}
+            </div>
+          )}
     </div>
   );
 };

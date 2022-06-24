@@ -7,12 +7,14 @@ import NFT_ABI from "../contracts/contracts/NFT.sol/NFT.json";
 import NFTMarket_ABI from "../contracts/contracts/NFTMarket.sol/NFTMarket.json";
 import Token_ABI from "../contracts/contracts/Token.sol/Token.json";
 import HISTORY_ABI from "../contracts/contracts/History.sol/History.json";
+import AUCTION_ABI from "../contracts/contracts/NFTAuction.sol/NFTAuction.json";
 
 import { TOKEN_ADDRESS } from "../contracts/Token.address";
 import { NFT_ADDRESS } from "../contracts/NFT.address";
 import { MARKET_ADDRESS } from "../contracts/NFTMarket.address";
 import { HISTORY_ADDRESS } from "../contracts/History.address";
 import moment from "moment";
+import { AUCTION_ADDRESS } from "../contracts/Auction.address";
 
 export const useCreateNFTMutation = () => {
   return useMutation(
@@ -229,10 +231,10 @@ export const useGetCreatedNFTsQuery = (ethAddress) => {
         provider
       );
 
-      const data = await marketContract.fetchItemsCreated(ethAddress);
+      const createdData = await marketContract.fetchItemsCreated(ethAddress);
 
-      const items = await Promise.all(
-        data.map(async (i) => {
+      const createdItems = await Promise.all(
+        createdData.map(async (i) => {
           const tokenUri = await tokenContract.tokenURI(i.tokenId);
           const meta = await axios.get(tokenUri);
           let item = {
@@ -249,7 +251,7 @@ export const useGetCreatedNFTsQuery = (ethAddress) => {
         })
       );
 
-      return items || [];
+      return createdItems || [];
     },
     {
       refetchInterval: 5000,
@@ -313,9 +315,15 @@ export const useTopSellerQuery = () => {
       NFTMarket_ABI,
       provider
     );
+    const auctionContract = new ethers.Contract(
+      AUCTION_ADDRESS,
+      AUCTION_ABI,
+      provider
+    );
 
-    const data = await marketContract.getTopSeller();
-    const items = data.map((i) => {
+    const marketData = await marketContract.getTopSeller();
+    const auctionData = await auctionContract.getTopSeller();
+    const items = [...marketData, ...auctionData].map((i) => {
       return {
         user: i.user,
         count: Number(i.count.toString()) / 10 ** 10,
@@ -337,9 +345,18 @@ export const useTopBuyerQuery = () => {
       NFTMarket_ABI,
       provider
     );
+    const auctionContract = new ethers.Contract(
+      AUCTION_ADDRESS,
+      AUCTION_ABI,
+      provider
+    );
 
-    const data = await marketContract.getTopBuyer();
-    const items = data.map((i) => ({
+    const marketData = await marketContract.getTopBuyer();
+    const auctionData = await auctionContract.getTopBuyer();
+
+    console.log(marketData, auctionData);
+
+    const items = [...marketData, ...auctionData].map((i) => ({
       user: i.user,
       count: Number(i.count.toString()) / 10 ** 10,
     }));
@@ -402,31 +419,31 @@ export const useUserHistoryQuery = (ethAddress) => {
       );
 
       const data = await historyContract.getUserHistory(ethAddress);
+      console.log(data);
+      // const items = await Promise.all(
+      //   data.map(async (i) => {
+      //     let price = Number(i.price.toString()) / 10 ** 10;
 
-      const items = await Promise.all(
-        data.map(async (i) => {
-          let price = Number(i.price.toString()) / 10 ** 10;
+      //     let item = {
+      //       title: i.title,
+      //       description: i.description,
+      //       price: price,
+      //       date: moment(
+      //         new Date(
+      //           parseInt(i.date.toString())
+      //         )
+      //       ).format("DD/MM/YYYY"),
+      //       time: moment(
+      //         new Date(
+      //           parseInt(i.date.toString())
+      //         )
+      //       ).format("hh:mm A"),
+      //     };
+      //     return item;
+      //   })
+      // );
 
-          let item = {
-            title: i.title,
-            description: i.description,
-            price: price,
-            date: moment(
-              new Date(
-                parseInt(i.date.toString())
-              )
-            ).format("DD/MM/YYYY"),
-            time: moment(
-              new Date(
-                parseInt(i.date.toString())
-              )
-            ).format("hh:mm A"),
-          };
-          return item;
-        })
-      );
-
-      return items.reverse();
+      // return items.reverse();
     },
     {
       enabled: !!ethAddress

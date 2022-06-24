@@ -13,12 +13,6 @@ const MARKET_TYPES = [
     iconDark: <i className="fa fa-tag" style={{ color: "white" }} />,
   },
   {
-    id: "open_for_bids",
-    name: "Open for bids",
-    icon: <i className="fa fa-archive" />,
-    iconDark: <i className="fa fa-archive" style={{ color: "white" }} />,
-  },
-  {
     id: "timed_auction",
     name: "Timed auction",
     icon: <i className="fa fa-clock-o" />,
@@ -35,15 +29,13 @@ const ContactForm = (props) => {
     fileUrl,
     fileLoading,
     buttonLoading,
+    currentMarketplaceType,
+    setMarketplaceType,
   } = props;
 
   const inputFile = useRef();
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-
-  const [currentMarketplaceType, setMarketplaceType] = useState(
-    MARKET_TYPES[0].id
-  );
   const [currentDurationType, setCurrentDurationType] = useState("hour");
 
   const openFileUpload = () => {

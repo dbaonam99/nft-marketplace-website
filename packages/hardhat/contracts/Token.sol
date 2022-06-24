@@ -69,7 +69,7 @@ contract Token is ERC20 {
     //and it is not a contract
     //perform the transfer by increasing the to account and decreasing the from accounts
     function transferFrom(address _from, address _to, uint _value) public override returns (bool success) {
-        require(!isContract(_to), 'This is not a contract');
+        // require(!isContract(_to), 'This is not a contract');
         require(_value <= __balanceOf[_from], 'This wallet does not have enough money');
         require(_value <= __allowances[_from][msg.sender], 'This wallet does not have enough alowances');
 

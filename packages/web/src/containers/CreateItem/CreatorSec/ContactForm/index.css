@@ -5,7 +5,7 @@
 }
 
 .marketplace-type {
-  width: 30%;
+  width: 50%;
   border: 2px solid #eee;
   padding: 14px 20px;
   border-radius: 14px;
@@ -13,6 +13,10 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-right: 20px;
+}
+.marketplace-type:last-child {
+  margin-right: 0;
 }
 
 .marketplace-type-dark {

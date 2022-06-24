@@ -20,6 +20,7 @@ contract NFTAuction is ReentrancyGuard {
     Counters.Counter private _auctionIds;
     Counters.Counter private _bidIds;
     Counters.Counter private _auctionHistoryCount;
+    Counters.Counter private _auctionEnded;
 
     IERC20 uit;
     address contractOwner;
@@ -42,6 +43,7 @@ contract NFTAuction is ReentrancyGuard {
         address nftContract;
         uint256 tokenId;
         address owner;
+        address creator;
         uint256 startTime;
         uint256 startingPrice;
         uint256 biddingStep;
@@ -50,6 +52,7 @@ contract NFTAuction is ReentrancyGuard {
         address highestBidder;
         bytes32 status;
         uint256 createdDate;
+        bool ended;
     }
 
     struct BidInfo {
@@ -68,6 +71,11 @@ contract NFTAuction is ReentrancyGuard {
         string description;
     }
 
+    struct UserCount {
+        address user;
+        uint count;
+    }
+
     event AuctionCreated(
         uint256 auctionId,
         address nftContract,
@@ -77,7 +85,8 @@ contract NFTAuction is ReentrancyGuard {
         uint256 startTime,
         uint256 duration,
         uint256 biddingStep,
-        uint256 createdDate
+        uint256 createdDate,
+        bool ended
     );
     event AuctionBid(uint256 auctionId, address bidder, uint256 price);
     event Withdraw(address indexed bidder, uint amount);
@@ -89,16 +98,18 @@ contract NFTAuction is ReentrancyGuard {
     mapping(uint256 => BidInfo) public bidHistory;
     mapping(uint256 => uint) public bidHistoryCount;
     mapping(address => uint256) public userAuctionCount;
-    mapping (uint256 => mapping(uint => AuctionHistory)) public auctionHistory;
-    mapping (uint256 => uint256) public historyCount;
+    mapping(uint256 => mapping(uint => AuctionHistory)) public auctionHistory;
+    mapping(uint256 => uint256) public historyCount;
+    mapping(uint256 => UserCount) public sellCount;
+    mapping(uint256 => UserCount) public boughtCount;
 
     function createUserHistory(
         address userAddress, 
+        uint256 tokenId,
         uint date,
-        string memory title, 
-        string memory description
+        string memory actionType
     ) public {
-        History(historyAddress).createUserHistory(userAddress, date, title, description);
+        History(historyAddress).createUserHistory(userAddress, tokenId, date, actionType);
     }
 
     function createTokenHistory(
@@ -134,6 +145,7 @@ contract NFTAuction is ReentrancyGuard {
             nftContract,
             tokenId,
             msg.sender,
+            msg.sender,
             startTime,
             startingPrice,
             biddingStep,
@@ -141,10 +153,11 @@ contract NFTAuction is ReentrancyGuard {
             startingPrice,
             address(0),
             CREATED,
-            block.timestamp
+            block.timestamp,
+            false
         );
 
-        ERC721(nftContract).transferFrom(msg.sender, contractOwner, tokenId);
+        ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
         userAuctionCount[msg.sender] += 1;
 
         _auctionHistoryCount.increment();
@@ -157,7 +170,7 @@ contract NFTAuction is ReentrancyGuard {
             "sell"
         );
 
-        createUserHistory(msg.sender, block.timestamp, "Put token to the auction!", "User put token to the auction!");
+        createUserHistory(msg.sender, tokenId, block.timestamp, "startAuction");
         createTokenHistory(tokenId, msg.sender, block.timestamp, startingPrice,  "startAuction");
 
         emit AuctionCreated(
@@ -169,7 +182,8 @@ contract NFTAuction is ReentrancyGuard {
             startTime,
             duration,
             biddingStep,
-            block.timestamp
+            block.timestamp,
+            false
         );
         return auctionId;
     }
@@ -194,7 +208,7 @@ contract NFTAuction is ReentrancyGuard {
                 "Bid price must be divisible by bidding step"
             );
 
-            uit.transferFrom(msg.sender, contractOwner, price);
+            uit.transferFrom(msg.sender, address(this), price);
             idToAuction[auctionId].highestBidAmount = price;
             idToAuction[auctionId].highestBidder = msg.sender;
             idToAuction[auctionId].status = BIDDING;
@@ -208,7 +222,7 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
-            createUserHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
+            createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "bid");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -222,13 +236,11 @@ contract NFTAuction is ReentrancyGuard {
                 "Bid price must be divisible by bidding step"
             );
 
-            uit.transferFrom(msg.sender, contractOwner, price);
+            uit.transferFrom(msg.sender, address(this), price);
             if (idToAuction[auctionId].highestBidder != address(0)) {
                 // return uit to the previuos bidder
-                uit.approve(contractOwner, idToAuction[auctionId].highestBidAmount);
-                uit.transferFrom(
-                    contractOwner, 
-                    idToAuction[auctionId].highestBidder, 
+                uit.transfer(
+                    idToAuction[auctionId].highestBidder,
                     idToAuction[auctionId].highestBidAmount
                 );
             } 
@@ -246,7 +258,7 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
-            createUserHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
+            createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "bid");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -303,7 +315,7 @@ contract NFTAuction is ReentrancyGuard {
         address nftContract = idToAuction[auctionId].nftContract;
 
         IERC721(nftContract).safeTransferFrom(
-            contractOwner,
+            address(this),
             winner,
             idToAuction[auctionId].tokenId
         );
@@ -322,40 +334,71 @@ contract NFTAuction is ReentrancyGuard {
 
         if (idToAuction[auctionId].highestBidder == address(0)) {
             IERC721(idToAuction[auctionId].nftContract).safeTransferFrom(
-                contractOwner,
+                address(this),
                 owner,
                 idToAuction[auctionId].tokenId
             );
-            idToAuction[auctionId].status == FINISHED;
-            createUserHistory(msg.sender, block.timestamp, "End the aution!", "User End the aution!");
-            createTokenHistory(idToAuction[auctionId].tokenId, msg.sender, block.timestamp, idToAuction[auctionId].highestBidAmount,  "endAuction");
         } else {
-            uit.transferFrom(
-                contractOwner, 
-                owner, 
-                idToAuction[auctionId].highestBidAmount
-            );
+            uit.transfer(owner, idToAuction[auctionId].highestBidAmount);
             claimItem(auctionId);
             uit.transferFrom(
                 msg.sender,
                 contractOwner,
                 listingPrice
             );
-            idToAuction[auctionId].status == FINISHED;
-            createUserHistory(msg.sender, block.timestamp, "End the aution!", "User End the aution!");
-            createTokenHistory(idToAuction[auctionId].tokenId, msg.sender, block.timestamp, idToAuction[auctionId].highestBidAmount,  "endAuction");
+            idToAuction[auctionId].owner = idToAuction[auctionId].highestBidder;
         }
+
+
+        idToAuction[auctionId].status == FINISHED;
+        idToAuction[auctionId].ended = true;
+
+        userAuctionCount[msg.sender] -= 1;
+        userAuctionCount[idToAuction[auctionId].highestBidder] += 1;
+
+        _auctionEnded.increment();
+        uint auctionEnded = _auctionEnded.current();
+        sellCount[auctionEnded] = UserCount(msg.sender, idToAuction[auctionId].highestBidAmount);
+        boughtCount[auctionEnded] = UserCount(idToAuction[auctionId].highestBidder, idToAuction[auctionId].highestBidAmount);
+
+        createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "endAuction");
+        createTokenHistory(idToAuction[auctionId].tokenId, msg.sender, block.timestamp, idToAuction[auctionId].highestBidAmount,  "endAuction");
     }
+
+    function getTopSeller() public view returns (UserCount[] memory) {
+        uint endedAmount = _auctionEnded.current();
+
+        UserCount[] memory addresses = new UserCount[](endedAmount);
+            for (uint i = 0; i < endedAmount; i++) {
+            uint currentId = i + 1;
+            addresses[i] = sellCount[currentId];
+        }
+        return addresses;
+    }
+
+    function getTopBuyer() public view returns (UserCount[] memory) {
+        uint endedAmount = _auctionEnded.current();
+
+        UserCount[] memory addresses = new UserCount[](endedAmount);
+            for (uint i = 0; i < endedAmount; i++) {
+            uint currentId = i + 1;
+            addresses[i] = boughtCount[currentId];
+        }
+        return addresses;
+    } 
 
     function fetchAuctionItems() public view returns (Auction[] memory) {
         uint itemCount = _auctionIds.current();
+        uint currentItemCount = _auctionIds.current() - _auctionEnded.current();
+        uint currentIndex = 0;
 
-        Auction[] memory items = new Auction[](itemCount);
+        Auction[] memory items = new Auction[](currentItemCount);
         for (uint i = 0; i < itemCount; i++) {
-            if (idToAuction[i + 1].status != FINISHED) {
+            if (idToAuction[i + 1].ended == false) {
                 uint currentId = i + 1;
                 Auction storage currentItem = idToAuction[currentId];
-                items[i] = currentItem;
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
             }
         }
         return items;
@@ -372,6 +415,30 @@ contract NFTAuction is ReentrancyGuard {
                 uint currentId = i + 1;
                 Auction storage currentItem = idToAuction[currentId];
                 items[currentIndex] = currentItem;
+                currentIndex += 1;
+            }
+        }
+        return items;
+    }
+
+    function fetchAuctionItemsCreated(address userAddress) public view returns (Auction[] memory) {
+        uint totalItemCount = _auctionIds.current();
+        uint itemCount = 0;
+        uint currentIndex = 0;
+
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (idToAuction[i + 1].creator == userAddress) {
+                itemCount += 1;
+            }
+        }
+
+        Auction[] memory items = new Auction[](itemCount);
+        for (uint i = 0; i < totalItemCount; i++) {
+            if (idToAuction[i + 1].creator == userAddress) {
+                uint currentId = i + 1;
+                Auction storage currentItem = idToAuction[currentId];
+                items[currentIndex] = currentItem;
+                currentIndex += 1;
             }
         }
         return items;

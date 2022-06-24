@@ -913,7 +913,7 @@ body .bt-dropdown-menu .dropdown-item.active {
 }
 .admire {
   display: flex;
-  border-top: 1px dotted #565656;
+  /* border-top: 1px dotted #565656; */
   padding-top: 20px;
 }
 .admire .adm {

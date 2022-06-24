@@ -44,7 +44,7 @@ const SaleModal = ({
       <div>
         <div className="who-we-contant">
           <div className="dream-dots text-left">
-            <span className="gradient-text ">{t("header.createItem")}</span>
+            <span className="gradient-text ">{t("common.putOnSale")}</span>
           </div>
         </div>
         <div style={{ width: 300 }}>
@@ -66,7 +66,7 @@ const SaleModal = ({
           </div>
           <div className="text-center w-full">
             <button type="submit" className="more-btn w-100" onClick={bid}>
-              Place a bid
+              {t("common.sale")}
             </button>
           </div>
         </div>

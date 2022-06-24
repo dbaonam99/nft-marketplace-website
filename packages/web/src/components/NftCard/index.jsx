@@ -22,6 +22,7 @@ function NftCard(props) {
     itemId,
     sold,
     owner,
+    ended,
   } = props;
   const isLightMode = useThemeMode();
 
@@ -37,7 +38,7 @@ function NftCard(props) {
     })();
   }, [owner]);
 
-  console.log("sold", sold);
+  console.log("ended", ended);
 
   return (
     <>
@@ -60,8 +61,24 @@ function NftCard(props) {
                 }
               >
                 <img src={image} alt="" className="nft-img" />
-                <div className="nft-img-overlay" />
               </NavLink>
+              {(ended || sold) && (
+                <>
+                  <div className="nft-img-overlay" />
+                  <div className="cta admire">
+                    <div
+                      className={
+                        isLightMode ? "adm text-muted w-100" : "w-100 adm"
+                      }
+                      onClick={() => setIsOpen(true)}
+                    >
+                      <button className="btn btn-explore more-btn w-100">
+                        {t("common.putOnSale")}
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
               <div className={clsx("owner-info", isLightMode && "bg-light")}>
                 <Avatar src={userInfo?.avatar} size="40px" />
 
@@ -92,10 +109,10 @@ function NftCard(props) {
               >
                 <div className="price-box">
                   <p className={isLightMode ? "text-muted" : "g-text"}>
-                    {t("common.from")}
+                    {ended ? t("common.price") : t("common.from")}
                   </p>
                   <p className={isLightMode ? "b-text" : "w-text"}>
-                    {startingPrice} UIT
+                    {ended ? "..." : `${startingPrice} UIT`}
                   </p>
                 </div>
                 <div className="price-box">
@@ -105,7 +122,9 @@ function NftCard(props) {
                   <p className={isLightMode ? "b-text" : "w-text"}>
                     {highestBidAmount && (
                       <p className={isLightMode ? "b-text" : "w-text"}>
-                        {startingPrice === highestBidAmount
+                        {ended
+                          ? "..."
+                          : startingPrice === highestBidAmount
                           ? t("common.noBidYet")
                           : `${highestBidAmount} UIT`}
                       </p>
@@ -135,18 +154,6 @@ function NftCard(props) {
                   <p className={isLightMode ? "b-text" : "w-text"}>
                     {t("common.notForBid")}
                   </p>
-                </div>
-              </div>
-            )}
-            {sold && (
-              <div className="admire">
-                <div
-                  className={isLightMode ? "adm text-muted w-100" : "w-100 adm"}
-                  onClick={() => setIsOpen(true)}
-                >
-                  <button className="btn btn-explore more-btn w-100">
-                    {t("common.putOnSale")}
-                  </button>
                 </div>
               </div>
             )}

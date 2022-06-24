@@ -63,8 +63,10 @@ export const useEndAuctionMutation = () => {
 
     const contract = new ethers.Contract(AUCTION_ADDRESS, AUCTION_ABI, signer);
     const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
+    const tokenContract = new ethers.Contract(TOKEN_ADDRESS, Token_ABI, signer);
 
     await nftContract.setApprovalForAll(AUCTION_ADDRESS, true);
+    await tokenContract.approve(AUCTION_ADDRESS, 100 * 10 ** 10);
     let transaction = await contract.endAuction(auctionId);
 
     return await transaction.wait();
@@ -164,6 +166,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       description: meta.data.description,
       createdDate: data.createdDate.toString(),
       highestBidAmount: Number(data.highestBidAmount.toString()) / 10 ** 10,
+      status: data.status,
     };
     return item;
   });
@@ -231,7 +234,6 @@ export const useGetBidHistoryQuery = ({ auctionId }) => {
 
       const items = await Promise.all(
         data.map(async (i) => {
-          console.log(i);
           let item = {
             price: Number(i.price.toString()) / 10 ** 10,
             auctionId: i.auctionId.toNumber(),

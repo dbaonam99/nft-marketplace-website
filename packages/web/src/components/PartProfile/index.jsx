@@ -23,8 +23,6 @@ function PartProfile({ cover, avatar, img3, data, user }) {
     navigator.clipboard.writeText(address);
   };
 
-  console.log("isCopied", isCopied);
-
   return (
     <div className="col-12 col-lg-3">
       <div

@@ -7,6 +7,7 @@ import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
 import Avatar from "../../../components/Avatar";
+import { useMoralis } from "react-moralis";
 
 const MarketSideBar = ({
   name,
@@ -20,9 +21,14 @@ const MarketSideBar = ({
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const { user } = useMoralis();
+
   const [userInfo, setUserInfo] = useState({});
 
   const buyNFTMutation = useBuyNFTMutation();
+
+  const isOwner =
+    user?.get("ethAddress")?.toLowerCase() === owner?.toLowerCase();
 
   useEffect(() => {
     (async () => {
@@ -39,10 +45,12 @@ const MarketSideBar = ({
     });
   };
 
+  console.log(isOwner);
+
   return (
     <>
       <div className="col-12 col-lg-5 mt-s sidebar-container">
-        <div className="sidebar-area">
+        <div className="sidebar-area-market">
           <div className="donnot-miss-widget">
             <div className="who-we-contant">
               <h2 className={isLightMode ? "text-dark" : ""}>
@@ -52,12 +60,10 @@ const MarketSideBar = ({
             <div
               className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
             >
-              <span
-                className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
-              >
+              <p className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}>
                 {t("common.price")}:
-              </span>
-              <span
+              </p>
+              <p
                 className={
                   isLightMode
                     ? "mb-15 text-muted mr-15"
@@ -65,7 +71,7 @@ const MarketSideBar = ({
                 }
               >
                 {price?.toString()} UIT
-              </span>
+              </p>
             </div>
 
             <div
@@ -107,6 +113,7 @@ const MarketSideBar = ({
             <BidTabs tokenId={tokenId} />
           </div>
         </div>
+        {}
         <div
           className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
         >

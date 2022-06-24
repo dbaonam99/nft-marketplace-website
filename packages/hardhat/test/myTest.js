@@ -7,10 +7,9 @@ const getMarketData = (data, type) => {
       const item = {
         auctionId: i.auctionId.toString(),
         tokenId: i.tokenId.toString(),
-        seller: i.seller,
         owner: i.owner,
         creator: i.creator,
-        sold: i.sold,
+        ended: i.ended,
       };
       return item;
     });
@@ -50,6 +49,7 @@ describe("NFT Marketplace", function () {
 
   let tokenId3;
   let auctionId3;
+  let auctionId4;
 
   let listingPrice;
 
@@ -513,14 +513,14 @@ describe("NFT Marketplace", function () {
             ? result.events[3].args.auctionId.toString()
             : 1;
 
-        expect(result.events[3].args.auctionId.toString()).to.equal("1");
-        expect(result.events[3].args.tokenId.toString()).to.equal("3");
-        // expect(result.events[3].args.seller).to.equal(addr1.address);
-        expect(result.events[3].args.owner).to.equal(addr1.address);
-        // expect(result.events[3].args.creator).to.equal(addr1.address);
-        expect(result.events[3].args.startingPrice).to.equal("1");
-        expect(result.events[3].args.startTime).to.equal(startDate);
-        expect(result.events[3].args.biddingStep).to.equal(1);
+        expect(result.events[4].args.auctionId.toString()).to.equal("1");
+        expect(result.events[4].args.tokenId.toString()).to.equal("3");
+        // expect(result.events[4].args.seller).to.equal(addr1.address);
+        expect(result.events[4].args.owner).to.equal(addr1.address);
+        // expect(result.events[4].args.creator).to.equal(addr1.address);
+        expect(result.events[4].args.startingPrice).to.equal("1");
+        expect(result.events[4].args.startTime).to.equal(startDate);
+        expect(result.events[4].args.biddingStep).to.equal(1);
 
         // GET USER HISTORY
         const addr1History = await history.getUserHistory(addr1.address);
@@ -581,9 +581,7 @@ describe("NFT Marketplace", function () {
       });
 
       it("Should ADDRESS 3 bid Token3", async function () {
-        await token.connect(owner).approve(auction.address, 1000000);
         await token.connect(addr3).approve(auction.address, 2000);
-
         trans = await auction.connect(addr3).bid(auctionId3, {
           value: 2000,
         });
@@ -591,9 +589,9 @@ describe("NFT Marketplace", function () {
 
         expect(await getBalance(addr2.address)).to.equal("7800"); // return money after address 3 bided
         expect(await getBalance(addr3.address)).to.equal("8000");
-        expect(result.events[4].args.auctionId).to.equal("1");
-        expect(result.events[4].args.bidder).to.equal(addr3.address);
-        expect(result.events[4].args.price).to.equal("2000");
+        expect(result.events[3].args.auctionId).to.equal("1");
+        expect(result.events[3].args.bidder).to.equal(addr3.address);
+        expect(result.events[3].args.price).to.equal("2000");
 
         // GET USER HISTORY
         const addr1History = await history.getUserHistory(addr1.address);
@@ -618,7 +616,6 @@ describe("NFT Marketplace", function () {
 
       it("Should ADDRESS 2 bid Token3 again", async function () {
         await token.connect(addr2).approve(auction.address, 4000);
-
         trans = await auction.connect(addr2).bid(auctionId3, {
           value: 4000,
         });
@@ -626,9 +623,9 @@ describe("NFT Marketplace", function () {
 
         expect(await getBalance(addr2.address)).to.equal("3800"); // return money after address 3 bided
         expect(await getBalance(addr3.address)).to.equal("10000");
-        expect(result.events[4].args.auctionId).to.equal("1");
-        expect(result.events[4].args.bidder).to.equal(addr2.address);
-        expect(result.events[4].args.price).to.equal("4000");
+        expect(result.events[3].args.auctionId).to.equal("1");
+        expect(result.events[3].args.bidder).to.equal(addr2.address);
+        expect(result.events[3].args.price).to.equal("4000");
 
         // GET USER HISTORY
         const addr1History = await history.getUserHistory(addr1.address);
@@ -653,7 +650,7 @@ describe("NFT Marketplace", function () {
 
       it("Should end a Auction", async function () {
         await nft.connect(owner).setApprovalForAll(auction.address, true);
-        await token.connect(addr1).approve(auction.address, 1000000);
+        await token.connect(addr1).approve(auction.address, listingPrice);
         await auction.connect(addr1).endAuction(auctionId3);
 
         expect(await getBalance(addr1.address)).to.equal("15900"); // 100 for listing price
@@ -672,197 +669,69 @@ describe("NFT Marketplace", function () {
         const data = await auction.getAuctionDetail(tokenId3);
         expect(data.auctionId.toString()).to.equal("1");
         expect(data.tokenId.toString()).to.equal("3");
-        expect(data.owner).to.equal(addr1.address);
+        expect(data.owner).to.equal(addr2.address);
         expect(data.highestBidAmount).to.equal("4000");
         expect(data.highestBidder).to.equal(addr2.address);
+      });
+
+      it("Should ADDRESS 2 start a Auction", async function () {
+        const date = new Date();
+        date.setDate(date.getDate());
+        const startDate = Math.floor(date.getTime() / 1000);
+
+        await nft.connect(addr2).setApprovalForAll(auction.address, true);
+        trans = await auction.connect(addr2).startAuction(
+          nft.address,
+          tokenId3,
+          1, // starting price
+          startDate,
+          27,
+          1,
+          {
+            value: listingPrice,
+          }
+        );
+        result = await trans.wait();
+
+        auctionId4 =
+          result.events[4].args && result.events[4].args.auctionId
+            ? result.events[4].args.auctionId.toString()
+            : 1;
+
+        expect(result.events[4].args.auctionId.toString()).to.equal("2");
+        expect(result.events[4].args.tokenId.toString()).to.equal("3");
+        expect(result.events[4].args.owner).to.equal(addr2.address);
+        expect(result.events[4].args.startingPrice).to.equal("1");
+        expect(result.events[4].args.startTime).to.equal(startDate);
+        expect(result.events[4].args.biddingStep).to.equal(1);
+        expect(result.events[4].args.ended).to.equal(false);
+
+        // GET USER HISTORY
+        const addr1History = await history.getUserHistory(addr1.address);
+        const addr2History = await history.getUserHistory(addr2.address);
+        expect(addr1History.length).to.equal(9);
+        expect(addr2History.length).to.equal(7);
+
+        // GET AUCTION DETAIL
+        const data = await auction.getAuctionDetail(tokenId3);
+        expect(data.auctionId.toString()).to.equal("2");
+        expect(data.tokenId.toString()).to.equal("3");
+        expect(data.owner).to.equal(addr2.address);
+        expect(data.startingPrice).to.equal("1");
+        expect(data.startTime).to.equal(startDate);
+        expect(data.biddingStep).to.equal(1);
+        expect(data.ended).to.equal(false);
+      });
+
+      it("Should shown Token3 on the auction", async function () {
+        const data = await auction.fetchAuctionItems();
+        const items = getMarketData(data, "auction");
+
+        expect(items.length).to.equal(1);
+        expect(data[0].auctionId.toString()).to.equal("2");
+        expect(data[0].tokenId.toString()).to.equal("3");
+        expect(data[0].owner).to.equal(addr2.address);
       });
     });
   });
 });
-
-//   // it("Should get all item are on the auction", async function () {
-//   //   const items = await auction.fetchAuctionItems();
-
-//   //   items.map(async (i) => {
-//   //     const item = {
-//   //       auctionId: i.auctionId.toString(),
-//   //       owner: i.owner,
-//   //       tokenId: i.tokenId.toString(),
-//   //       startingPrice: i.startingPrice.toString(),
-//   //       startTime: i.startTime.toString(),
-//   //       duration: i.duration.toString(),
-//   //       biddingStep: i.biddingStep.toString(),
-//   //     };
-//   //     return item;
-//   //   });
-//   //   console.log(items);
-//   // });
-
-//   // it("Should get addr1 item on the auction", async function () {
-//   //   const items = await auction.fetchMyAuctionItems(addr1.address);
-
-//   //   items.map(async (i) => {
-//   //     const item = {
-//   //       auctionId: i.auctionId.toString(),
-//   //       owner: i.owner,
-//   //       tokenId: i.tokenId.toString(),
-//   //       startingPrice: i.startingPrice.toString(),
-//   //       startTime: i.startTime.toString(),
-//   //       duration: i.duration.toString(),
-//   //       biddingStep: i.biddingStep.toString(),
-//   //     };
-//   //     return item;
-//   //   });
-//   //   console.log(items);
-//   // });
-
-//   // it("Should get addr2 item on the auction", async function () {
-//   //   const items = await auction.fetchMyAuctionItems(addr2.address);
-
-//   //   items.map(async (i) => {
-//   //     const item = {
-//   //       auctionId: i.auctionId.toString(),
-//   //       owner: i.owner,
-//   //       tokenId: i.tokenId.toString(),
-//   //       startingPrice: i.startingPrice.toString(),
-//   //       startTime: i.startTime.toString(),
-//   //       duration: i.duration.toString(),
-//   //       biddingStep: i.biddingStep.toString(),
-//   //     };
-//   //     return item;
-//   //   });
-//   //   console.log(items);
-//   // });
-// });
-
-// // describe("NFT Market", function () {
-// //   let market;
-// //   let nft;
-// //   let history;
-// //   let token;
-// //   let owner;
-// //   let addr1;
-// //   let addr2;
-// //   let addr3;
-
-// //   beforeEach(async function () {
-// //     [owner, addr1, addr2, addr3] = await ethers.getSigners();
-// //   });
-
-// //   it("Should deploy contracts", async function () {
-// //     const History = await ethers.getContractFactory("History");
-// //     history = await History.deploy();
-// //     await history.deployed();
-
-// //     const Token = await ethers.getContractFactory("Token");
-// //     token = await Token.deploy(owner.address);
-// //     await token.deployed();
-
-// //     const Market = await ethers.getContractFactory("NFTMarket");
-// //     market = await Market.deploy(token.address, owner.address, history.address);
-// //     await market.deployed();
-
-// //     const NFT = await ethers.getContractFactory("NFT");
-// //     nft = await NFT.deploy(history.address);
-// //     await nft.deployed();
-// //   });
-
-// //   const getBalance = async (address) => {
-// //     const balance = await token.balanceOf(address);
-// //     return balance.toString();
-// //   };
-
-// //   it("Should create tokens", async function () {
-// //     await nft.connect(addr1).createToken("https://www.mytokenlocation.com");
-// //     // await nft.connect(addr1).createToken("https://www.mytokenlocation.com2");
-// //     // await nft.connect(addr1).createToken("https://www.mytokenlocation.com3");
-// //     // await nft.connect(addr1).createToken("https://www.mytokenlocation.com4");
-// //     // await nft.connect(addr2).createToken("https://www.mytokenlocation.com5");
-// //     // await nft.connect(addr2).createToken("https://www.mytokenlocation.com6");
-// //   });
-
-// //   it("Should transfer Tokens to Bidders", async function () {
-// //     await token.approve(owner.address, 1000000);
-
-// //     await token.transferFrom(owner.address, addr1.address, 10000);
-// //     await token.transferFrom(owner.address, addr2.address, 10000);
-// //     await token.transferFrom(owner.address, addr3.address, 10000);
-
-// //     expect(await getBalance(addr1.address)).to.equal("10000");
-// //     expect(await getBalance(addr2.address)).to.equal("10000");
-// //     expect(await getBalance(addr3.address)).to.equal("10000");
-// //   });
-
-// //   it("Should put a Token for sale", async function () {
-// //     let listingPrice = await market.getListingPrice();
-// //     listingPrice = listingPrice.toString();
-
-// //     await nft.connect(addr1).setApprovalForAll(market.address, true);
-// //     await market.connect(addr1).createMarketItem(nft.address, 1, 1000, 0, {
-// //       value: listingPrice,
-// //     });
-// //   });
-
-// //   it("Should addr 2 buy a Token", async function () {
-// //     await token.connect(addr2).approve(market.address, 1000);
-// //     await market.connect(addr2).buyMarketItem(nft.address, 1, {
-// //       value: 1000,
-// //     });
-// //   });
-
-// //   it("Should addr 2 put a Token for sale", async function () {
-// //     let listingPrice = await market.getListingPrice();
-// //     listingPrice = listingPrice.toString();
-
-// //     await nft.connect(addr2).setApprovalForAll(market.address, true);
-// //     await market.connect(addr2).createMarketItem(nft.address, 1, 2000, 1, {
-// //       value: listingPrice,
-// //     }); // return 7
-// //   });
-
-// //   it("Should addr 3 buy a Token", async function () {
-// //     await token.connect(addr3).approve(market.address, 2000);
-// //     await market.connect(addr3).buyMarketItem(nft.address, 1, {
-// //       value: 2000,
-// //     });
-// //   });
-
-// //   it("Should addr 3 put a Token for sale", async function () {
-// //     let listingPrice = await market.getListingPrice();
-// //     listingPrice = listingPrice.toString();
-
-// //     await nft.connect(addr3).setApprovalForAll(market.address, true);
-// //     await market.connect(addr3).createMarketItem(nft.address, 1, 3000, 2, {
-// //       value: listingPrice,
-// //     });
-// //   });
-
-// //   it("Should addr 1 buy a Token", async function () {
-// //     await token.connect(addr1).approve(market.address, 3000);
-// //     await market.connect(addr1).buyMarketItem(nft.address, 1, {
-// //       value: 3000,
-// //     });
-// //   });
-
-// //   it("Should get top seller", async function () {
-// //     const data = await market.getTopSeller();
-// //     const items = data.map((i) => ({
-// //       user: ACCOUNTS[i.user],
-// //       count: Number(i.count.toString()),
-// //     }));
-
-// //     const sortedData = items.sort((a, b) => b.count - a.count);
-// //     console.log(sortedData);
-// //   });
-
-// //   it("Should get top buyer", async function () {
-// //     const data = await market.getTopBuyer();
-// //     const items = data.map((i) => ({
-// //       user: ACCOUNTS[i.user],
-// //       count: Number(i.count.toString()),
-// //     }));
-
-// //     const sortedData = items.sort((a, b) => b.count - a.count);
-// //     console.log(sortedData);
-// //   });
-// // });
