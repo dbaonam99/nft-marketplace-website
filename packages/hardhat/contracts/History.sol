@@ -18,9 +18,9 @@ contract History {
 
     struct UserHistory {
         address user;
+        uint256 tokenId;
         uint256 date;
-        string title;
-        string description;
+        string actionType;
     }
 
     mapping(uint256 => UserHistory) public idToUserHistory;
@@ -28,31 +28,31 @@ contract History {
     mapping(address => uint) public userHistoryCounter;
     mapping(uint256 => uint) public tokenHistoryCounter;
 
-    event userHistoryCreated(address user, uint256 date, string title, string description);
+    event userHistoryCreated(address user, uint256 tokenId, uint256 date, string actionType);
     event tokenHistoryCreated(uint256 tokenId, address user, uint256 createdDate, uint256 price, string description);
 
     function createUserHistory(
         address userAddress,
+        uint256 tokenId,
         uint256 date,
-        string memory title,
-        string memory description
+        string memory actionType
     ) public returns (uint256) {
         _userHistoryIds.increment();
         uint256 historyId = _userHistoryIds.current();
 
         idToUserHistory[historyId] = UserHistory(
             userAddress,
+            tokenId,
             date,
-            title,
-            description
+            actionType
         );
         userHistoryCounter[userAddress] += 1;
         
         emit userHistoryCreated(
             userAddress,
+            tokenId,
             date,
-            title,
-            description
+            actionType
         );
         return historyId;
     }

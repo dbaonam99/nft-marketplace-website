@@ -13,8 +13,9 @@ const BiddingBox = ({
   startTime,
   endAuction,
   isOwner,
+  overTime,
+  setOverTime,
   ended,
-  setEnded,
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -65,7 +66,7 @@ const BiddingBox = ({
               isLightMode ? "biding-end-title-light" : "biding-end-title"
             }
           >
-            {!ended && t("common.biddingEndIn")}
+            {!overTime && t("common.biddingEndIn")}
           </p>
           <div className="count-down titled circled text-center flex-1">
             <Countdown
@@ -74,7 +75,7 @@ const BiddingBox = ({
               }
               renderer={(props) => {
                 if (props.completed) {
-                  setEnded(true);
+                  setOverTime(true);
                   return (
                     <div>
                       <b style={{ color: "red" }}>{t("common.biddingEnded")}</b>
@@ -117,7 +118,8 @@ const BiddingBox = ({
       </div>
 
       {isOwner
-        ? ended && (
+        ? overTime &&
+          ended && (
             <div
               className="open-popup-link more-btn width-100"
               onClick={endAuction}
@@ -125,7 +127,7 @@ const BiddingBox = ({
               {t("common.endAuction")}
             </div>
           )
-        : !ended && (
+        : !overTime && (
             <div className="open-popup-link more-btn width-100" onClick={onBid}>
               {t("common.placeABid")}
             </div>

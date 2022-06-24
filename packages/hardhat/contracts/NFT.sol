@@ -20,16 +20,18 @@ contract NFT is ERC721URIStorage {
     uint256 newItemId = _tokenIds.current();
     _mint(msg.sender, newItemId);
     _setTokenURI(newItemId, tokenURI);
-    createUserHistory(msg.sender, block.timestamp, "Token created!", tokenURI);
+    createUserHistory(msg.sender, newItemId, block.timestamp, "createToken" ,"Token created!", tokenURI);
     return newItemId;
   }
 
   function createUserHistory(
     address userAddress, 
+    uint256 tokenId,
     uint date,
+    string memory actionType,
     string memory title, 
     string memory description
   ) public {
-    History(historyAddress).createUserHistory(userAddress, date, title, description);
+    History(historyAddress).createUserHistory(userAddress, tokenId, date, actionType, title, description);
   }
 }

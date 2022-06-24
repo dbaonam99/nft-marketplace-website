@@ -27,6 +27,7 @@ const AuctionSidebar = (props) => {
     createdDate,
     highestBidAmount,
     tokenId,
+    ended,
   } = props;
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -37,7 +38,7 @@ const AuctionSidebar = (props) => {
   const endAuctionMutation = useEndAuctionMutation();
   const [userInfo, setUserInfo] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
-  const [ended, setEnded] = useState(false);
+  const [overTime, setOverTime] = useState(false);
 
   const isOwner =
     user?.get("ethAddress")?.toLowerCase() === owner?.toLowerCase();
@@ -174,8 +175,9 @@ const AuctionSidebar = (props) => {
             duration={duration}
             startTime={startTime}
             isOwner={isOwner}
+            overTime={overTime}
+            setOverTime={setOverTime}
             ended={ended}
-            setEnded={setEnded}
           />
         </div>
       </div>

@@ -37,7 +37,7 @@ export const useGetOnSaleItemsQuery = (ethAddress) => {
       const auctionData = await auctionContract.fetchAuctionItems();
       const auctionItems = await Promise.all(
         auctionData.map(async (i) => {
-          const tokenUri = await tokenContract.tokenURI(1);
+          const tokenUri = await tokenContract.tokenURI(i.tokenId);
           const meta = await axios.get(tokenUri);
           let item = {
             auctionId: i.auctionId.toString(),
@@ -119,7 +119,7 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
       const auctionData = await auctionContract.fetchMyAuctionItems(ethAddress);
       const auctionItems = await Promise.all(
         auctionData.map(async (i) => {
-          const tokenUri = await tokenContract.tokenURI(1);
+          const tokenUri = await tokenContract.tokenURI(i.tokenId);
           const meta = await axios.get(tokenUri);
           let item = {
             auctionId: i.auctionId.toString(),
@@ -134,6 +134,7 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
             name: meta.data.name,
             description: meta.data.description,
             createdDate: i.createdDate.toString(),
+            ended: i.ended,
             type: "auction",
           };
           return item;
@@ -212,8 +213,6 @@ export const useGetCreatedItemsQuery = (ethAddress) => {
       const auctionData = await auctionContract.fetchAuctionItemsCreated(
         ethAddress
       );
-
-      console.log(auctionData);
 
       const auctionItems = await Promise.all(
         auctionData.map(async (i) => {

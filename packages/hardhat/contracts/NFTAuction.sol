@@ -105,11 +105,11 @@ contract NFTAuction is ReentrancyGuard {
 
     function createUserHistory(
         address userAddress, 
+        uint256 tokenId,
         uint date,
-        string memory title, 
-        string memory description
+        string memory actionType
     ) public {
-        History(historyAddress).createUserHistory(userAddress, date, title, description);
+        History(historyAddress).createUserHistory(userAddress, tokenId, date, actionType);
     }
 
     function createTokenHistory(
@@ -170,7 +170,7 @@ contract NFTAuction is ReentrancyGuard {
             "sell"
         );
 
-        createUserHistory(msg.sender, block.timestamp, "Put token to the auction!", "User put token to the auction!");
+        createUserHistory(msg.sender, tokenId, block.timestamp, "startAuction");
         createTokenHistory(tokenId, msg.sender, block.timestamp, startingPrice,  "startAuction");
 
         emit AuctionCreated(
@@ -222,7 +222,7 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
-            createUserHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
+            createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "bid");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -258,7 +258,7 @@ contract NFTAuction is ReentrancyGuard {
             );
             bidHistoryCount[auctionId] += 1;
 
-            createUserHistory(msg.sender, block.timestamp, "Bid the aution!", "User Bid the aution!");
+            createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "bid");
             emit AuctionBid(auctionId, msg.sender, price);
             return true;
         }
@@ -361,7 +361,7 @@ contract NFTAuction is ReentrancyGuard {
         sellCount[auctionEnded] = UserCount(msg.sender, idToAuction[auctionId].highestBidAmount);
         boughtCount[auctionEnded] = UserCount(idToAuction[auctionId].highestBidder, idToAuction[auctionId].highestBidAmount);
 
-        createUserHistory(msg.sender, block.timestamp, "End the aution!", "User End the aution!");
+        createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "endAuction");
         createTokenHistory(idToAuction[auctionId].tokenId, msg.sender, block.timestamp, idToAuction[auctionId].highestBidAmount,  "endAuction");
     }
 
