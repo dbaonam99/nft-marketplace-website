@@ -3,7 +3,7 @@ import timelineData from "../../../data/data-containers/data-Timeline.json";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 
-const TimelineBox = () => {
+const TimelineBox = ({ data }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
 

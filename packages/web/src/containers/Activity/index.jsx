@@ -4,10 +4,15 @@ import SidebarAreaContainer from "./SidebarArea";
 import "../../assets/css/activity.css";
 import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from 'react-i18next';
+import { useMoralis } from "react-moralis";
+import { useUserHistoryQuery } from "../../queries/NFT";
 
 const ActivityContainer = () => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
+  const { user } = useMoralis();
+
+  const { data, isLoading } = useUserHistoryQuery(user?.get("ethAddress"));
 
   return (
     <>
@@ -24,7 +29,7 @@ const ActivityContainer = () => {
       >
         <div className="container">
           <div className="row">
-            <TimelineBox />
+            <TimelineBox data={data} />
             <SidebarAreaContainer />
           </div>
         </div>

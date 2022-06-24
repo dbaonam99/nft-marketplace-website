@@ -19,7 +19,6 @@ export const useCreateAuctionMutation = () => {
       price,
       duration,
       biddingStep,
-      callback,
     }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
@@ -50,7 +49,6 @@ export const useCreateAuctionMutation = () => {
         { value: listingPrice }
       );
 
-      callback();
       return await transaction.wait();
     }
   );

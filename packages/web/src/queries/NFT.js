@@ -12,6 +12,7 @@ import { TOKEN_ADDRESS } from "../contracts/Token.address";
 import { NFT_ADDRESS } from "../contracts/NFT.address";
 import { MARKET_ADDRESS } from "../contracts/NFTMarket.address";
 import { HISTORY_ADDRESS } from "../contracts/History.address";
+import moment from "moment";
 
 export const useCreateNFTMutation = () => {
   return useMutation(
@@ -45,7 +46,7 @@ export const useCreateNFTMutation = () => {
 
 export const useCreateNFTMarketItemMutation = () => {
   return useMutation(
-    async ({ listingPrice, tokenId, price, itemId, callback }) => {
+    async ({ listingPrice, tokenId, price, itemId }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
       const provider = new ethers.providers.Web3Provider(connection);
@@ -71,9 +72,8 @@ export const useCreateNFTMarketItemMutation = () => {
           value: listingPrice,
         }
       );
-      callback();
       return await transaction.wait();
-    }
+    },
   );
 };
 
@@ -383,5 +383,56 @@ export const useGetTokenHistoryQuery = ({ tokenId }) => {
     {
       refetchInterval: 2000,
     }
+  );
+};
+
+export const useUserHistoryQuery = (ethAddress) => {
+  return useQuery(
+    "userHistory",
+    async () => {
+      if (!ethAddress) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
+
+      const historyContract = new ethers.Contract(
+        HISTORY_ADDRESS,
+        HISTORY_ABI,
+        provider
+      );
+
+      const data = await historyContract.getUserHistory(ethAddress);
+
+      const items = await Promise.all(
+        data.map(async (i) => {
+          let price = Number(i.price.toString()) / 10 ** 10;
+
+          let item = {
+            title: i.title,
+            description: i.description,
+            price: price,
+            date: moment(
+              new Date(
+                parseInt(i.date.toString())
+              )
+            ).format("DD/MM/YYYY"),
+            time: moment(
+              new Date(
+                parseInt(i.date.toString())
+              )
+            ).format("hh:mm A"),
+          };
+          return item;
+        })
+      );
+
+      return items.reverse();
+    },
+    {
+      enabled: !!ethAddress
+    }
+    // {
+    //   refetchInterval: 2000,
+    // }
   );
 };

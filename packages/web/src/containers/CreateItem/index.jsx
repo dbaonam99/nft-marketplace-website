@@ -15,6 +15,7 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import PreviewItem from "./PreviewItem";
 import { useCreateAuctionMutation } from "../../queries/Auction";
+import toast, { Toaster } from 'react-hot-toast';
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -95,7 +96,8 @@ const CreateItemContainer = () => {
               listingPrice: listingPrice.toString(),
               tokenId: res,
               price,
-              callback: () => {
+            }, {
+              onSuccess: () => {
                 updateFormInput((prevState) => ({
                   ...prevState,
                   price: "",
@@ -104,16 +106,8 @@ const CreateItemContainer = () => {
                 }));
                 setFileUrl(null);
                 setButtonLoading(false);
-                // toast("🦄 Wow so easy!", {
-                //   position: "top-right",
-                //   autoClose: 5000,
-                //   hideProgressBar: false,
-                //   closeOnClick: true,
-                //   pauseOnHover: true,
-                //   draggable: true,
-                //   progress: undefined,
-                // });
-              },
+                toast.success("Tạo thành công!")
+              }
             });
           },
         }
@@ -191,7 +185,8 @@ const CreateItemContainer = () => {
               price,
               duration: durationTimestamp,
               biddingStep,
-              callback: () => {
+            }, {
+              onSuccess: () => {
                 updateFormInput((prevState) => ({
                   ...prevState,
                   price: "",
@@ -202,7 +197,8 @@ const CreateItemContainer = () => {
                 }));
                 setFileUrl(null);
                 setButtonLoading(false);
-              },
+                toast.success("Tạo thành công!")
+              }
             });
           },
         }
@@ -249,6 +245,8 @@ const CreateItemContainer = () => {
             </div>
           </div>
         </div>
+        <Toaster />
+
       </section>
     </>
   );
