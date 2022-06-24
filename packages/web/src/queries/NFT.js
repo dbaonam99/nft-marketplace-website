@@ -354,8 +354,6 @@ export const useTopBuyerQuery = () => {
     const marketData = await marketContract.getTopBuyer();
     const auctionData = await auctionContract.getTopBuyer();
 
-    console.log(marketData, auctionData);
-
     const items = [...marketData, ...auctionData].map((i) => ({
       user: i.user,
       count: Number(i.count.toString()) / 10 ** 10,

@@ -16,7 +16,7 @@ const ItemDetailsContainer = () => {
   const sp = new URLSearchParams(search);
   const isAuctionDetail = sp.get("auction");
 
-  const { data: nftDetail } = useGetNFTDetailQuery(tokenId);
+  // const { data: nftDetail } = useGetNFTDetailQuery(tokenId);
   const { data: auctionDetail } = useGetAuctionDetailQuery(tokenId);
 
   return (
@@ -35,8 +35,8 @@ const ItemDetailsContainer = () => {
             </div>
           ) : (
             <div className="row item-detail-container">
-              <Detailed imageUrl={nftDetail?.image} />
-              <MarketSideBar {...nftDetail} />
+              {/* <Detailed imageUrl={nftDetail?.image} />
+              <MarketSideBar {...nftDetail} /> */}
             </div>
           )}
         </div>

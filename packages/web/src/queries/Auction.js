@@ -19,6 +19,7 @@ export const useCreateAuctionMutation = () => {
       price,
       duration,
       biddingStep,
+      oldAuctionId,
       callback,
     }) => {
       const web3Modal = new Web3Modal();
@@ -47,6 +48,7 @@ export const useCreateAuctionMutation = () => {
         startDate,
         duration,
         biddingStep,
+        oldAuctionId || 0,
         { value: listingPrice }
       );
 
@@ -152,6 +154,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
     );
 
     const data = await auctionContract.getAuctionDetail(tokenId);
+
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
     const meta = await axios.get(tokenUri);
 
@@ -161,7 +164,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       tokenId: data.tokenId.toString(),
       startingPrice: Number(data.startingPrice.toString()) / 10 ** 10,
       startTime: data.startTime.toString(),
-      duration: data.duration.toString(),
+      duration: Number(data.duration.toString()),
       biddingStep: data.biddingStep.toString(),
       image: meta.data.image,
       name: meta.data.name,
