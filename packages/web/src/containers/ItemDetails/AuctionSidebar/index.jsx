@@ -1,4 +1,4 @@
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { getUserInfo } from "../../../queries/User";
@@ -13,6 +13,7 @@ import BiddingBox from "./BiddingBox";
 import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
 import Avatar from "../../../components/Avatar";
+import { useMoralis } from "react-moralis";
 
 const AuctionSidebar = (props) => {
   const {
@@ -32,9 +33,14 @@ const AuctionSidebar = (props) => {
   const { data: highestBidder } = useGetHighestBidderQuery({
     auctionId,
   });
+  const { user } = useMoralis();
   const endAuctionMutation = useEndAuctionMutation();
   const [userInfo, setUserInfo] = useState({});
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [ended, setEnded] = useState(false);
+
+  const isOwner =
+    user?.get("ethAddress")?.toLowerCase() === owner?.toLowerCase();
 
   useEffect(() => {
     (async () => {
@@ -55,7 +61,7 @@ const AuctionSidebar = (props) => {
         auctionId={auctionId}
       />
       <div className="col-12 col-lg-5 mt-s sidebar-container">
-        <div className="sidebar-area">
+        <div className={isOwner ? "sidebar-area more-padding" : "sidebar-area"}>
           <div className="donnot-miss-widget">
             <div className="who-we-contant">
               <h2 className={isLightMode ? "text-dark" : ""}>
@@ -63,40 +69,56 @@ const AuctionSidebar = (props) => {
               </h2>
             </div>
             <div
-              className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
+              className={
+                isLightMode
+                  ? "mb-15 d-flex text-muted"
+                  : "mb-15 d-flex gray-text"
+              }
             >
-              <span
-                className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
-              >
-                {t("common.from")}:
-              </span>
-              <span
-                className={
-                  isLightMode
-                    ? "mb-15 text-muted mr-15"
-                    : "mb-15 gray-text mr-15"
-                }
-              >
-                {startingPrice} UIT
-              </span>
+              <div className="d-flex">
+                <p
+                  className={
+                    isLightMode ? "text-muted mr-15" : "gray-text mr-15"
+                  }
+                >
+                  {t("common.from")}:
+                </p>
+                <p
+                  className={
+                    isLightMode ? "mb-15 text-dark mr-15" : "mb-15 w-text mr-15"
+                  }
+                >
+                  {startingPrice} UIT
+                </p>
+              </div>
 
-              <span
-                className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
-              >
-                {t("common.highestBid")}:
-              </span>
-              <span
-                className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
-              >
-                {highestBidAmount} UIT
-              </span>
+              <div className="d-flex">
+                <p
+                  className={
+                    isLightMode ? "text-muted mr-15" : "gray-text mr-15"
+                  }
+                >
+                  {t("common.highestBid")}:
+                </p>
+                <p
+                  className={
+                    isLightMode ? "mb-15 text-dark mr-15" : "mb-15 w-text mr-15"
+                  }
+                >
+                  {highestBidAmount} UIT
+                </p>
+              </div>
             </div>
 
             <div
               className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
             >
               <span
-                className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
+                className={
+                  isLightMode
+                    ? "text-dark mr-15 description"
+                    : "w-text mr-15 description"
+                }
               >
                 {description}
               </span>
@@ -115,7 +137,7 @@ const AuctionSidebar = (props) => {
                 <Avatar src={userInfo?.avatar} size="60px" />
               </div>
               <div className="author-info">
-                <NavLink to="/profile">
+                <NavLink to={`/profile/${owner}`}>
                   <h5
                     className={
                       isLightMode ? "author-name text-dark" : "author-name"
@@ -151,7 +173,9 @@ const AuctionSidebar = (props) => {
             startingPrice={startingPrice}
             duration={duration}
             startTime={startTime}
-            owner={owner}
+            isOwner={isOwner}
+            ended={ended}
+            setEnded={setEnded}
           />
         </div>
       </div>

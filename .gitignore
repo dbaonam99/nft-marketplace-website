@@ -77,3 +77,4 @@ packages/web/src/contracts/contracts/NFTMarket.sol/NFTMarket.json
 packages/web/src/contracts/contracts/NFTAuction.sol/NFTAuction.json
 packages/web/src/contracts/contracts/NFT.sol/NFT.json
 packages/web/src/contracts/Auction.address.js
+packages/web/src/contracts/History.address.js

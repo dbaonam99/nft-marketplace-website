@@ -3,11 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { useMoralis, useMoralisFile } from "react-moralis";
 import { Link, useHistory } from "react-router-dom";
 import Breadcrumb from "../../components/Breadcrumb";
-import {
-  useGetCreatedNFTsQuery,
-  useGetMyNFTsQuery,
-  useGetMarketItemsQuery,
-} from "../../queries/NFT.js";
+import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import "../../assets/css/profile.css";
@@ -15,7 +11,11 @@ import useThemeMode from "../../hooks/useThemeMode";
 import NftCard from "../../components/NftCard";
 import LoadingIndicator from "../../components/LoadingIndicator";
 import clsx from "clsx";
-import { useGetMyAuctionItemsQuery } from "../../queries/Auction";
+import {
+  useGetCreatedItemsQuery,
+  useGetOnSaleItemsQuery,
+  useGetOwnedItemsQuery,
+} from "../../queries/Profile";
 
 export const createShortAddress = (string) => {
   if (string) {
@@ -47,18 +47,15 @@ const ProfileContainer = () => {
   const history = useHistory();
   const { isInitialized, isAuthenticated, user, setUserData, refetchUserData } =
     useMoralis();
+  const { saveFile, isUploading } = useMoralisFile();
 
   const { data: createdNFTs, isLoading: createdNFTsLoading } =
-    useGetCreatedNFTsQuery(user?.get("ethAddress"));
-  const { data: myNFTs, isLoading: myNFTsLoading } = useGetMyNFTsQuery(
+    useGetCreatedItemsQuery(user?.get("ethAddress"));
+  const { data: myNFTs, isLoading: myNFTsLoading } = useGetOwnedItemsQuery(
     user?.get("ethAddress")
   );
   const { data: onSaleNFTs, isLoading: onSaleNFTsLoading } =
-    useGetMarketItemsQuery(user?.get("ethAddress"));
-  const { data: onAuctionNFTs, isLoading: onAuctionNFTsLoading } =
-    useGetMyAuctionItemsQuery(user?.get("ethAddress"));
-
-  const { saveFile, isUploading } = useMoralisFile();
+    useGetOnSaleItemsQuery(user?.get("ethAddress"));
 
   const [copy, setCopy] = useState(false);
   const [tab, setTab] = useState(TABS[0].id);
@@ -101,17 +98,8 @@ const ProfileContainer = () => {
     let loading;
     switch (type) {
       case TABS[0].id: {
-        loading = onSaleNFTsLoading || onAuctionNFTsLoading;
-        data = onSaleNFTs
-          ? [
-              ...onSaleNFTs.filter(
-                (item) =>
-                  item.seller.toLowerCase() ===
-                  user?.get("ethAddress").toLowerCase()
-              ),
-            ]
-          : [];
-        data = onAuctionNFTs ? [...data, ...onAuctionNFTs] : [];
+        loading = onSaleNFTsLoading;
+        data = onSaleNFTs ? [...onSaleNFTs] : [];
         break;
       }
       case TABS[1].id: {

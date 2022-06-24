@@ -31,6 +31,8 @@ const CreateItemContainer = () => {
   const [fileLoading, setFileLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
 
+  const [currentMarketplaceType, setMarketplaceType] = useState("fixed_price");
+
   const createNFTMutation = useCreateNFTMutation();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
   const createAuctionMutation = useCreateAuctionMutation();
@@ -56,9 +58,6 @@ const CreateItemContainer = () => {
     switch (type) {
       case "fixed_price": {
         createSale();
-        break;
-      }
-      case "open_for_bids": {
         break;
       }
       case "timed_auction": {
@@ -238,6 +237,8 @@ const CreateItemContainer = () => {
                 fileUrl={fileUrl}
                 fileLoading={fileLoading}
                 buttonLoading={buttonLoading}
+                currentMarketplaceType={currentMarketplaceType}
+                setMarketplaceType={setMarketplaceType}
               />
             </div>
             <div className="d-none d-lg-block col-lg-4">
@@ -245,6 +246,7 @@ const CreateItemContainer = () => {
                 image={fileUrl}
                 name={formInput.name}
                 price={formInput.price}
+                currentMarketplaceType={currentMarketplaceType}
               />
             </div>
           </div>

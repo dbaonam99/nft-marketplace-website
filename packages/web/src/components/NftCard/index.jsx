@@ -37,7 +37,6 @@ function NftCard(props) {
     })();
   }, [owner]);
 
-  console.log("sold", sold);
 
   return (
     <>

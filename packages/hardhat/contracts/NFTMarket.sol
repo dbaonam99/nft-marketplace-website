@@ -185,15 +185,8 @@ contract NFTMarket is ReentrancyGuard {
     createUserHistory(msg.sender, block.timestamp, "Buy a token!", "User buy a token!");
     createUserHistory(idToMarketItem[itemId].seller, block.timestamp, "Buy a token!", "User buy a token!");
 
-    sellCount[itemSold] = UserCount(
-      idToMarketItem[itemId].seller,
-      price
-    );
-
-    boughtCount[itemSold] = UserCount(
-      msg.sender,
-      price
-    );
+    sellCount[itemSold] = UserCount(idToMarketItem[itemId].seller, price);
+    boughtCount[itemSold] = UserCount(msg.sender, price);
 
     createTokenHistory(tokenId, msg.sender, block.timestamp, price,  "buy");
     

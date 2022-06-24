@@ -10,6 +10,8 @@ const CreatorSec = ({
   fileUrl,
   fileLoading,
   buttonLoading,
+  currentMarketplaceType,
+  setMarketplaceType,
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -36,6 +38,8 @@ const CreatorSec = ({
           fileUrl={fileUrl}
           fileLoading={fileLoading}
           buttonLoading={buttonLoading}
+          currentMarketplaceType={currentMarketplaceType}
+          setMarketplaceType={setMarketplaceType}
         />
       </div>
     </>

@@ -23,7 +23,6 @@ const SaleModal = ({
     //   auctionId,
     //   price: bidPrice,
     // });
-    console.log("Sale Modal", tokenId, itemId);
     createNFTMarketItemMutation.mutate({
       listingPrice: listingPrice.toString(),
       tokenId,

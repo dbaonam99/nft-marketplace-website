@@ -13,8 +13,6 @@ function LiveAuctionsContainer() {
   const { data: auctionItems, isLoading } = useGetAuctionItemsQuery();
   const { t } = useTranslation();
 
-  console.log("auctionItems", auctionItems);
-
   return (
     <section
       className={clsx(

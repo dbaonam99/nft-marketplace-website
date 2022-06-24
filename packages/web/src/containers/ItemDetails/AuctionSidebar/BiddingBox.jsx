@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
 import { useTranslation } from "react-i18next";
-import { useMoralis } from "react-moralis";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { getUserInfo } from "../../../queries/User";
 
@@ -13,15 +12,13 @@ const BiddingBox = ({
   duration,
   startTime,
   endAuction,
-  owner,
+  isOwner,
+  ended,
+  setEnded,
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
   const [userInfo, setUserInfo] = useState({});
-  const [ended, setEnded] = useState(false);
-  const { user } = useMoralis();
-  const isOwner =
-    user?.get("ethAddress")?.toLowerCase() === owner?.toLowerCase();
   const isNoBidYet = highestBidAmount === startingPrice;
 
   useEffect(() => {
@@ -118,20 +115,21 @@ const BiddingBox = ({
           </div>
         </div>
       </div>
-      {ended ? (
-        isOwner && (
-          <div
-            className="open-popup-link more-btn width-100"
-            onClick={endAuction}
-          >
-            {t("common.endAuction")}
-          </div>
-        )
-      ) : (
-        <div className="open-popup-link more-btn width-100" onClick={onBid}>
-          {t("common.placeABid")}
-        </div>
-      )}
+
+      {isOwner
+        ? ended && (
+            <div
+              className="open-popup-link more-btn width-100"
+              onClick={endAuction}
+            >
+              {t("common.endAuction")}
+            </div>
+          )
+        : !ended && (
+            <div className="open-popup-link more-btn width-100" onClick={onBid}>
+              {t("common.placeABid")}
+            </div>
+          )}
     </div>
   );
 };
