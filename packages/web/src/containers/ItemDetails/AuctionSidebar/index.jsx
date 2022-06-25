@@ -14,7 +14,8 @@ import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
 import Avatar from "../../../components/Avatar";
 import { useMoralis } from "react-moralis";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
+import clsx from "clsx";
 
 const AuctionSidebar = (props) => {
   const {
@@ -52,11 +53,12 @@ const AuctionSidebar = (props) => {
   }, [owner]);
 
   const endAuction = () => {
-    endAuctionMutation.mutate({ auctionId },
+    endAuctionMutation.mutate(
+      { auctionId },
       {
         onSuccess: () => {
           toast.success(t("message.bidNFT"));
-        }
+        },
       }
     );
   };
@@ -69,7 +71,14 @@ const AuctionSidebar = (props) => {
         auctionId={auctionId}
       />
       <div className="col-12 col-lg-5 mt-s sidebar-container">
-        <div className={isOwner ? "sidebar-area more-padding" : "sidebar-area"}>
+        <div
+          className={clsx(
+            "sidebar-area",
+            isOwner
+              ? overTime && !ended && "more-padding"
+              : !overTime && "more-padding"
+          )}
+        >
           <div className="donnot-miss-widget">
             <div className="who-we-contant">
               <h2 className={isLightMode ? "text-dark" : ""}>
