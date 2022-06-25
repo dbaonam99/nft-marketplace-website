@@ -14,6 +14,7 @@ import { useEffect, useState } from "react";
 import BidModal from "./BidModal";
 import Avatar from "../../../components/Avatar";
 import { useMoralis } from "react-moralis";
+import toast from 'react-hot-toast';
 
 const AuctionSidebar = (props) => {
   const {
@@ -51,7 +52,13 @@ const AuctionSidebar = (props) => {
   }, [owner]);
 
   const endAuction = () => {
-    endAuctionMutation.mutate({ auctionId });
+    endAuctionMutation.mutate({ auctionId },
+      {
+        onSuccess: () => {
+          toast.success(t("message.bidNFT"));
+        }
+      }
+    );
   };
 
   return (

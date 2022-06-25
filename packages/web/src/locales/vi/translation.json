@@ -69,10 +69,18 @@
     "itemDescription": "Mô tả NFT",
     "itemPrice": "Giá NFT",
     "itemStartPrice": "Giá khởi điểm",
+    "submit": "Nhập",
     "itemDuration": "Thời gian đấu giá",
     "itemBiddingStep": "Bước giá",
     "avatar": "Ảnh đại diện",
-    "username": "Tên hiển thị"
+    "username": "Tên hiển thị",
+    "for": "với giá",
+    "withStartPrice": "với giá khởi điểm",
+    "biddingStep": "bước giá",
+    "listings": "Danh sách",
+    "purchases": "Mua",
+    "sales": "Bán",
+    "bids": "Đấu giá"
   },
   "header": {
     "home": "Trang chủ",
@@ -110,7 +118,13 @@
   },
   "activity": {
     "recentActivity": "Hoạt động gần đây",
-    "businessHistory": "Lịch sử kinh doanh"
+    "businessHistory": "Lịch sử kinh doanh",
+    "createdToken": "Tạo NFT",
+    "saledToken": "Đăng bán NFT",
+    "buyToken": "Mua NFT",
+    "sellToken": "Đã bán NFT",
+    "startAuction": "Mở đấu giá",
+    "bid": "Đã đấu giá"
   },
   "connectWallet": {
     "connectYourWallet": "Kết nối đến ví của bạn",
@@ -129,5 +143,12 @@
   "contact": {
     "getInTouch": "Liên hệ",
     "contactWithUs": "Liên hệ với chúng tôi"
+  },
+  "message": {
+    "createdNFT": "Tạo NFT thành công!",
+    "buyNFT": "Mua NFT thành công!",
+    "bidNFT": "Đấu giá NFT thành công!",
+    "updatedCover": "Cập nhật ảnh bìa thành công!",
+    "updatedProfile": "Cập nhật thông tin thành công!"
   }
 }

@@ -1,7 +1,7 @@
 const hre = require("hardhat");
 const fs = require("fs");
 
-const ADMIN_ADDRESS = "0xB809bbe7Baca49b75DA0364468b6821A8A1113c9";
+const ADMIN_ADDRESS = "0xaf696d6468060B8a66c2b781e419D344aAf9D177";
 
 module.exports = async () => {
   /* ----------------- History Contract ----------------- */

@@ -11,10 +11,17 @@ const BidModal = ({ modalIsOpen, setIsOpen, auctionId }) => {
   const [bidPrice, setBidPrice] = useState();
 
   const bid = () => {
-    bidMutation.mutate({
-      auctionId,
-      price: bidPrice,
-    });
+    bidMutation.mutate(
+      {
+        auctionId,
+        price: bidPrice,
+      },
+      {
+        onSuccess: () => {
+          setIsOpen(false);
+        },
+      }
+    );
   };
 
   return (

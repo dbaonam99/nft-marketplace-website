@@ -23,17 +23,14 @@ const TimelineBox = ({ data }) => {
           </div>
           <div className="timelineBody">
             <ul className="timeline">
-              {timelineData &&
-                timelineData.map((item, i) => (
+              {data && data?.length > 0 &&
+                data.map((item) => (
                   <ItemTimeline
-                    key={i}
-                    FullTime={item.FullTime}
-                    Time={item.Time}
-                    title={item.title}
-                    text={item.title}
-                    addLink={item.title}
-                    name={item.title}
-                    bid={item.bid}
+                    key={`${item.actionType} ${item.tokenId}`}
+                    date={item?.date}
+                    time={item?.time}
+                    actionType={item?.actionType}
+                    tokenId={item?.tokenId}
                   />
                 ))}
             </ul>

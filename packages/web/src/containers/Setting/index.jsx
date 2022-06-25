@@ -8,6 +8,7 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useMoralis, useMoralisFile } from "react-moralis";
 import { useHistory } from "react-router-dom";
+import toast from 'react-hot-toast';
 
 const CreateItemContainer = () => {
   const history = useHistory();
@@ -59,6 +60,7 @@ const CreateItemContainer = () => {
         email: formInput.email,
       });
     }
+    toast.success(t("message.updatedProfile"))
     history.push("/my-profile");
   };
 

@@ -11,32 +11,24 @@ import {
 
 export const FilterData = [
 	{
-		img:ActivityIconsf1,
-		text:'Listings'
+		id: "listings",
+		img: ActivityIconsf1,
+		text: "common.listings"
 	},
 	{
-		img:ActivityIconsf2,
-		text:'Likes'
+		id: "purchases",
+		img: ActivityIconsf3,
+		text: "common.purchases"
 	},
 	{
-		img:ActivityIconsf3,
-		text:'Purchases'
+		id: "sales",
+		img: ActivityIconsf4,
+		text: "common.sales"
 	},
 	{
-		img:ActivityIconsf4,
-		text:'Sales'
-	},
-	{
-		img:ActivityIconsf5,
-		text:'Transfer'
-	},
-	{
-		img:ActivityIconsf6,
-		text:'Burns'
-	},
-	{
-		img:ActivityIconsf7,
-		text:'Bids'
+		id: "bids",
+		img: ActivityIconsf7,
+		text: "common.bids"
 	}
 
 ]

@@ -15,7 +15,7 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import PreviewItem from "./PreviewItem";
 import { useCreateAuctionMutation } from "../../queries/Auction";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -105,7 +105,7 @@ const CreateItemContainer = () => {
                 }));
                 setFileUrl(null);
                 setButtonLoading(false);
-                toast.success("Tạo thành công!")
+                toast.success(t("message.createdNFT"));
               }
             });
           },
@@ -196,7 +196,7 @@ const CreateItemContainer = () => {
                 }));
                 setFileUrl(null);
                 setButtonLoading(false);
-                toast.success("Tạo thành công!")
+                toast.success(t("message.createdNFT"));
               }
             });
           },
@@ -247,7 +247,6 @@ const CreateItemContainer = () => {
             </div>
           </div>
         </div>
-        <Toaster />
 
       </section>
     </>

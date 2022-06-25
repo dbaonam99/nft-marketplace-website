@@ -184,7 +184,7 @@ export const useGetMarketItemsQuery = () => {
 };
 
 export const useGetNFTDetailQuery = (tokenId) => {
-  return useQuery("NFTDetail", async () => {
+  return useQuery(["NFTDetail", tokenId], async () => {
     if (!tokenId) return;
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
@@ -212,7 +212,10 @@ export const useGetNFTDetailQuery = (tokenId) => {
       itemId: data.itemId.toNumber(),
     };
     return item;
-  });
+  },
+    {
+      enabled: !!tokenId
+    });
 };
 
 export const useGetCreatedNFTsQuery = (ethAddress) => {
@@ -354,8 +357,6 @@ export const useTopBuyerQuery = () => {
     const marketData = await marketContract.getTopBuyer();
     const auctionData = await auctionContract.getTopBuyer();
 
-    console.log(marketData, auctionData);
-
     const items = [...marketData, ...auctionData].map((i) => ({
       user: i.user,
       count: Number(i.count.toString()) / 10 ** 10,
@@ -419,34 +420,31 @@ export const useUserHistoryQuery = (ethAddress) => {
       );
 
       const data = await historyContract.getUserHistory(ethAddress);
-      console.log(data);
-      // const items = await Promise.all(
-      //   data.map(async (i) => {
-      //     let price = Number(i.price.toString()) / 10 ** 10;
 
-      //     let item = {
-      //       title: i.title,
-      //       description: i.description,
-      //       price: price,
-      //       date: moment(
-      //         new Date(
-      //           parseInt(i.date.toString())
-      //         )
-      //       ).format("DD/MM/YYYY"),
-      //       time: moment(
-      //         new Date(
-      //           parseInt(i.date.toString())
-      //         )
-      //       ).format("hh:mm A"),
-      //     };
-      //     return item;
-      //   })
-      // );
+      const items = await Promise.all(
+        data.map(async (i) => {
+          const item = {
+            tokenId: i?.tokenId?.toNumber(),
+            actionType: i?.actionType,
+            date: moment(
+              new Date(
+                parseInt(i.date.toString()) * 1000
+              )
+            ).format("DD/MM/YYYY"),
+            time: moment(
+              new Date(
+                parseInt(i.date.toString()) * 1000
+              )
+            ).format("hh:mm A"),
+          };
+          return item;
+        })
+      );
 
-      // return items.reverse();
+      return items.reverse();
     },
     {
-      enabled: !!ethAddress
+      enabled: !!ethAddress,
     }
     // {
     //   refetchInterval: 2000,

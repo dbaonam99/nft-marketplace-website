@@ -132,30 +132,54 @@ contract NFTAuction is ReentrancyGuard {
         uint256 startingPrice,
         uint256 startTime,
         uint256 duration,
-        uint256 biddingStep
+        uint256 biddingStep,
+        uint256 oldAuctionId
     ) public payable nonReentrant returns (uint256) {
         require(biddingStep > 0, "Bidding step must be at least 1 wei");
         require(msg.value == listingPrice, "Price must be equal to listing price");
 
-        _auctionIds.increment();
-        uint256 auctionId = _auctionIds.current();
- 
-        idToAuction[auctionId] = Auction(
-            auctionId,
-            nftContract,
-            tokenId,
-            msg.sender,
-            msg.sender,
-            startTime,
-            startingPrice,
-            biddingStep,
-            duration,
-            startingPrice,
-            address(0),
-            CREATED,
-            block.timestamp,
-            false
-        );
+        uint256 auctionId;
+        // if (oldAuctionId == 0) {
+            _auctionIds.increment();
+            auctionId = _auctionIds.current();
+    
+            idToAuction[auctionId] = Auction(
+                auctionId,
+                nftContract,
+                tokenId,
+                msg.sender,
+                msg.sender,
+                startTime,
+                startingPrice,
+                biddingStep,
+                duration,
+                startingPrice,
+                address(0),
+                CREATED,
+                block.timestamp,
+                false
+            );
+        // } else {
+        //     auctionId = _auctionIds.current();
+        //     address _creator = idToAuction[auctionId].creator;
+          
+        //     idToAuction[auctionId] = Auction(
+        //         auctionId,
+        //         nftContract,
+        //         tokenId,
+        //         msg.sender,
+        //         _creator,
+        //         startTime,
+        //         startingPrice,
+        //         biddingStep,
+        //         duration,
+        //         startingPrice,
+        //         address(0),
+        //         CREATED,
+        //         block.timestamp,
+        //         false
+        //     );
+        // }
 
         ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
         userAuctionCount[msg.sender] += 1;

@@ -19,6 +19,7 @@ export const useCreateAuctionMutation = () => {
       price,
       duration,
       biddingStep,
+      oldAuctionId,
     }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
@@ -46,6 +47,7 @@ export const useCreateAuctionMutation = () => {
         startDate,
         duration,
         biddingStep,
+        oldAuctionId || 0,
         { value: listingPrice }
       );
 
@@ -136,7 +138,7 @@ export const useGetAuctionItemsQuery = () => {
 };
 
 export const useGetAuctionDetailQuery = (tokenId) => {
-  return useQuery("AuctionDetail", async () => {
+  return useQuery(["AuctionDetail", tokenId], async () => {
     if (!tokenId) return;
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
@@ -150,6 +152,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
     );
 
     const data = await auctionContract.getAuctionDetail(tokenId);
+
     const tokenUri = await tokenContract.tokenURI(data.tokenId);
     const meta = await axios.get(tokenUri);
 
@@ -159,7 +162,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       tokenId: data.tokenId.toString(),
       startingPrice: Number(data.startingPrice.toString()) / 10 ** 10,
       startTime: data.startTime.toString(),
-      duration: data.duration.toString(),
+      duration: Number(data.duration.toString()),
       biddingStep: data.biddingStep.toString(),
       image: meta.data.image,
       name: meta.data.name,
@@ -168,6 +171,7 @@ export const useGetAuctionDetailQuery = (tokenId) => {
       highestBidAmount: Number(data.highestBidAmount.toString()) / 10 ** 10,
       status: data.status,
     };
+
     return item;
   });
 };

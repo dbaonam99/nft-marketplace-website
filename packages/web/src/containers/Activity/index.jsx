@@ -6,6 +6,8 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from 'react-i18next';
 import { useMoralis } from "react-moralis";
 import { useUserHistoryQuery } from "../../queries/NFT";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const ActivityContainer = () => {
   const isLightMode = useThemeMode();
@@ -13,6 +15,31 @@ const ActivityContainer = () => {
   const { user } = useMoralis();
 
   const { data, isLoading } = useUserHistoryQuery(user?.get("ethAddress"));
+
+  const [filter, setFilter] = useState("listings");
+  const [filtedData, setFiltedData] = useState(data);
+
+  useEffect(() => {
+    switch (filter) {
+      case "purchases": {
+        const tempData = data.filter(item => item.actionType === "buyToken");
+        setFiltedData(tempData);
+        break;
+      }
+      case "sales": {
+        const tempData = data.filter(item => ["createToken", "createMarket", "sellToken"].includes(item.actionType));
+        setFiltedData(tempData);
+        break;
+      }
+      case "bids": {
+        const tempData = data.filter(item => ["startAuction", "bid", "endAuction"].includes(item.actionType));
+        setFiltedData(tempData);
+        break;
+      }
+      default:
+        break;
+    }
+  }, [filter]);
 
   return (
     <>
@@ -29,8 +56,8 @@ const ActivityContainer = () => {
       >
         <div className="container">
           <div className="row">
-            <TimelineBox data={data} />
-            <SidebarAreaContainer />
+            <TimelineBox data={filter === "listings" ? data : filtedData} />
+            <SidebarAreaContainer filter={filter} setFilter={setFilter} />
           </div>
         </div>
       </section>

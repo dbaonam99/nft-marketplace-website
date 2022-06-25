@@ -16,6 +16,8 @@ import {
   useGetOnSaleItemsQuery,
   useGetOwnedItemsQuery,
 } from "../../queries/Profile";
+import toast from 'react-hot-toast';
+import { useTranslation } from "react-i18next";
 
 export const createShortAddress = (string) => {
   if (string) {
@@ -60,6 +62,7 @@ const ProfileContainer = () => {
   const [copy, setCopy] = useState(false);
   const [tab, setTab] = useState(TABS[0].id);
   const inputFile = useRef();
+  const { t } = useTranslation();
 
   useEffect(() => {
     const checkUser = () =>
@@ -82,6 +85,7 @@ const ProfileContainer = () => {
         setUserData({
           cover: cover._url,
         });
+        toast.success(t("message.updatedCover"))
         refetchUserData();
       }
     } catch (error) {

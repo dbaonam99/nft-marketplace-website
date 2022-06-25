@@ -8,6 +8,7 @@ import { getUserInfo } from "../../../queries/User";
 import BidTabs from "../BidTabs";
 import Avatar from "../../../components/Avatar";
 import { useMoralis } from "react-moralis";
+import toast from 'react-hot-toast';
 
 const MarketSideBar = ({
   name,
@@ -42,10 +43,13 @@ const MarketSideBar = ({
     buyNFTMutation.mutate({
       itemId,
       price: price,
-    });
+    },
+      {
+        onSuccess: () => {
+          toast.success(t("message.buyNFT"));
+        }
+      });
   };
-
-  console.log(isOwner);
 
   return (
     <>
@@ -113,7 +117,7 @@ const MarketSideBar = ({
             <BidTabs tokenId={tokenId} />
           </div>
         </div>
-        {}
+        { }
         <div
           className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
         >

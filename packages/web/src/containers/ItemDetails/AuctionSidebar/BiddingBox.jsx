@@ -29,6 +29,8 @@ const BiddingBox = ({
     })();
   }, [highestBidder]);
 
+  console.log(new Date(Number(duration * 1000) + Number(startTime * 1000)));
+
   return (
     <div
       style={{
@@ -86,25 +88,25 @@ const BiddingBox = ({
                     <div className="auction-countdown">
                       <div className="auction-countdown-item">
                         <p className={isLightMode ? "text-dark" : ""}>
-                          {props.days}
+                          {props.days || "0"}
                         </p>
                         <p>Days</p>
                       </div>
                       <div className="auction-countdown-item">
                         <p className={isLightMode ? "text-dark" : ""}>
-                          {props.hours}
+                          {props.hours || "0"}
                         </p>
                         <p>Hours</p>
                       </div>
                       <div className="auction-countdown-item">
                         <p className={isLightMode ? "text-dark" : ""}>
-                          {props.minutes}
+                          {props.minutes || "0"}
                         </p>
                         <p>Minutes</p>
                       </div>
                       <div className="auction-countdown-item">
                         <p className={isLightMode ? "text-dark" : ""}>
-                          {props.seconds}
+                          {props.seconds || "0"}
                         </p>
                         <p>Seconds</p>
                       </div>
@@ -119,7 +121,7 @@ const BiddingBox = ({
 
       {isOwner
         ? overTime &&
-          ended && (
+          !ended && (
             <div
               className="open-popup-link more-btn width-100"
               onClick={endAuction}

@@ -48,19 +48,19 @@
       {
         "indexed": false,
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
         "name": "date",
         "type": "uint256"
       },
       {
         "indexed": false,
         "internalType": "string",
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "description",
+        "name": "actionType",
         "type": "string"
       }
     ],
@@ -115,17 +115,17 @@
       },
       {
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "date",
         "type": "uint256"
       },
       {
         "internalType": "string",
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "description",
+        "name": "actionType",
         "type": "string"
       }
     ],
@@ -205,17 +205,17 @@
           },
           {
             "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
             "name": "date",
             "type": "uint256"
           },
           {
             "internalType": "string",
-            "name": "title",
-            "type": "string"
-          },
-          {
-            "internalType": "string",
-            "name": "description",
+            "name": "actionType",
             "type": "string"
           }
         ],
@@ -288,17 +288,17 @@
       },
       {
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
         "name": "date",
         "type": "uint256"
       },
       {
         "internalType": "string",
-        "name": "title",
-        "type": "string"
-      },
-      {
-        "internalType": "string",
-        "name": "description",
+        "name": "actionType",
         "type": "string"
       }
     ],

@@ -38,8 +38,6 @@ function NftCard(props) {
     })();
   }, [owner]);
 
-  console.log("ended", ended);
-
   return (
     <>
       <SaleModal
@@ -48,6 +46,7 @@ function NftCard(props) {
         itemId={itemId}
         tokenId={tokenId}
         listingPrice={listingPrice}
+        auctionId={auctionId}
       />
       <div className="col-lg-3 col-sm-6 col-xs-12 nft-card">
         <div className={clsx(isLightMode && "l-bg bt-border", "pricing-item")}>

@@ -29,6 +29,7 @@
     "login": "Login",
     "signUp": "Signup",
     "currentPrice": "Current Price",
+    "submit": "Submit",
     "from": "From",
     "artist": "Artist",
     "size": "Size",
@@ -72,7 +73,14 @@
     "itemDuration": "Auction duration",
     "itemBiddingStep": "Bidding step",
     "avatar": "Avatar",
-    "username": "Username"
+    "username": "Username",
+    "for": "for",
+    "withStartPrice": "with start price",
+    "biddingStep": "bidding step",
+    "listings": "Listings",
+    "purchases": "Purchases",
+    "sales": "Sales",
+    "bids": "Bids"
   },
   "header": {
     "home": "Home",
@@ -110,7 +118,13 @@
   },
   "activity": {
     "recentActivity": "Recent Activity",
-    "businessHistory": "Business History"
+    "businessHistory": "Business History",
+    "createdToken": "Created NFT",
+    "saledToken": "Post sell NFT",
+    "buyToken": "Buy NFT",
+    "sellToken": "Sell NFT",
+    "startAuction": "Start Auction",
+    "bid": "Bid"
   },
   "connectWallet": {
     "connectYourWallet": "Connect Your Wallet",
@@ -129,5 +143,12 @@
   "contact": {
     "getInTouch": "Get In Touch",
     "contactWithUs": "Contact With Us"
+  },
+  "message": {
+    "createdNFT": "Created NFT successfully!",
+    "buyNFT": "Buy NFT successfully!",
+    "bidNFT": "Bid NFT successfully!",
+    "updatedCover": "Updated cover successfully!",
+    "updatedProfile": "Updated profile successfully!"
   }
 }

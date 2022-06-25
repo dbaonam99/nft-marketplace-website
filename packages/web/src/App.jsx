@@ -6,6 +6,7 @@ import { Switch, Route } from "react-router-dom";
 
 import Aos from "aos";
 import Modal from "./components/Modal";
+import { Toaster } from 'react-hot-toast';
 
 import {
   Activity,
@@ -131,6 +132,7 @@ const App = () => {
             <Route path="/my-profile" component={MyProfile} />
             <Route path="/setting" component={Setting} />
           </Switch>
+          <Toaster position="top-right" />
         </div>
       </AuthProvider>
     </QueryClientProvider>

@@ -225,9 +225,18 @@
   margin-bottom: 15px;
   transition: all 0.5s;
   cursor: pointer;
+  
 }
 .filter-item:hover {
   color: #917af9;
+}
+.filter-item-active {
+  border-color: #917af9;
+  background-color: #917af9;
+}
+.filter-item-active-light {
+  border-color: #917af9;
+  background-color: #917af9;
 }
 .filter-item img {
   padding-right: 10px;
