@@ -6,7 +6,7 @@ import { Switch, Route } from "react-router-dom";
 
 import Aos from "aos";
 import Modal from "./components/Modal";
-import { Toaster } from 'react-hot-toast';
+import { Toaster } from "react-hot-toast";
 
 import {
   Activity,
@@ -125,7 +125,7 @@ const App = () => {
             <Route path="/authors" component={Authors} />
             <Route path="/connectWallet" component={ConnectWallet} />
             <Route path="/contact" component={Contact} />
-            <Route path="/createitem" component={CreateItem} />
+            <Route path="/create-item" component={CreateItem} />
             <Route path="/discover" component={Discover} />
             <Route path="/item-details/:tokenId" component={ItemDetails} />
             <Route path="/profile/:ethAddress" component={Profile} />

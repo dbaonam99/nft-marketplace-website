@@ -1,0 +1,8 @@
+.custom-item-render {
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+.custom-item-render.active .ant-upload-list-item {
+  border-color: #3e79f7;
+}

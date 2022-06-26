@@ -226,7 +226,7 @@ function Head({ Title }) {
             <li className="nav-item dropdown">
               <NavLink
                 className="nav-link"
-                to="/createitem"
+                to="/create-item"
                 data-toggle="dropdown"
                 style={{
                   color: itemDetailPath
