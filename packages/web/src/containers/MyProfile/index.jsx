@@ -16,7 +16,7 @@ import {
   useGetOnSaleItemsQuery,
   useGetOwnedItemsQuery,
 } from "../../queries/Profile";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 import { useTranslation } from "react-i18next";
 
 export const createShortAddress = (string) => {
@@ -85,7 +85,7 @@ const ProfileContainer = () => {
         setUserData({
           cover: cover._url,
         });
-        toast.success(t("message.updatedCover"))
+        toast.success(t("message.updatedCover"));
         refetchUserData();
       }
     } catch (error) {
@@ -122,6 +122,8 @@ const ProfileContainer = () => {
         break;
     }
 
+    console.log(onSaleNFTs?.map((item) => item.image));
+
     return (
       <>
         {loading ? (
@@ -139,7 +141,6 @@ const ProfileContainer = () => {
 
   return (
     <>
-      <Breadcrumb namePage="Trang cá nhân" title="Trang cá nhân" />
       <section
         className={
           isLightMode

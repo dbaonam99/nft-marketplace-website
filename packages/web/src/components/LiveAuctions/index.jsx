@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useGetAuctionItemsQuery } from "../../queries/Auction";
 import LoadingIndicator from "../LoadingIndicator";
 import NftCard from "../NftCard";
+import { NavLink } from "react-router-dom";
 
 function LiveAuctionsContainer() {
   const isLightMode = useThemeMode();
@@ -16,7 +17,7 @@ function LiveAuctionsContainer() {
   return (
     <section
       className={clsx(
-        "features section-padding-50 ",
+        "features section-padding-0-100",
         isLightMode && "bg-light"
       )}
     >
@@ -38,6 +39,11 @@ function LiveAuctionsContainer() {
             </>
           )}
         </div>
+      </div>
+      <div className="col-12 col-lg-12 text-center">
+        <NavLink className="btn more-btn" to="/discover">
+          {t("common.loadmore")}
+        </NavLink>
       </div>
     </section>
   );

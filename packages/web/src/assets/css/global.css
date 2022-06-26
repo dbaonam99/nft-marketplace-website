@@ -874,6 +874,9 @@ body .bt-dropdown-menu .dropdown-item.active {
   object-fit: cover;
   border-radius: 50%;
 }
+.about-us-area {
+  padding-top: 50px;
+}
 .top-seller .creator-sec {
   padding: 30px 20px !important;
 }

@@ -47,82 +47,63 @@ export const useCreateNFTMutation = () => {
 };
 
 export const useCreateNFTMarketItemMutation = () => {
-  return useMutation(
-    async ({ listingPrice, tokenId, price, itemId }) => {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+  return useMutation(async ({ listingPrice, tokenId, price, itemId }) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-      const marketContract = new ethers.Contract(
-        MARKET_ADDRESS,
-        NFTMarket_ABI,
-        signer
-      );
+    const marketContract = new ethers.Contract(
+      MARKET_ADDRESS,
+      NFTMarket_ABI,
+      signer
+    );
 
-      const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
-      await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
+    const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
+    await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
 
-      const _price = price * 10 ** 10;
+    const _price = price * 10 ** 10;
 
-      const transaction = await marketContract.createMarketItem(
-        NFT_ADDRESS,
-        tokenId,
-        _price,
-        itemId || 0,
-        {
-          value: listingPrice,
-        }
-      );
-      return await transaction.wait();
-    },
-  );
+    const transaction = await marketContract.createMarketItem(
+      NFT_ADDRESS,
+      tokenId,
+      _price,
+      itemId || 0,
+      {
+        value: listingPrice,
+      }
+    );
+    return await transaction.wait();
+  });
 };
 
 export const useBuyNFTMutation = () => {
-  return useMutation(
-    async ({ itemId, price }) => {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+  return useMutation(async ({ itemId, price }) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-      const marketContract = new ethers.Contract(
-        MARKET_ADDRESS,
-        NFTMarket_ABI,
-        signer
-      );
+    const marketContract = new ethers.Contract(
+      MARKET_ADDRESS,
+      NFTMarket_ABI,
+      signer
+    );
 
-      const tokenContract = new ethers.Contract(
-        TOKEN_ADDRESS,
-        Token_ABI,
-        signer
-      );
+    const tokenContract = new ethers.Contract(TOKEN_ADDRESS, Token_ABI, signer);
 
-      const _price = price * 10 ** 10;
+    const _price = price * 10 ** 10;
 
-      await tokenContract.approve(MARKET_ADDRESS, _price);
-      const transaction = await marketContract.buyMarketItem(
-        NFT_ADDRESS,
-        itemId,
-        {
-          value: _price,
-        }
-      );
-      return await transaction.wait();
-    },
-    {
-      onError: (error) => {
-        if (error instanceof Error) {
-          // toast.error(error.message);
-        }
-      },
-
-      onSuccess: (data) => {
-        // toast.success(data);
-      },
-    }
-  );
+    await tokenContract.approve(MARKET_ADDRESS, _price);
+    const transaction = await marketContract.buyMarketItem(
+      NFT_ADDRESS,
+      itemId,
+      {
+        value: _price,
+      }
+    );
+    return await transaction.wait();
+  });
 };
 
 export const useGetListingPriceQuery = () => {
@@ -184,38 +165,41 @@ export const useGetMarketItemsQuery = () => {
 };
 
 export const useGetNFTDetailQuery = (tokenId) => {
-  return useQuery(["NFTDetail", tokenId], async () => {
-    if (!tokenId) return;
-    const provider = new ethers.providers.JsonRpcProvider(
-      "http://localhost:8545"
-    );
+  return useQuery(
+    ["NFTDetail", tokenId],
+    async () => {
+      if (!tokenId) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
 
-    const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
-    const marketContract = new ethers.Contract(
-      MARKET_ADDRESS,
-      NFTMarket_ABI,
-      provider
-    );
+      const tokenContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, provider);
+      const marketContract = new ethers.Contract(
+        MARKET_ADDRESS,
+        NFTMarket_ABI,
+        provider
+      );
 
-    const data = await marketContract.getTokenDetail(tokenId);
-    const tokenUri = await tokenContract.tokenURI(data.tokenId);
-    const meta = await axios.get(tokenUri);
-    const item = {
-      price: Number(data.price.toString()) / 10 ** 10,
-      tokenId: data.tokenId.toNumber(),
-      seller: data.seller,
-      owner: data.owner,
-      image: meta.data.image,
-      name: meta.data.name,
-      description: meta.data.description,
-      sold: data.sold,
-      itemId: data.itemId.toNumber(),
-    };
-    return item;
-  },
+      const data = await marketContract.getTokenDetail(tokenId);
+      const tokenUri = await tokenContract.tokenURI(data.tokenId);
+      const meta = await axios.get(tokenUri);
+      const item = {
+        price: Number(data.price.toString()) / 10 ** 10,
+        tokenId: data.tokenId.toNumber(),
+        seller: data.seller,
+        owner: data.owner,
+        image: meta.data.image,
+        name: meta.data.name,
+        description: meta.data.description,
+        sold: data.sold,
+        itemId: data.itemId.toNumber(),
+      };
+      return item;
+    },
     {
-      enabled: !!tokenId
-    });
+      enabled: !!tokenId,
+    }
+  );
 };
 
 export const useGetCreatedNFTsQuery = (ethAddress) => {
@@ -426,16 +410,12 @@ export const useUserHistoryQuery = (ethAddress) => {
           const item = {
             tokenId: i?.tokenId?.toNumber(),
             actionType: i?.actionType,
-            date: moment(
-              new Date(
-                parseInt(i.date.toString()) * 1000
-              )
-            ).format("DD/MM/YYYY"),
-            time: moment(
-              new Date(
-                parseInt(i.date.toString()) * 1000
-              )
-            ).format("hh:mm A"),
+            date: moment(new Date(parseInt(i.date.toString()) * 1000)).format(
+              "DD/MM/YYYY"
+            ),
+            time: moment(new Date(parseInt(i.date.toString()) * 1000)).format(
+              "hh:mm A"
+            ),
           };
           return item;
         })

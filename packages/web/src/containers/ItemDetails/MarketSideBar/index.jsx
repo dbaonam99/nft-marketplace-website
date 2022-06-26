@@ -8,7 +8,7 @@ import { getUserInfo } from "../../../queries/User";
 import BidTabs from "../BidTabs";
 import Avatar from "../../../components/Avatar";
 import { useMoralis } from "react-moralis";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
 
 const MarketSideBar = ({
   name,
@@ -40,15 +40,25 @@ const MarketSideBar = ({
 
   const buyNft = () => {
     if (sold) return;
-    buyNFTMutation.mutate({
-      itemId,
-      price: price,
-    },
+    buyNFTMutation.mutate(
+      {
+        itemId,
+        price: price,
+      },
       {
         onSuccess: () => {
           toast.success(t("message.buyNFT"));
-        }
-      });
+        },
+        onError: (error) => {
+          console.log("check", JSON.parse(error));
+          // if (error instanceof Error) toast.error(error);
+          // else
+          //   toast.error(
+          //     typeof error === "string" ? error : "Failed to finalize lease !"
+          //   );
+        },
+      }
+    );
   };
 
   return (
@@ -61,17 +71,16 @@ const MarketSideBar = ({
                 {name} #{tokenId}
               </h2>
             </div>
-            <div
-              className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
-            >
-              <p className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}>
+
+            <div className="d-flex">
+              <p
+                className={isLightMode ? "text-muted mr-15" : "gray-text mr-15"}
+              >
                 {t("common.price")}:
               </p>
               <p
                 className={
-                  isLightMode
-                    ? "mb-15 text-muted mr-15"
-                    : "mb-15 gray-text mr-15"
+                  isLightMode ? "mb-15 text-dark mr-15" : "mb-15 w-text mr-15"
                 }
               >
                 {price?.toString()} UIT
@@ -79,7 +88,11 @@ const MarketSideBar = ({
             </div>
 
             <div
-              className={isLightMode ? "mb-15 text-muted" : "mb-15 gray-text"}
+              className={
+                isLightMode
+                  ? "mb-15 text-muted description"
+                  : "mb-15 gray-text description"
+              }
             >
               <span
                 className={isLightMode ? "text-dark mr-15" : "w-text mr-15"}
@@ -117,7 +130,7 @@ const MarketSideBar = ({
             <BidTabs tokenId={tokenId} />
           </div>
         </div>
-        { }
+        {}
         <div
           className={isLightMode ? "item-detail-cta-light" : "item-detail-cta"}
         >

@@ -20,7 +20,7 @@
 }
 
 .marketplace-type-dark {
-  width: 30%;
+  width: 50%;
   border: 2px solid #343a40;
   padding: 14px 20px;
   border-radius: 14px;
@@ -28,6 +28,10 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-right: 20px;
+}
+.marketplace-type-dark:last-child {
+  margin-right: 0;
 }
 
 .marketplace-type .marketplace-name {

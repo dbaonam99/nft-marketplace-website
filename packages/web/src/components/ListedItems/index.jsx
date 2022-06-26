@@ -19,9 +19,10 @@ function ListedItemsContainer() {
   return (
     <section
       className={clsx(
-        "features section-padding-0-100 ",
+        "features section-padding-0-100",
         isLightMode && "bg-light"
       )}
+      style={{ paddingTop: 100 }}
     >
       <div className="container">
         <InfoComponent

@@ -161,8 +161,6 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
         })
       );
 
-      console.log([...auctionItems]);
-
       return [...auctionItems, ...marketItems] || [];
     },
     {

@@ -25,6 +25,11 @@ function Head({ Title }) {
     location.pathname.split("/").length > 2 &&
     location.pathname.split("/")[1] === "item-details";
 
+  const myProfilePath =
+    location.pathname.split("/").length >= 2 &&
+    (location.pathname.split("/")[1] === "my-profile" ||
+      location.pathname.split("/")[1] === "profile");
+
   useEffect(() => {
     window.addEventListener("scroll", (e) => {
       if (window.pageYOffset > 20) {
@@ -174,17 +179,18 @@ function Head({ Title }) {
                 className="nav-link"
                 to="/"
                 style={{
-                  color: itemDetailPath
-                    ? isLightMode
-                      ? "black"
-                      : "white"
-                    : "",
+                  color:
+                    itemDetailPath || myProfilePath
+                      ? isLightMode
+                        ? "black"
+                        : "white"
+                      : "",
                 }}
               >
                 {t("header.home")}
               </NavLink>
             </li>
-            <li className="nav-item dropdown">
+            {/* <li className="nav-item dropdown">
               <NavLink
                 className="nav-link dropdown-toggle"
                 to="#"
@@ -206,17 +212,18 @@ function Head({ Title }) {
                   </NavLink>
                 ))}
               </div>
-            </li>
+            </li> */}
             <li className="nav-item">
               <NavLink
                 className="nav-link"
                 to="/activity"
                 style={{
-                  color: itemDetailPath
-                    ? isLightMode
-                      ? "black"
-                      : "white"
-                    : "",
+                  color:
+                    itemDetailPath || myProfilePath
+                      ? isLightMode
+                        ? "black"
+                        : "white"
+                      : "",
                 }}
               >
                 {t("header.activity")}
@@ -229,11 +236,12 @@ function Head({ Title }) {
                 to="/create-item"
                 data-toggle="dropdown"
                 style={{
-                  color: itemDetailPath
-                    ? isLightMode
-                      ? "black"
-                      : "white"
-                    : "",
+                  color:
+                    itemDetailPath || myProfilePath
+                      ? isLightMode
+                        ? "black"
+                        : "white"
+                      : "",
                 }}
               >
                 {t("header.createItem")}
@@ -244,11 +252,12 @@ function Head({ Title }) {
                 className="nav-link"
                 to="/contact"
                 style={{
-                  color: itemDetailPath
-                    ? isLightMode
-                      ? "black"
-                      : "white"
-                    : "",
+                  color:
+                    itemDetailPath || myProfilePath
+                      ? isLightMode
+                        ? "black"
+                        : "white"
+                      : "",
                 }}
               >
                 {t("header.contact")}
@@ -281,11 +290,12 @@ function Head({ Title }) {
                 to={isAuthenticated ? "/my-profile" : "/connectwallet"}
                 className="btn login-btn connect-wallet-button"
                 style={{
-                  color: itemDetailPath
-                    ? isLightMode
-                      ? "black"
-                      : "white"
-                    : "",
+                  color:
+                    itemDetailPath || myProfilePath
+                      ? isLightMode
+                        ? "black"
+                        : "white"
+                      : "",
                 }}
               >
                 {t("header.connectWallet")}

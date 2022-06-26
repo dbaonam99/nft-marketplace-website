@@ -1,13 +1,13 @@
 const Avatar = ({ src, size }) => (
   <>
     {src ? (
-      <div style={{ minWidth: size }}>
+      <div style={{ width: size, minHeight: size, minWidth: size }}>
         <img
           src={src}
           width={size}
           height={size}
           alt=""
-          style={{ objectFit: "cover" }}
+          style={{ objectFit: "cover", minHeight: size, maxHeight: size }}
         />
       </div>
     ) : (

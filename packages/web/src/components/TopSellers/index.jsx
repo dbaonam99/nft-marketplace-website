@@ -32,10 +32,7 @@ function TopSellersContainer({ data, isTopBuyer, isLoading }) {
 
   return (
     <section
-      className={clsx(
-        "about-us-area section-padding-50 clearfix",
-        isLightMode && "bg-light"
-      )}
+      className={clsx("about-us-area clearfix", isLightMode && "bg-light")}
     >
       <div className="container top-seller">
         {isLoading ? (

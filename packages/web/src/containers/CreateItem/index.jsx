@@ -15,7 +15,8 @@ import useThemeMode from "../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import PreviewItem from "./PreviewItem";
 import { useCreateAuctionMutation } from "../../queries/Auction";
-import toast from 'react-hot-toast';
+import toast from "react-hot-toast";
+import { auctionData, marketData, useCreateMockMarketItem } from "./mockData";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -87,27 +88,31 @@ const CreateItemContainer = () => {
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
+
       createNFTMutation.mutate(
         { url },
         {
           onSuccess: (res) => {
-            createNFTMarketItemMutation.mutate({
-              listingPrice: listingPrice.toString(),
-              tokenId: res,
-              price,
-            }, {
-              onSuccess: () => {
-                updateFormInput((prevState) => ({
-                  ...prevState,
-                  price: "",
-                  name: "",
-                  description: "",
-                }));
-                setFileUrl(null);
-                setButtonLoading(false);
-                toast.success(t("message.createdNFT"));
+            createNFTMarketItemMutation.mutate(
+              {
+                listingPrice: listingPrice.toString(),
+                tokenId: res,
+                price,
+              },
+              {
+                onSuccess: () => {
+                  updateFormInput((prevState) => ({
+                    ...prevState,
+                    price: "",
+                    name: "",
+                    description: "",
+                  }));
+                  setFileUrl(null);
+                  setButtonLoading(false);
+                  toast.success(t("message.createdNFT"));
+                },
               }
-            });
+            );
           },
         }
       );
@@ -162,7 +167,6 @@ const CreateItemContainer = () => {
         break;
     }
 
-    /* first, upload to IPFS */
     const data = JSON.stringify({
       name,
       description,
@@ -172,33 +176,35 @@ const CreateItemContainer = () => {
       setFileLoading(true);
       const added = await client.add(data);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
 
       createNFTMutation.mutate(
         { url },
         {
           onSuccess: (res) => {
-            createAuctionMutation.mutate({
-              listingPrice: listingPrice.toString(),
-              tokenId: res,
-              price,
-              duration: durationTimestamp,
-              biddingStep,
-            }, {
-              onSuccess: () => {
-                updateFormInput((prevState) => ({
-                  ...prevState,
-                  price: "",
-                  name: "",
-                  description: "",
-                  duration: "",
-                  biddingStep: "",
-                }));
-                setFileUrl(null);
-                setButtonLoading(false);
-                toast.success(t("message.createdNFT"));
+            createAuctionMutation.mutate(
+              {
+                listingPrice: listingPrice.toString(),
+                tokenId: res,
+                price,
+                duration: durationTimestamp,
+                biddingStep,
+              },
+              {
+                onSuccess: () => {
+                  updateFormInput((prevState) => ({
+                    ...prevState,
+                    price: "",
+                    name: "",
+                    description: "",
+                    duration: "",
+                    biddingStep: "",
+                  }));
+                  setFileUrl(null);
+                  setButtonLoading(false);
+                  toast.success(t("message.createdNFT"));
+                },
               }
-            });
+            );
           },
         }
       );
@@ -207,6 +213,70 @@ const CreateItemContainer = () => {
       setButtonLoading(false);
     } finally {
       setFileLoading(false);
+    }
+  };
+
+  const createMockMarketItem = async () => {
+    const callContract = async (url, price) => {
+      return new Promise((resolve) => {
+        createNFTMutation.mutate(
+          {
+            url,
+          },
+          {
+            onSuccess: (res) => {
+              createNFTMarketItemMutation.mutate(
+                {
+                  listingPrice: listingPrice.toString(),
+                  tokenId: res,
+                  price: price,
+                },
+                {
+                  onSuccess: (res) => {
+                    resolve(res);
+                  },
+                }
+              );
+            },
+          }
+        );
+      });
+    };
+    for (let i in marketData) {
+      await callContract(marketData[i].url, marketData[i].price);
+    }
+    const callAuctionContract = async (url, price, duration, biddingStep) => {
+      return new Promise((resolve) => {
+        createNFTMutation.mutate(
+          { url },
+          {
+            onSuccess: (res) => {
+              createAuctionMutation.mutate(
+                {
+                  listingPrice: listingPrice.toString(),
+                  tokenId: res,
+                  price,
+                  duration,
+                  biddingStep,
+                },
+                {
+                  onSuccess: (res) => {
+                    resolve(res);
+                  },
+                }
+              );
+            },
+          }
+        );
+      });
+    };
+    for (let i in auctionData) {
+      await callAuctionContract(
+        auctionData[i].url,
+        auctionData[i].price,
+        auctionData[i].duration,
+        auctionData[i].biddingStep
+      );
     }
   };
 
@@ -225,6 +295,7 @@ const CreateItemContainer = () => {
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
+              {/* <div onClick={() => createMockMarketItem()}>TEST</div> */}
               <CreatorSec
                 updateFormInput={onChange}
                 formInput={formInput}
@@ -247,7 +318,6 @@ const CreateItemContainer = () => {
             </div>
           </div>
         </div>
-
       </section>
     </>
   );

@@ -18,11 +18,11 @@ const HeroContainer = () => {
                 </div>
                 <h1>
                   {t("home.bannerSloganFirst")}{" "}
-                  <span className="gradient-text">{t("home.bannerSloganLast")}</span>{" "}
+                  <span className="gradient-text">
+                    {t("home.bannerSloganLast")}
+                  </span>{" "}
                 </h1>
-                <p className="w-text">
-                  {t("home.bannerDescription")}
-                </p>
+                <p className="w-text">{t("home.bannerDescription")}</p>
                 <div className="dream-btn-group">
                   <button className="btn btn-explore more-btn mr-3">
                     {t("common.findMore")}
