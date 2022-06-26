@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { useTranslation } from "react-i18next";
 import LoadingIndicator from "../../../../components/LoadingIndicator";
@@ -41,6 +41,10 @@ const ContactForm = (props) => {
   const openFileUpload = () => {
     inputFile.current.click();
   };
+
+  useEffect(() => {
+    updateFormInput("durationType", currentDurationType);
+  }, [currentDurationType]);
 
   return (
     <>
@@ -206,9 +210,7 @@ const ContactForm = (props) => {
                     required
                     value={formInput.duration}
                     onChange={(e) => {
-                      console.log(e.target.value);
                       updateFormInput("duration", e.target.value);
-                      updateFormInput("durationType", currentDurationType);
                     }}
                   />
                   <span className="highlight"></span>
