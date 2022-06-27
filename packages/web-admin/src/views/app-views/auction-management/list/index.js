@@ -63,6 +63,15 @@ const AuctionList = () => {
     {
       title: 'Description',
       dataIndex: 'description',
+      width: 200,
+      render: (value) => (
+        <Text
+          style={{ width: 200 }}
+          ellipsis={{ tooltip: value }}
+        >
+          {value}
+        </Text>
+      )
     },
     {
       title: 'Owner',

@@ -10,7 +10,7 @@ import { onMobileNavToggle } from "redux/actions/Theme";
 import { useSelector } from "react-redux";
 import { APP_PREFIX_PATH } from "configs/AppConfig";
 
-import { 
+import {
   DashboardOutlined,
   LineChartOutlined,
   OrderedListOutlined
@@ -66,19 +66,27 @@ const dashBoardNavTree = [{
       icon: OrderedListOutlined,
       breadcrumb: true,
       submenu: []
+    },
+    {
+      key: 'artists-management',
+      path: `${APP_PREFIX_PATH}/artists-management`,
+      title: "Danh sách Artist",
+      icon: OrderedListOutlined,
+      breadcrumb: true,
+      submenu: []
     }
   ]
-}]  
+}]
 
 const SideNavContent = (props) => {
-	const { sideNavTheme, routeInfo, hideGroupTitle, localization, onMobileNavToggle } = props;
-	const isMobile = !utils.getBreakPoint(useBreakpoint()).includes('lg')
-	const closeMobileNav = () => {
-		if (isMobile) {
-			onMobileNavToggle(false)
-		}
-	}
-  
+  const { sideNavTheme, routeInfo, hideGroupTitle, localization, onMobileNavToggle } = props;
+  const isMobile = !utils.getBreakPoint(useBreakpoint()).includes('lg')
+  const closeMobileNav = () => {
+    if (isMobile) {
+      onMobileNavToggle(false)
+    }
+  }
+
   return (
     <Menu
       theme={sideNavTheme === SIDE_NAV_LIGHT ? "light" : "dark"}
