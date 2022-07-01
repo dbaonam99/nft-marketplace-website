@@ -295,7 +295,7 @@ const CreateItemContainer = () => {
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
-              {/* <div onClick={() => createMockMarketItem()}>TEST</div> */}
+              <div onClick={() => createMockMarketItem()}>TEST</div>
               <CreatorSec
                 updateFormInput={onChange}
                 formInput={formInput}

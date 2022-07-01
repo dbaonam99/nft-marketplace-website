@@ -27,6 +27,7 @@ const SaleModal = ({
   tokenId,
   auctionId,
   listingPrice,
+  itemId,
 }) => {
   const isLightMode = useThemeMode();
   const createNFTMarketItemMutation = useCreateNFTMarketItemMutation();
@@ -111,6 +112,7 @@ const SaleModal = ({
         listingPrice: listingPrice.toString(),
         tokenId,
         price,
+        itemId,
         callback: () => {
           updateFormInput((prevState) => ({
             ...prevState,

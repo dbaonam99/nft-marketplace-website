@@ -14,6 +14,10 @@ module.exports = async () => {
     "../web/src/contracts/History.address.js",
     `export const HISTORY_ADDRESS = "${history.address}";`
   );
+  fs.writeFileSync(
+    "../web-admin/src/contracts/History.address.js",
+    `export const HISTORY_ADDRESS = "${history.address}";`
+  );
 
   /* ----------------- Token Contract ----------------- */
 
@@ -25,6 +29,10 @@ module.exports = async () => {
     "../web/src/contracts/Token.address.js",
     `export const TOKEN_ADDRESS = "${token.address}";`
   );
+  fs.writeFileSync(
+    "../web-admin/src/contracts/Token.address.js",
+    `export const TOKEN_ADDRESS = "${token.address}";`
+  );
 
   /* ----------------- NFT Contract ----------------- */
 
@@ -34,6 +42,10 @@ module.exports = async () => {
   console.log("NFT deployed to:", nft.address);
   fs.writeFileSync(
     "../web/src/contracts/NFT.address.js",
+    `export const NFT_ADDRESS = "${nft.address}";`
+  );
+  fs.writeFileSync(
+    "../web-admin/src/contracts/NFT.address.js",
     `export const NFT_ADDRESS = "${nft.address}";`
   );
 
@@ -51,6 +63,10 @@ module.exports = async () => {
     "../web/src/contracts/Auction.address.js",
     `export const AUCTION_ADDRESS = "${auction.address}";`
   );
+  fs.writeFileSync(
+    "../web-admin/src/contracts/Auction.address.js",
+    `export const AUCTION_ADDRESS = "${auction.address}";`
+  );
 
   /* ----------------- Market Contract ----------------- */
 
@@ -64,6 +80,10 @@ module.exports = async () => {
   console.log("NFTMarket deployed to:", nftMarket.address);
   fs.writeFileSync(
     "../web/src/contracts/NFTMarket.address.js",
+    `export const MARKET_ADDRESS = "${nftMarket.address}";`
+  );
+  fs.writeFileSync(
+    "../web-admin/src/contracts/NFTMarket.address.js",
     `export const MARKET_ADDRESS = "${nftMarket.address}";`
   );
 };

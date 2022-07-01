@@ -122,8 +122,6 @@ const ProfileContainer = () => {
         break;
     }
 
-    console.log(onSaleNFTs?.map((item) => item.image));
-
     return (
       <>
         {loading ? (

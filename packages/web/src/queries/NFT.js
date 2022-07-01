@@ -73,7 +73,9 @@ export const useCreateNFTMarketItemMutation = () => {
         value: listingPrice,
       }
     );
-    return await transaction.wait();
+    const result = await transaction.wait();
+    console.log("result", result);
+    return result;
   });
 };
 
