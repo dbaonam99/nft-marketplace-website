@@ -9,8 +9,8 @@ contract Admin {
         adminAddress = _adminAddress;
     }
 
-    function checkIsAdmin() public returns (address) {
-        // if (msg.sender == adminAddress) return true;
-        return msg.sender;
+    function checkIsAdmin(address userAddress) public view returns (bool) {
+        if (userAddress == adminAddress) return true;
+        return false;
     }
 }

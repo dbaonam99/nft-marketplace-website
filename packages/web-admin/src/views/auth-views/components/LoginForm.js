@@ -17,8 +17,8 @@ export const LoginForm = (props) => {
   let history = useHistory();
 
   const { loading, showMessage, message } = props;
-  const { authenticate, isAuthenticated, logout } = useMoralis();
-  const { data } = useCheckIsAdmin(isAuthenticated);
+  const { authenticate, isAuthenticated, logout, user } = useMoralis();
+  const { data } = useCheckIsAdmin(isAuthenticated, user?.get("ethAddress"));
 
   useEffect(() => {
     if (data) {
