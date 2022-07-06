@@ -41,6 +41,8 @@ export const useCreateAuctionMutation = () => {
       const startDate = Math.floor(date.getTime() / 1000);
 
       const _price = price * 10 ** 10;
+
+      console.log("duration", duration);
       let transaction = await contract.startAuction(
         NFT_ADDRESS,
         MARKET_ADDRESS,

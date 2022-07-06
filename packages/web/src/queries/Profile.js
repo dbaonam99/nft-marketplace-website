@@ -86,7 +86,7 @@ export const useGetOnSaleItemsQuery = (ethAddress) => {
           ...marketItems.filter(
             (item) => item.seller.toLowerCase() === ethAddress.toLowerCase()
           ),
-        ] || []
+        ].filter((item) => !item.deleted) || []
       );
     },
     {
@@ -162,8 +162,6 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
           return item;
         })
       );
-
-      console.log([...auctionItems, ...marketItems]);
 
       return (
         [...auctionItems, ...marketItems].filter((item) => !item.deleted) || []
@@ -242,7 +240,9 @@ export const useGetCreatedItemsQuery = (ethAddress) => {
         })
       );
 
-      return [...marketItems, ...auctionItems] || [];
+      return (
+        [...marketItems, ...auctionItems].filter((item) => !item.deleted) || []
+      );
     },
     {
       refetchInterval: 5000,

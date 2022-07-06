@@ -75,29 +75,31 @@ const SaleModal = ({
         break;
     }
 
-    try {
-      createAuctionMutation.mutate({
-        listingPrice: listingPrice.toString(),
-        tokenId,
-        price,
-        duration: durationTimestamp,
-        biddingStep,
-        auctionId,
-        callback: () => {
-          updateFormInput((prevState) => ({
-            ...prevState,
-            price: "",
-            duration: "",
-            biddingStep: "",
-          }));
-          setButtonLoading(false);
-          setIsOpen(false);
-        },
-      });
-    } catch (error) {
-      console.log("Error uploading file: ", error);
-      setButtonLoading(false);
-    }
+    console.log("durationTimestamp", durationTimestamp);
+
+    // try {
+    //   createAuctionMutation.mutate({
+    //     listingPrice: listingPrice.toString(),
+    //     tokenId,
+    //     price,
+    //     duration: durationTimestamp,
+    //     biddingStep,
+    //     auctionId,
+    //     callback: () => {
+    //       updateFormInput((prevState) => ({
+    //         ...prevState,
+    //         price: "",
+    //         duration: "",
+    //         biddingStep: "",
+    //       }));
+    //       setButtonLoading(false);
+    //       setIsOpen(false);
+    //     },
+    //   });
+    // } catch (error) {
+    //   console.log("Error uploading file: ", error);
+    //   setButtonLoading(false);
+    // }
   };
 
   const createSale = async () => {

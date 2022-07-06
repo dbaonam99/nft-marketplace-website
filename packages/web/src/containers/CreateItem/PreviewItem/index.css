@@ -27,7 +27,7 @@
 
 .preview-item .wrapper .image {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  /* aspect-ratio: 1 / 1; */
   height: 100%;
   overflow: hidden;
   border-radius: 12px;

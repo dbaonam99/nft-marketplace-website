@@ -89,3 +89,8 @@ packages/web-admin/src/contracts/Token.address.js
 packages/web/src/contracts/Admin.address.js
 packages/web/src/contracts/contracts/Admin.sol/Admin.json
 packages/web/src/contracts/History.address.js
+packages/web-admin/src/contracts/Auction.address.js
+packages/web-admin/src/contracts/History.address.js
+packages/web-admin/src/contracts/NFT.address.js
+packages/web-admin/src/contracts/NFTMarket.address.js
+packages/web-admin/src/contracts/Token.address.js
