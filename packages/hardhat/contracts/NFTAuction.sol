@@ -10,6 +10,8 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol";
 import "./History.sol";
+import "./NFT.sol";
+import "./NFTMarket.sol";
 
 contract NFTAuction is ReentrancyGuard {
     bytes32 public constant CREATED = keccak256("CREATED");
@@ -39,7 +41,6 @@ contract NFTAuction is ReentrancyGuard {
 
     struct Auction {
         uint256 auctionId;
-        address nftContract;
         uint256 tokenId;
         address owner;
         address creator;
@@ -52,6 +53,7 @@ contract NFTAuction is ReentrancyGuard {
         bytes32 status;
         uint256 createdDate;
         bool ended;
+        bool deleted;
     }
 
     struct BidInfo {
@@ -78,15 +80,17 @@ contract NFTAuction is ReentrancyGuard {
 
     event AuctionCreated(
         uint256 auctionId,
-        address nftContract,
         uint256 tokenId,
         address owner,
+        address creator,
         uint256 startingPrice,
         uint256 startTime,
         uint256 duration,
         uint256 biddingStep,
         uint256 createdDate,
-        bool ended
+        uint256 updatedDate,
+        bool ended,
+        bool deleted
     );
     event AuctionBid(uint256 auctionId, address bidder, uint256 price);
     event Withdraw(address indexed bidder, uint amount);
@@ -124,8 +128,23 @@ contract NFTAuction is ReentrancyGuard {
         return listingPrice;
     }
 
+    function deleteAuctionItem(uint256 tokenId) public {
+        uint itemCount = _auctionIds.current();
+
+        Auction memory item;
+        for (uint i = 0; i < itemCount; i++) {
+            if (idToAuction[i + 1].tokenId == tokenId) {
+                uint currentId = i + 1;
+                Auction storage currentItem = idToAuction[currentId];
+                item = currentItem;
+            }
+        }
+        if (item.auctionId != 0) idToAuction[item.auctionId].deleted = true;
+    }
+
     function startAuction(
         address nftContract,
+        address marketContract,
         uint256 tokenId,
         uint256 startingPrice,
         uint256 startTime,
@@ -140,31 +159,10 @@ contract NFTAuction is ReentrancyGuard {
         if (oldAuctionId == 0) {
             _auctionIds.increment();
             auctionId = _auctionIds.current();
+            address _creator = NFT(nftContract).getNFTCreator(tokenId);
     
             idToAuction[auctionId] = Auction(
                 auctionId,
-                nftContract,
-                tokenId,
-                msg.sender,
-                msg.sender,
-                startTime,
-                startingPrice,
-                biddingStep,
-                duration,
-                startingPrice,
-                address(0),
-                CREATED,
-                block.timestamp,
-                false
-            );
-            userAuctionCount[msg.sender] += 1;
-        } else {
-            auctionId = _auctionIds.current();
-            address _creator = idToAuction[auctionId].creator;
-          
-            idToAuction[auctionId] = Auction(
-                auctionId,
-                nftContract,
                 tokenId,
                 msg.sender,
                 _creator,
@@ -176,8 +174,61 @@ contract NFTAuction is ReentrancyGuard {
                 address(0),
                 CREATED,
                 block.timestamp,
+                false,
                 false
             );
+
+            emit AuctionCreated(
+                auctionId,
+                tokenId,
+                msg.sender,
+                _creator,
+                startingPrice,
+                startTime,
+                duration,
+                biddingStep,
+                block.timestamp,
+                block.timestamp,
+                false,
+                false
+            );
+            userAuctionCount[msg.sender] += 1;
+        } else {
+            auctionId = _auctionIds.current();
+            address _creator = NFT(nftContract).getNFTCreator(tokenId);
+          
+            idToAuction[auctionId] = Auction(
+                auctionId,
+                tokenId,
+                msg.sender,
+                _creator,
+                startTime,
+                startingPrice,
+                biddingStep,
+                duration,
+                startingPrice,
+                address(0),
+                CREATED,
+                block.timestamp,
+                false,
+                false
+            );
+
+            emit AuctionCreated(
+                auctionId,
+                tokenId,
+                msg.sender,
+                _creator,
+                startingPrice,
+                startTime,
+                duration,
+                biddingStep,
+                block.timestamp,
+                block.timestamp,
+                false,
+                false
+            );
+            // userAuctionCount[msg.sender] += 1;
             // reset old bid history
             bidHistoryCount[auctionId] = 0;
             uint bidCount = _bidIds.current();
@@ -188,23 +239,12 @@ contract NFTAuction is ReentrancyGuard {
             }
         }
 
+        NFTMarket(marketContract).deleteMarketItem(tokenId);
         ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
         createUserHistory(msg.sender, tokenId, block.timestamp, "startAuction");
         createTokenHistory(tokenId, msg.sender, block.timestamp, startingPrice,  "startAuction");
 
-        emit AuctionCreated(
-            auctionId,
-            nftContract,
-            tokenId,
-            msg.sender,
-            startingPrice,
-            startTime,
-            duration,
-            biddingStep,
-            block.timestamp,
-            false
-        );
         return auctionId;
     }
 
@@ -316,7 +356,6 @@ contract NFTAuction is ReentrancyGuard {
     }
 
     function getWinner(uint256 auctionId) public view returns (address) {
-        require(isFinished(auctionId), "Auction is not finished");
         return idToAuction[auctionId].highestBidder;
     }
 
@@ -330,10 +369,9 @@ contract NFTAuction is ReentrancyGuard {
         }
     }
 
-    function claimItem(uint256 auctionId) private {
+    function claimItem(address nftContract, uint256 auctionId) private {
         address winner = getWinner(auctionId);
         require(winner != address(0), "There is no winner");
-        address nftContract = idToAuction[auctionId].nftContract;
 
         IERC721(nftContract).safeTransferFrom(
             address(this),
@@ -343,25 +381,25 @@ contract NFTAuction is ReentrancyGuard {
         emit Claim(auctionId, winner);
     }
 
-    function endAuction(uint256 auctionId) public nonReentrant {
-        require(isFinished(auctionId),
-            "Auction is not finished"
-        );
-        require(idToAuction[auctionId].status != FINISHED,
-            "Auction is already finalized"
-        );
+    function endAuction(address nftContract, uint256 auctionId) public nonReentrant {
+        // require(isFinished(auctionId),
+        //     "Auction is not finished"
+        // );
+        // require(idToAuction[auctionId].status != FINISHED,
+        //     "Auction is already finalized"
+        // );
 
         address owner = idToAuction[auctionId].owner;
 
         if (idToAuction[auctionId].highestBidder == address(0)) {
-            IERC721(idToAuction[auctionId].nftContract).safeTransferFrom(
+            IERC721(nftContract).safeTransferFrom(
                 address(this),
                 owner,
                 idToAuction[auctionId].tokenId
             );
         } else {
             uit.transfer(owner, idToAuction[auctionId].highestBidAmount);
-            claimItem(auctionId);
+            claimItem(nftContract, auctionId);
             uit.transferFrom(
                 msg.sender,
                 contractOwner,
@@ -374,7 +412,9 @@ contract NFTAuction is ReentrancyGuard {
         idToAuction[auctionId].status == FINISHED;
         idToAuction[auctionId].ended = true;
 
-        userAuctionCount[msg.sender] -= 1;
+        if (userAuctionCount[msg.sender] > 0) {
+            userAuctionCount[msg.sender] -= 1;
+        }
         userAuctionCount[idToAuction[auctionId].highestBidder] += 1;
 
         _auctionEnded.increment();
@@ -408,13 +448,10 @@ contract NFTAuction is ReentrancyGuard {
         return addresses;
     } 
 
-    event TestEvent(uint test);
     function fetchAuctionItems() public view returns (Auction[] memory) {
         uint itemCount = _auctionIds.current();
-        // uint currentItemCount = _auctionIds.current() - _auctionEnded.current();
         uint currentIndex = 0;
 
-        // emit TestEvent(currentItemCount);
         Auction[] memory items = new Auction[](itemCount);
         for (uint i = 0; i < itemCount; i++) {
             if (idToAuction[i + 1].ended == false) {

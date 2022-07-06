@@ -136,6 +136,7 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
             createdDate: i.createdDate.toString(),
             ended: i.ended,
             type: "auction",
+            deleted: i.deleted,
           };
           return item;
         })
@@ -156,12 +157,17 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
             description: meta.data.description,
             sold: i.sold,
             itemId: i.itemId.toNumber(),
+            deleted: i.deleted,
           };
           return item;
         })
       );
 
-      return [...auctionItems, ...marketItems] || [];
+      console.log([...auctionItems, ...marketItems]);
+
+      return (
+        [...auctionItems, ...marketItems].filter((item) => !item.deleted) || []
+      );
     },
     {
       refetchInterval: 5000,

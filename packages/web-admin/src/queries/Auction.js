@@ -10,6 +10,7 @@ import Token_ABI from "../contracts/contracts/Token.sol/Token.json";
 import { AUCTION_ADDRESS } from "../contracts/Auction.address";
 import { NFT_ADDRESS } from "../contracts/NFT.address";
 import { TOKEN_ADDRESS } from "../contracts/Token.address";
+import { MARKET_ADDRESS } from "../contracts/NFTMarket.address";
 
 export const useCreateAuctionMutation = () => {
   return useMutation(
@@ -42,6 +43,7 @@ export const useCreateAuctionMutation = () => {
       const _price = price * 10 ** 10;
       let transaction = await contract.startAuction(
         NFT_ADDRESS,
+        MARKET_ADDRESS,
         tokenId,
         _price,
         startDate,
@@ -69,7 +71,7 @@ export const useEndAuctionMutation = () => {
 
     await nftContract.setApprovalForAll(AUCTION_ADDRESS, true);
     await tokenContract.approve(AUCTION_ADDRESS, 100 * 10 ** 10);
-    let transaction = await contract.endAuction(auctionId);
+    let transaction = await contract.endAuction(NFT_ADDRESS, auctionId);
 
     return await transaction.wait();
   });

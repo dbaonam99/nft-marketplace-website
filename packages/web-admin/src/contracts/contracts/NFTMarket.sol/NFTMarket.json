@@ -76,28 +76,21 @@
         "internalType": "uint256",
         "name": "createdDate",
         "type": "uint256"
-      }
-    ],
-    "name": "MarketItemCreated",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "string",
-        "name": "test",
-        "type": "string"
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "test2",
-        "type": "address"
+        "internalType": "uint256",
+        "name": "updatedDate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "deleted",
+        "type": "bool"
       }
     ],
-    "name": "TestEvent",
+    "name": "MarketItemCreated",
     "type": "event"
   },
   {
@@ -147,6 +140,11 @@
       {
         "internalType": "address",
         "name": "nftContract",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "auctionContract",
         "type": "address"
       },
       {
@@ -240,6 +238,19 @@
   {
     "inputs": [
       {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "deleteMarketItem",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "address",
         "name": "userAddress",
         "type": "address"
@@ -293,6 +304,16 @@
             "internalType": "uint256",
             "name": "createdDate",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updatedDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
           }
         ],
         "internalType": "struct NFTMarket.MarketItem[]",
@@ -353,6 +374,16 @@
             "internalType": "uint256",
             "name": "createdDate",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updatedDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
           }
         ],
         "internalType": "struct NFTMarket.MarketItem[]",
@@ -419,6 +450,16 @@
             "internalType": "uint256",
             "name": "createdDate",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updatedDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
           }
         ],
         "internalType": "struct NFTMarket.MarketItem[]",
@@ -544,6 +585,16 @@
             "internalType": "uint256",
             "name": "createdDate",
             "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "updatedDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
           }
         ],
         "internalType": "struct NFTMarket.MarketItem",
@@ -677,6 +728,16 @@
         "internalType": "uint256",
         "name": "createdDate",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "updatedDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "deleted",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -736,6 +797,16 @@
         "internalType": "uint256",
         "name": "createdDate",
         "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "updatedDate",
+        "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "deleted",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",

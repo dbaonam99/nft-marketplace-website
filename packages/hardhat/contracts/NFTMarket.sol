@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "./History.sol";
+import "./NFT.sol";
+import "./NFTAuction.sol";
 
 contract NFTMarket is ReentrancyGuard {
   using Counters for Counters.Counter;
@@ -34,6 +36,8 @@ contract NFTMarket is ReentrancyGuard {
     uint256 price;
     bool sold;
     uint256 createdDate;
+    uint256 updatedDate;
+    bool deleted;
   }
 
   struct UserCount {
@@ -65,7 +69,9 @@ contract NFTMarket is ReentrancyGuard {
     address creator,
     uint256 price,
     bool sold,
-    uint256 createdDate
+    uint256 createdDate,
+    uint256 updatedDate,
+    bool deleted
   );
 
   function createUserHistory(
@@ -91,9 +97,23 @@ contract NFTMarket is ReentrancyGuard {
     return listingPrice;
   }
 
-  event TestEvent(string test, address test2);
+  function deleteMarketItem(uint256 tokenId) public {
+    uint itemCount = _itemIds.current();
+
+    MarketItem memory item;
+    for (uint i = 0; i < itemCount; i++) {
+      if (idToMarketItem[i + 1].tokenId == tokenId) {
+        uint currentId = i + 1;
+        MarketItem storage currentItem = idToMarketItem[currentId];
+        item = currentItem;
+      }
+    }
+    if (item.itemId != 0) idToMarketItem[item.itemId].deleted = true;
+  }
+
   function createMarketItem(
     address nftContract,
+    address auctionContract,
     uint256 tokenId,
     uint256 price,
     uint256 oldItemId
@@ -105,16 +125,20 @@ contract NFTMarket is ReentrancyGuard {
     if (oldItemId == 0) {
       _itemIds.increment();
       itemId = _itemIds.current();
+      address _creator = NFT(nftContract).getNFTCreator(tokenId);
+
       idToMarketItem[itemId] = MarketItem(
         itemId,
         nftContract,
         tokenId,
         payable(msg.sender),
         payable(msg.sender),
-        payable(msg.sender),
+        _creator,
         price,
         false,
-        block.timestamp
+        block.timestamp,
+        block.timestamp,
+        false
       );
 
       emit MarketItemCreated(
@@ -126,12 +150,15 @@ contract NFTMarket is ReentrancyGuard {
         msg.sender,
         price,
         false,
-        block.timestamp
+        block.timestamp,
+        block.timestamp,
+        false
       );
     } else {
       itemId = _itemIds.current();
-      address _creator = idToMarketItem[itemId].creator;
       uint256 _tokenId = idToMarketItem[itemId].tokenId;
+      address _creator = NFT(nftContract).getNFTCreator(tokenId);
+
       idToMarketItem[itemId] = MarketItem(
         itemId,
         nftContract,
@@ -141,7 +168,9 @@ contract NFTMarket is ReentrancyGuard {
         _creator,
         price,
         false,
-        block.timestamp
+        block.timestamp,
+        block.timestamp,
+        false
       );
 
       emit MarketItemCreated(
@@ -153,11 +182,14 @@ contract NFTMarket is ReentrancyGuard {
         _creator,
         price,
         false,
-        block.timestamp
+        block.timestamp,
+        block.timestamp,
+        false
       );
     }
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+    NFTAuction(auctionContract).deleteAuctionItem(tokenId);
 
     createUserHistory(msg.sender, tokenId, block.timestamp, "createMarket");
     createTokenHistory(tokenId, msg.sender, block.timestamp, price,  "sell");
@@ -179,6 +211,7 @@ contract NFTMarket is ReentrancyGuard {
     IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
     idToMarketItem[itemId].owner = payable(msg.sender);
     idToMarketItem[itemId].sold = true;
+    idToMarketItem[itemId].updatedDate = block.timestamp;
     _itemsSold.increment();
     uint itemSold = _itemsSold.current();
 

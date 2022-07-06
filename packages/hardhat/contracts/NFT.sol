@@ -14,6 +14,13 @@ contract NFT is ERC721URIStorage {
   constructor(address _historyAddress) ERC721("UIT Tokens", "UIT") {
     historyAddress = _historyAddress;
   }
+
+  struct NFTInfo {
+    uint256 tokenId;
+    address creator;
+  }
+
+  mapping (uint256 => NFTInfo) idToNFT;
   
   function createToken(string memory tokenURI) public returns (uint) {
     _tokenIds.increment();
@@ -21,6 +28,7 @@ contract NFT is ERC721URIStorage {
     _mint(msg.sender, newItemId);
     _setTokenURI(newItemId, tokenURI);
     createUserHistory(msg.sender, newItemId, block.timestamp, "createToken");
+    idToNFT[newItemId] = NFTInfo(newItemId, msg.sender);
     return newItemId;
   }
 
@@ -31,5 +39,9 @@ contract NFT is ERC721URIStorage {
     string memory actionType
   ) public {
     History(historyAddress).createUserHistory(userAddress, tokenId, date, actionType);
+  }
+
+  function getNFTCreator(uint256 tokenId) public view returns (address) {
+    return idToNFT[tokenId].creator;
   }
 }

@@ -66,6 +66,7 @@ export const useCreateNFTMarketItemMutation = () => {
 
     const transaction = await marketContract.createMarketItem(
       NFT_ADDRESS,
+      AUCTION_ADDRESS,
       tokenId,
       _price,
       itemId || 0,

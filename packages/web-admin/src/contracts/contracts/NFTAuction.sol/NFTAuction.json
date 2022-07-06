@@ -56,12 +56,6 @@
       },
       {
         "indexed": false,
-        "internalType": "address",
-        "name": "nftContract",
-        "type": "address"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -70,6 +64,12 @@
         "indexed": false,
         "internalType": "address",
         "name": "owner",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "creator",
         "type": "address"
       },
       {
@@ -104,8 +104,20 @@
       },
       {
         "indexed": false,
+        "internalType": "uint256",
+        "name": "updatedDate",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
         "internalType": "bool",
         "name": "ended",
+        "type": "bool"
+      },
+      {
+        "indexed": false,
+        "internalType": "bool",
+        "name": "deleted",
         "type": "bool"
       }
     ],
@@ -148,19 +160,6 @@
       }
     ],
     "name": "GetBanlance",
-    "type": "event"
-  },
-  {
-    "anonymous": false,
-    "inputs": [
-      {
-        "indexed": false,
-        "internalType": "uint256",
-        "name": "test",
-        "type": "uint256"
-      }
-    ],
-    "name": "TestEvent",
     "type": "event"
   },
   {
@@ -411,6 +410,24 @@
     "inputs": [
       {
         "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "deleteAuctionItem",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "nftContract",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
         "name": "auctionId",
         "type": "uint256"
       }
@@ -430,11 +447,6 @@
             "internalType": "uint256",
             "name": "auctionId",
             "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "nftContract",
-            "type": "address"
           },
           {
             "internalType": "uint256",
@@ -494,6 +506,11 @@
           {
             "internalType": "bool",
             "name": "ended",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
             "type": "bool"
           }
         ],
@@ -523,11 +540,6 @@
             "type": "uint256"
           },
           {
-            "internalType": "address",
-            "name": "nftContract",
-            "type": "address"
-          },
-          {
             "internalType": "uint256",
             "name": "tokenId",
             "type": "uint256"
@@ -585,6 +597,11 @@
           {
             "internalType": "bool",
             "name": "ended",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
             "type": "bool"
           }
         ],
@@ -614,9 +631,95 @@
             "type": "uint256"
           },
           {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+          },
+          {
             "internalType": "address",
-            "name": "nftContract",
+            "name": "owner",
             "type": "address"
+          },
+          {
+            "internalType": "address",
+            "name": "creator",
+            "type": "address"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startTime",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "startingPrice",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "biddingStep",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "duration",
+            "type": "uint256"
+          },
+          {
+            "internalType": "uint256",
+            "name": "highestBidAmount",
+            "type": "uint256"
+          },
+          {
+            "internalType": "address",
+            "name": "highestBidder",
+            "type": "address"
+          },
+          {
+            "internalType": "bytes32",
+            "name": "status",
+            "type": "bytes32"
+          },
+          {
+            "internalType": "uint256",
+            "name": "createdDate",
+            "type": "uint256"
+          },
+          {
+            "internalType": "bool",
+            "name": "ended",
+            "type": "bool"
+          },
+          {
+            "internalType": "bool",
+            "name": "deleted",
+            "type": "bool"
+          }
+        ],
+        "internalType": "struct NFTAuction.Auction[]",
+        "name": "",
+        "type": "tuple[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "tokenId",
+        "type": "uint256"
+      }
+    ],
+    "name": "getAuctionDetail",
+    "outputs": [
+      {
+        "components": [
+          {
+            "internalType": "uint256",
+            "name": "auctionId",
+            "type": "uint256"
           },
           {
             "internalType": "uint256",
@@ -677,96 +780,10 @@
             "internalType": "bool",
             "name": "ended",
             "type": "bool"
-          }
-        ],
-        "internalType": "struct NFTAuction.Auction[]",
-        "name": "",
-        "type": "tuple[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenId",
-        "type": "uint256"
-      }
-    ],
-    "name": "getAuctionDetail",
-    "outputs": [
-      {
-        "components": [
-          {
-            "internalType": "uint256",
-            "name": "auctionId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "nftContract",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "tokenId",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "owner",
-            "type": "address"
-          },
-          {
-            "internalType": "address",
-            "name": "creator",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startTime",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "startingPrice",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "biddingStep",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "duration",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "highestBidAmount",
-            "type": "uint256"
-          },
-          {
-            "internalType": "address",
-            "name": "highestBidder",
-            "type": "address"
-          },
-          {
-            "internalType": "bytes32",
-            "name": "status",
-            "type": "bytes32"
-          },
-          {
-            "internalType": "uint256",
-            "name": "createdDate",
-            "type": "uint256"
           },
           {
             "internalType": "bool",
-            "name": "ended",
+            "name": "deleted",
             "type": "bool"
           }
         ],
@@ -984,11 +1001,6 @@
         "type": "uint256"
       },
       {
-        "internalType": "address",
-        "name": "nftContract",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "tokenId",
         "type": "uint256"
@@ -1047,6 +1059,11 @@
         "internalType": "bool",
         "name": "ended",
         "type": "bool"
+      },
+      {
+        "internalType": "bool",
+        "name": "deleted",
+        "type": "bool"
       }
     ],
     "stateMutability": "view",
@@ -1100,6 +1117,11 @@
       {
         "internalType": "address",
         "name": "nftContract",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "marketContract",
         "type": "address"
       },
       {
