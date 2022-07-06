@@ -1,4 +1,5 @@
 import { ethers } from "ethers";
+import Web3Modal from "web3modal";
 import { useQuery } from "react-query";
 import { ADMIN_ADDRESS } from "../contracts/Admin.address";
 import Admin_ABI from "../contracts/contracts/Admin.sol/Admin.json";
@@ -17,12 +18,14 @@ export const useCheckIsAdmin = (enabled) => {
         provider
       );
 
+      console.log("check");
       const resp = await adminContract.checkIsAdmin();
-      console.log(resp);
-      return resp;
+
+      console.log("result", resp);
+      // return resp;
     },
     {
-      enabled
+      enabled,
     }
   );
 };
