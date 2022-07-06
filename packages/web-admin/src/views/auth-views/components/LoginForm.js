@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { connect } from "react-redux";
-import { Button, Form, Alert } from "antd";
+import { Button, Form, Alert, notification } from "antd";
 import PropTypes from 'prop-types';
 import {
 	signIn,
@@ -21,14 +21,19 @@ export const LoginForm = (props) => {
 		showMessage,
 		message,
 	} = props;
-	const { authenticate, isAuthenticated } = useMoralis();
+	const { authenticate, isAuthenticated, logout } = useMoralis();
 	const { data } = useCheckIsAdmin(isAuthenticated);
 
 	useEffect(() => {
-		if (isAuthenticated) {
+		if (data) {
 			history.push("/app/dashboard");
+		} else {
+			notification.error({
+				message: "Bạn không có quyền truy cập!"
+			})
+			logout()
 		}
-	}, [isAuthenticated]);
+	}, [data]);
 
 	const onLogin = async () => {
 		authenticate();

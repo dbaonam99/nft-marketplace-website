@@ -8,7 +8,7 @@ import { useMoralis } from "react-moralis";
 
 export const NavProfile = () => {
   const profileImg = "/img/avatars/thumb-1.jpg";
-  const { logout } = useMoralis();
+  const { logout, user } = useMoralis();
 
   const handleLogout = () => {
     logout();
@@ -18,7 +18,10 @@ export const NavProfile = () => {
     <div className="nav-profile nav-dropdown">
       <div className="nav-profile-header">
         <div className="d-flex">
-          <Avatar size={45} src={profileImg} />
+          <div style={{ flexSrink: 0, marginRight: "10px" }}>
+            <Avatar size={45} src={user?.get("avatar") || profileImg} />
+          </div>
+          <span className="font-weight-normal">{user?.get("username")}</span>
         </div>
       </div>
       <div className="nav-profile-body">
@@ -38,7 +41,7 @@ export const NavProfile = () => {
     <Dropdown placement="bottomRight" overlay={profileMenu} trigger={["click"]}>
       <Menu className="d-flex align-item-center" mode="horizontal">
         <Menu.Item>
-          <Avatar src={profileImg} />
+          <Avatar src={user?.get("avatar") || profileImg} />
         </Menu.Item>
       </Menu>
     </Dropdown>
