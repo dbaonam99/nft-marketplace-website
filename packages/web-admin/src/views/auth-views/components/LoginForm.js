@@ -2,46 +2,50 @@ import React, { useEffect } from 'react';
 import { connect } from "react-redux";
 import { Button, Form, Alert } from "antd";
 import PropTypes from 'prop-types';
-import { 
-	signIn, 
-	showLoading, 
-	showAuthMessage, 
-	hideAuthMessage, 
+import {
+	signIn,
+	showLoading,
+	showAuthMessage,
+	hideAuthMessage,
 } from 'redux/actions/Auth';
 import { useHistory } from "react-router-dom";
 import { motion } from "framer-motion"
 import { useMoralis } from 'react-moralis';
+import { useCheckIsAdmin } from 'queries/Admin';
 
 export const LoginForm = (props) => {
 	let history = useHistory();
 
-	const { 
+	const {
 		loading,
 		showMessage,
 		message,
 	} = props;
-  const { authenticate, isAuthenticated } = useMoralis();
+	const { authenticate, isAuthenticated } = useMoralis();
+	const { data } = useCheckIsAdmin(isAuthenticated);
 
 	useEffect(() => {
-		if (isAuthenticated) history.push("/app/dashboard");
+		if (isAuthenticated) {
+			history.push("/app/dashboard");
+		}
 	}, [isAuthenticated]);
 
-	const onLogin = async (values) => {
-    authenticate();
+	const onLogin = async () => {
+		authenticate();
 	};
 
 	return (
 		<>
-			<motion.div 
-				initial={{ opacity: 0, marginBottom: 0 }} 
-				animate={{ 
+			<motion.div
+				initial={{ opacity: 0, marginBottom: 0 }}
+				animate={{
 					opacity: showMessage ? 1 : 0,
-					marginBottom: showMessage ? 20 : 0 
-				}}> 
+					marginBottom: showMessage ? 20 : 0
+				}}>
 				<Alert type="error" showIcon message={message}></Alert>
 			</motion.div>
-			<Form 
-				layout="vertical" 
+			<Form
+				layout="vertical"
 				name="login-form"
 				onFinish={onLogin}
 			>
@@ -69,9 +73,9 @@ LoginForm.defaultProps = {
 	showForgetPassword: false
 };
 
-const mapStateToProps = ({auth}) => {
-	const {loading, message, showMessage, token, redirect} = auth;
-  return {loading, message, showMessage, token, redirect}
+const mapStateToProps = ({ auth }) => {
+	const { loading, message, showMessage, token, redirect } = auth;
+	return { loading, message, showMessage, token, redirect }
 }
 
 const mapDispatchToProps = {
