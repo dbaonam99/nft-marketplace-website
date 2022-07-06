@@ -5,7 +5,7 @@ import Admin_ABI from "../contracts/contracts/Admin.sol/Admin.json";
 
 export const useCheckIsAdmin = (enabled, userAddress) => {
   return useQuery(
-    "isAdmin",
+    ["isAdmin", userAddress],
     async () => {
       const provider = new ethers.providers.JsonRpcProvider(
         "http://localhost:8545"
@@ -17,10 +17,7 @@ export const useCheckIsAdmin = (enabled, userAddress) => {
         provider
       );
 
-      console.log(userAddress);
-
       const resp = await adminContract.checkIsAdmin(userAddress);
-      console.log(resp);
       return resp;
     },
     {
