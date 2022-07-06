@@ -17,17 +17,18 @@ export const LoginForm = (props) => {
 	let history = useHistory();
 
 	const { loading, showMessage, message } = props;
-	const { authenticate, isAuthenticated, logout, user } = useMoralis();
+	const { authenticate, isAuthenticated, user } = useMoralis();
 	const { data } = useCheckIsAdmin(isAuthenticated, user?.get("ethAddress"));
 
 	useEffect(() => {
-		if (data) {
-			history.push("/app/dashboard");
-		} else {
-			notification.error({
-				message: "Bạn không có quyền truy cập!",
-			});
-			logout();
+		if (data !== undefined) {
+			if (data) {
+				history.push("/app/dashboard");
+			} else {
+				notification.error({
+					message: "Bạn không có quyền truy cập!",
+				});
+			}
 		}
 	}, [data]);
 
