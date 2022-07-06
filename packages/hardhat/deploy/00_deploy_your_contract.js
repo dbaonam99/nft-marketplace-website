@@ -6,6 +6,21 @@ const ADMIN_ADDRESS = "0xB809bbe7Baca49b75DA0364468b6821A8A1113c9";
 module.exports = async () => {
   /* ----------------- History Contract ----------------- */
 
+  const Admin = await hre.ethers.getContractFactory("Admin");
+  const admin = await Admin.deploy(ADMIN_ADDRESS);
+  await admin.deployed();
+  console.log("Admin deployed to:", admin.address);
+  fs.writeFileSync(
+    "../web/src/contracts/Admin.address.js",
+    `export const ADMIN_ADDRESS = "${admin.address}";`
+  );
+  fs.writeFileSync(
+    "../web-admin/src/contracts/Admin.address.js",
+    `export const ADMIN_ADDRESS = "${admin.address}";`
+  );
+
+  /* ----------------- History Contract ----------------- */
+
   const History = await hre.ethers.getContractFactory("History");
   const history = await History.deploy();
   await history.deployed();
