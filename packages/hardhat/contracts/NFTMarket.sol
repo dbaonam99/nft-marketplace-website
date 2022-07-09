@@ -190,6 +190,7 @@ contract NFTMarket is ReentrancyGuard {
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
     NFTAuction(auctionContract).deleteAuctionItem(tokenId);
+    deleteMarketItem(tokenId);
 
     createUserHistory(msg.sender, tokenId, block.timestamp, "createMarket");
     createTokenHistory(tokenId, msg.sender, block.timestamp, price,  "sell");

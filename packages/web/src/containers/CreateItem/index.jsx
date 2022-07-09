@@ -23,7 +23,7 @@ const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 const CreateItemContainer = () => {
   const { data: listingPrice } = useGetListingPriceQuery();
 
-  const [fileUrl, setFileUrl] = useState(null);
+  const [imageUrl, setImageUrl] = useState(null);
   const [formInput, updateFormInput] = useState({
     price: "",
     name: "",
@@ -32,6 +32,7 @@ const CreateItemContainer = () => {
   });
   const [fileLoading, setFileLoading] = useState(false);
   const [buttonLoading, setButtonLoading] = useState(false);
+  const [error, setError] = useState();
 
   const [currentMarketplaceType, setMarketplaceType] = useState("fixed_price");
 
@@ -47,7 +48,7 @@ const CreateItemContainer = () => {
       setFileLoading(true);
       const added = await client.add(file);
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      setFileUrl(url);
+      setImageUrl(url);
     } catch (error) {
       console.log("Error uploading file: ", error);
     } finally {
@@ -73,7 +74,7 @@ const CreateItemContainer = () => {
 
   const createSale = async () => {
     const { name, description, price } = formInput;
-    if (!name || !description || !price || !fileUrl) {
+    if (!name || !description || !price || !imageUrl) {
       setButtonLoading(false);
       return;
     }
@@ -81,7 +82,7 @@ const CreateItemContainer = () => {
     const data = JSON.stringify({
       name,
       description,
-      image: fileUrl,
+      image: imageUrl,
     });
     try {
       setFileLoading(true);
@@ -90,29 +91,34 @@ const CreateItemContainer = () => {
       /* after file is uploaded to IPFS, pass the URL to save it on Polygon */
 
       createNFTMutation.mutate(
-        { url },
+        { url, imageUrl },
         {
           onSuccess: (res) => {
-            createNFTMarketItemMutation.mutate(
-              {
-                listingPrice: listingPrice.toString(),
-                tokenId: res,
-                price,
-              },
-              {
-                onSuccess: () => {
-                  updateFormInput((prevState) => ({
-                    ...prevState,
-                    price: "",
-                    name: "",
-                    description: "",
-                  }));
-                  setFileUrl(null);
-                  setButtonLoading(false);
-                  toast.success(t("message.createdNFT"));
+            if (res) {
+              createNFTMarketItemMutation.mutate(
+                {
+                  listingPrice: listingPrice.toString(),
+                  tokenId: res,
+                  price,
                 },
-              }
-            );
+                {
+                  onSuccess: () => {
+                    updateFormInput((prevState) => ({
+                      ...prevState,
+                      price: "",
+                      name: "",
+                      description: "",
+                    }));
+                    setImageUrl(null);
+                    setButtonLoading(false);
+                    toast.success(t("message.createdNFT"));
+                  },
+                }
+              );
+            } else {
+              setError(t("common.sameNFT"));
+              setButtonLoading(false);
+            }
           },
         }
       );
@@ -139,7 +145,7 @@ const CreateItemContainer = () => {
       !name ||
       !description ||
       !price ||
-      !fileUrl ||
+      !imageUrl ||
       !duration ||
       !biddingStep ||
       !durationType
@@ -170,7 +176,7 @@ const CreateItemContainer = () => {
     const data = JSON.stringify({
       name,
       description,
-      image: fileUrl,
+      image: imageUrl,
     });
 
     try {
@@ -179,33 +185,38 @@ const CreateItemContainer = () => {
       const url = `https://ipfs.infura.io/ipfs/${added.path}`;
 
       createNFTMutation.mutate(
-        { url },
+        { url, imageUrl },
         {
           onSuccess: (res) => {
-            createAuctionMutation.mutate(
-              {
-                listingPrice: listingPrice.toString(),
-                tokenId: res,
-                price,
-                duration: durationTimestamp,
-                biddingStep,
-              },
-              {
-                onSuccess: () => {
-                  updateFormInput((prevState) => ({
-                    ...prevState,
-                    price: "",
-                    name: "",
-                    description: "",
-                    duration: "",
-                    biddingStep: "",
-                  }));
-                  setFileUrl(null);
-                  setButtonLoading(false);
-                  toast.success(t("message.createdNFT"));
+            if (res) {
+              createAuctionMutation.mutate(
+                {
+                  listingPrice: listingPrice.toString(),
+                  tokenId: res,
+                  price,
+                  duration: durationTimestamp,
+                  biddingStep,
                 },
-              }
-            );
+                {
+                  onSuccess: () => {
+                    updateFormInput((prevState) => ({
+                      ...prevState,
+                      price: "",
+                      name: "",
+                      description: "",
+                      duration: "",
+                      biddingStep: "",
+                    }));
+                    setImageUrl(null);
+                    setButtonLoading(false);
+                    toast.success(t("message.createdNFT"));
+                  },
+                }
+              );
+            } else {
+              setError(t("common.sameNFT"));
+              setButtonLoading(false);
+            }
           },
         }
       );
@@ -223,6 +234,7 @@ const CreateItemContainer = () => {
         createNFTMutation.mutate(
           {
             url,
+            imageUrl,
           },
           {
             onSuccess: (res) => {
@@ -249,23 +261,28 @@ const CreateItemContainer = () => {
     const callAuctionContract = async (url, price, duration, biddingStep) => {
       return new Promise((resolve) => {
         createNFTMutation.mutate(
-          { url },
+          { url, imageUrl },
           {
             onSuccess: (res) => {
-              createAuctionMutation.mutate(
-                {
-                  listingPrice: listingPrice.toString(),
-                  tokenId: res,
-                  price,
-                  duration,
-                  biddingStep,
-                },
-                {
-                  onSuccess: (res) => {
-                    resolve(res);
+              if (res) {
+                createAuctionMutation.mutate(
+                  {
+                    listingPrice: listingPrice.toString(),
+                    tokenId: res,
+                    price,
+                    duration,
+                    biddingStep,
                   },
-                }
-              );
+                  {
+                    onSuccess: (res) => {
+                      resolve(res);
+                    },
+                  }
+                );
+              } else {
+                setError(t("common.sameNFT"));
+                setButtonLoading(false);
+              }
             },
           }
         );
@@ -296,22 +313,23 @@ const CreateItemContainer = () => {
         <div className="container">
           <div className="row">
             <div className="col-12 col-lg-8">
-              {/* <div onClick={() => createMockMarketItem()}>TEST</div> */}
               <CreatorSec
                 updateFormInput={onChange}
                 formInput={formInput}
                 createMarket={createMarket}
                 onFileChange={onFileChange}
-                fileUrl={fileUrl}
+                fileUrl={imageUrl}
                 fileLoading={fileLoading}
                 buttonLoading={buttonLoading}
                 currentMarketplaceType={currentMarketplaceType}
                 setMarketplaceType={setMarketplaceType}
+                onCreateMockMarketItem={() => createMockMarketItem()}
+                error={error}
               />
             </div>
             <div className="d-none d-lg-block col-lg-4">
               <PreviewItem
-                image={fileUrl}
+                image={imageUrl}
                 name={formInput.name}
                 price={formInput.price}
                 currentMarketplaceType={currentMarketplaceType}

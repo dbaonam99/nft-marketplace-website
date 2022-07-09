@@ -31,6 +31,7 @@ const ContactForm = (props) => {
     buttonLoading,
     currentMarketplaceType,
     setMarketplaceType,
+    error,
   } = props;
 
   const inputFile = useRef();
@@ -298,6 +299,8 @@ const ContactForm = (props) => {
               {buttonLoading ? <LoadingIndicator /> : t("header.createItem")}
             </button>
           </div>
+
+          {error && <p className="r-text text-center w-100">{error}</p>}
         </div>
       </div>
     </>

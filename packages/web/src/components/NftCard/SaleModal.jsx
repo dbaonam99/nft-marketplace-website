@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import Modal from "../Modal";
 import useThemeMode from "../../hooks/useThemeMode";
@@ -77,29 +77,29 @@ const SaleModal = ({
 
     console.log("durationTimestamp", durationTimestamp);
 
-    // try {
-    //   createAuctionMutation.mutate({
-    //     listingPrice: listingPrice.toString(),
-    //     tokenId,
-    //     price,
-    //     duration: durationTimestamp,
-    //     biddingStep,
-    //     auctionId,
-    //     callback: () => {
-    //       updateFormInput((prevState) => ({
-    //         ...prevState,
-    //         price: "",
-    //         duration: "",
-    //         biddingStep: "",
-    //       }));
-    //       setButtonLoading(false);
-    //       setIsOpen(false);
-    //     },
-    //   });
-    // } catch (error) {
-    //   console.log("Error uploading file: ", error);
-    //   setButtonLoading(false);
-    // }
+    try {
+      createAuctionMutation.mutate({
+        listingPrice: listingPrice.toString(),
+        tokenId,
+        price,
+        duration: durationTimestamp,
+        biddingStep,
+        auctionId,
+        callback: () => {
+          updateFormInput((prevState) => ({
+            ...prevState,
+            price: "",
+            duration: "",
+            biddingStep: "",
+          }));
+          setButtonLoading(false);
+          setIsOpen(false);
+        },
+      });
+    } catch (error) {
+      console.log("Error uploading file: ", error);
+      setButtonLoading(false);
+    }
   };
 
   const createSale = async () => {
@@ -137,6 +137,10 @@ const SaleModal = ({
       createAuction();
     }
   };
+
+  useEffect(() => {
+    onChange("durationType", currentDurationType);
+  }, [currentDurationType]);
 
   return (
     <Modal

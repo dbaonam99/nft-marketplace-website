@@ -12,6 +12,8 @@ const CreatorSec = ({
   buttonLoading,
   currentMarketplaceType,
   setMarketplaceType,
+  onCreateMockMarketItem,
+  error,
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
@@ -27,7 +29,9 @@ const CreatorSec = ({
       >
         <div className="who-we-contant">
           <div className="dream-dots text-left">
-            <span className="gradient-text ">{t("header.createItem")}</span>
+            <span className="gradient-text " onClick={onCreateMockMarketItem}>
+              {t("header.createItem")}
+            </span>
           </div>
         </div>
         <ContactForm
@@ -40,6 +44,7 @@ const CreatorSec = ({
           buttonLoading={buttonLoading}
           currentMarketplaceType={currentMarketplaceType}
           setMarketplaceType={setMarketplaceType}
+          error={error}
         />
       </div>
     </>

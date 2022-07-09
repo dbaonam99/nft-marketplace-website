@@ -122,7 +122,7 @@ describe("NFT Marketplace", function () {
     });
   });
 
-  // describe("NFT Market", function () {
+  describe("NFT Market", function () {
   //   describe("Token 1", async function () {
   //     it("Should create tokens", async function () {
   //       trans = await nft

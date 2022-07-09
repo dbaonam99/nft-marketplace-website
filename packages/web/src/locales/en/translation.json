@@ -80,7 +80,8 @@
     "listings": "Listings",
     "purchases": "Purchases",
     "sales": "Sales",
-    "bids": "Bids"
+    "bids": "Bids",
+    "sameNFT": "This image is already existing, please choose another image"
   },
   "header": {
     "home": "Home",

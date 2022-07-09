@@ -17,33 +17,20 @@ import moment from "moment";
 import { AUCTION_ADDRESS } from "../contracts/Auction.address";
 
 export const useCreateNFTMutation = () => {
-  return useMutation(
-    async ({ url }) => {
-      const web3Modal = new Web3Modal();
-      const connection = await web3Modal.connect();
-      const provider = new ethers.providers.Web3Provider(connection);
-      const signer = provider.getSigner();
+  return useMutation(async ({ url, imageUrl }) => {
+    const web3Modal = new Web3Modal();
+    const connection = await web3Modal.connect();
+    const provider = new ethers.providers.Web3Provider(connection);
+    const signer = provider.getSigner();
 
-      const contract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
+    const contract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
 
-      let transaction = await contract.createToken(url);
-      let tx = await transaction.wait();
-      let tokenId = tx.events[0].args[2].toNumber();
+    let transaction = await contract.createToken(url, imageUrl);
+    let tx = await transaction.wait();
+    let tokenId = tx.events.length > 0 ? tx.events[0].args[2].toNumber() : 0;
 
-      return tokenId;
-    },
-    {
-      onError: (error) => {
-        if (error instanceof Error) {
-          // toast.error(error.message);
-        }
-      },
-
-      onSuccess: (data) => {
-        // toast.success(data);
-      },
-    }
-  );
+    return tokenId;
+  });
 };
 
 export const useCreateNFTMarketItemMutation = () => {
@@ -75,7 +62,6 @@ export const useCreateNFTMarketItemMutation = () => {
       }
     );
     const result = await transaction.wait();
-    console.log("result", result);
     return result;
   });
 };

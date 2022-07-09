@@ -708,6 +708,9 @@ ol {
   color: black;
 }
 
+.r-text {
+  color: red !important;
+}
 .b-text {
   color: #272e3a !important;
 }

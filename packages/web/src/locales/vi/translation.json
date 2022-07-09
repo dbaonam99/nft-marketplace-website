@@ -80,7 +80,8 @@
     "listings": "Danh sách",
     "purchases": "Mua",
     "sales": "Bán",
-    "bids": "Đấu giá"
+    "bids": "Đấu giá",
+    "sameNFT": "Ảnh này đã có trên hệ thống, vui lòng chọn ảnh khác"
   },
   "header": {
     "home": "Trang chủ",

@@ -11,6 +11,7 @@ contract NFT is ERC721URIStorage {
   Counters.Counter private _tokenIds;
   
   address historyAddress;
+
   constructor(address _historyAddress) ERC721("UIT Tokens", "UIT") {
     historyAddress = _historyAddress;
   }
@@ -21,15 +22,21 @@ contract NFT is ERC721URIStorage {
   }
 
   mapping (uint256 => NFTInfo) idToNFT;
+  mapping (string => bool) urlStorage;
   
-  function createToken(string memory tokenURI) public returns (uint) {
-    _tokenIds.increment();
-    uint256 newItemId = _tokenIds.current();
-    _mint(msg.sender, newItemId);
-    _setTokenURI(newItemId, tokenURI);
-    createUserHistory(msg.sender, newItemId, block.timestamp, "createToken");
-    idToNFT[newItemId] = NFTInfo(newItemId, msg.sender);
-    return newItemId;
+  function createToken(string memory tokenURI, string memory imageUrl) public returns (uint) {
+    if (urlStorage[imageUrl] == true) {
+      return 99999;
+    } else {
+      _tokenIds.increment();
+      uint256 newItemId = _tokenIds.current();
+      _mint(msg.sender, newItemId);
+      _setTokenURI(newItemId, tokenURI);
+      createUserHistory(msg.sender, newItemId, block.timestamp, "createToken");
+      idToNFT[newItemId] = NFTInfo(newItemId, msg.sender);
+      urlStorage[imageUrl] = true;
+      return newItemId;
+    }
   }
 
   function createUserHistory(
