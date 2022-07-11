@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { I18nextProvider } from "react-i18next";
+import { MoralisProvider } from "react-moralis";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import i18n from "./translation/i18n";
-import { I18nextProvider } from "react-i18next";
-import { MoralisProvider } from "react-moralis";
 
 ReactDOM.render(
   <MoralisProvider

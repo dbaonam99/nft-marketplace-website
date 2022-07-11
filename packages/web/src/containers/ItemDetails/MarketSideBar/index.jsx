@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 import { useBuyNFTMutation } from "../../../queries/NFT";
@@ -7,7 +7,6 @@ import { getUserInfo } from "../../../queries/User";
 
 import BidTabs from "../BidTabs";
 import Avatar from "../../../components/Avatar";
-import { useMoralis } from "react-moralis";
 import toast from "react-hot-toast";
 
 const MarketSideBar = ({
@@ -22,14 +21,10 @@ const MarketSideBar = ({
 }) => {
   const isLightMode = useThemeMode();
   const { t } = useTranslation();
-  const { user } = useMoralis();
 
   const [userInfo, setUserInfo] = useState({});
 
   const buyNFTMutation = useBuyNFTMutation();
-
-  const isOwner =
-    user?.get("ethAddress")?.toLowerCase() === owner?.toLowerCase();
 
   useEffect(() => {
     (async () => {

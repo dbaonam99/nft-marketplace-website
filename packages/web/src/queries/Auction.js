@@ -21,6 +21,7 @@ export const useCreateAuctionMutation = () => {
       duration,
       biddingStep,
       oldAuctionId,
+      canDelete,
     }) => {
       const web3Modal = new Web3Modal();
       const connection = await web3Modal.connect();
@@ -42,7 +43,6 @@ export const useCreateAuctionMutation = () => {
 
       const _price = price * 10 ** 10;
 
-      console.log("duration", duration);
       let transaction = await contract.startAuction(
         NFT_ADDRESS,
         MARKET_ADDRESS,
@@ -52,6 +52,7 @@ export const useCreateAuctionMutation = () => {
         duration,
         biddingStep,
         oldAuctionId || 0,
+        canDelete || false,
         { value: listingPrice }
       );
 
@@ -141,9 +142,9 @@ export const useGetAuctionItemsQuery = () => {
   });
 };
 
-export const useGetAuctionDetailQuery = (tokenId) => {
+export const useGetAuctionDetailQuery = (tokenId, isAuctionDetail) => {
   return useQuery(["AuctionDetail", tokenId], async () => {
-    if (!tokenId) return;
+    if (!tokenId || !isAuctionDetail) return;
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
     );
@@ -304,6 +305,31 @@ export const useGetMyAuctionItemsQuery = (ethAddress) => {
     },
     {
       refetchInterval: 5000,
+    }
+  );
+};
+
+export const useGetBidedAuctionQuery = (ethAddress) => {
+  return useQuery(
+    "bidedAuction",
+    async () => {
+      if (!ethAddress) return;
+      const provider = new ethers.providers.JsonRpcProvider(
+        "http://localhost:8545"
+      );
+
+      const auctionContract = new ethers.Contract(
+        AUCTION_ADDRESS,
+        AUCTION_ABI,
+        provider
+      );
+
+      const data = await auctionContract.getBidedAuction(ethAddress);
+
+      return data.filter((i) => i.toString() !== "0").map((i) => i.toString());
+    },
+    {
+      refetchInterval: 2000,
     }
   );
 };

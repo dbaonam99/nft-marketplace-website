@@ -29,8 +29,6 @@ const BiddingBox = ({
     })();
   }, [highestBidder]);
 
-  console.log(new Date(Number(duration * 1000) + Number(startTime * 1000)));
-
   return (
     <div
       style={{

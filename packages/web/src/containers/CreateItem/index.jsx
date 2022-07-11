@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import PreviewItem from "./PreviewItem";
 import { useCreateAuctionMutation } from "../../queries/Auction";
 import toast from "react-hot-toast";
-import { auctionData, marketData, useCreateMockMarketItem } from "./mockData";
+import { auctionData, marketData } from "./mockData";
 
 const client = ipfsHttpClient("https://ipfs.infura.io:5001/api/v0");
 
@@ -229,18 +229,19 @@ const CreateItemContainer = () => {
   };
 
   const createMockMarketItem = async () => {
+    console.log(listingPrice);
     const callContract = async (url, price) => {
       return new Promise((resolve) => {
         createNFTMutation.mutate(
           {
             url,
-            imageUrl,
+            imageUrl: url,
           },
           {
             onSuccess: (res) => {
               createNFTMarketItemMutation.mutate(
                 {
-                  listingPrice: listingPrice.toString(),
+                  listingPrice: listingPrice?.toString(),
                   tokenId: res,
                   price: price,
                 },
@@ -261,13 +262,13 @@ const CreateItemContainer = () => {
     const callAuctionContract = async (url, price, duration, biddingStep) => {
       return new Promise((resolve) => {
         createNFTMutation.mutate(
-          { url, imageUrl },
+          { url, imageUrl: url },
           {
             onSuccess: (res) => {
               if (res) {
                 createAuctionMutation.mutate(
                   {
-                    listingPrice: listingPrice.toString(),
+                    listingPrice: listingPrice?.toString(),
                     tokenId: res,
                     price,
                     duration,

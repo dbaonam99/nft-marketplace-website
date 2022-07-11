@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useTranslation } from "react-i18next";
-import { useMoralis } from "react-moralis";
 import useThemeMode from "../../../hooks/useThemeMode";
-import { getUserInfo } from "../../../queries/User";
 import "./index.css";
 
 export default function PreviewItem({
@@ -12,19 +10,9 @@ export default function PreviewItem({
   currentMarketplaceType,
 }) {
   const isLightMode = useThemeMode();
-  const { user } = useMoralis();
   const { t } = useTranslation();
 
-  const [userInfo, setUserInfo] = useState({});
-
   const isFixedPrice = currentMarketplaceType === "fixed_price";
-
-  useEffect(() => {
-    (async () => {
-      const _userInfo = await getUserInfo(user?.get("ethAddress"));
-      setUserInfo(_userInfo);
-    })();
-  }, [user]);
 
   return (
     <div

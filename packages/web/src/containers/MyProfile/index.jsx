@@ -2,8 +2,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useMoralis, useMoralisFile } from "react-moralis";
 import { Link, useHistory } from "react-router-dom";
-import Breadcrumb from "../../components/Breadcrumb";
-import { useGetCreatedNFTsQuery } from "../../queries/NFT.js";
 import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import "../../assets/css/profile.css";

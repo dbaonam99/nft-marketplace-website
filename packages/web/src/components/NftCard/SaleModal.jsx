@@ -85,6 +85,7 @@ const SaleModal = ({
         duration: durationTimestamp,
         biddingStep,
         auctionId,
+        canDelete: itemId ? true : false,
         callback: () => {
           updateFormInput((prevState) => ({
             ...prevState,
@@ -108,13 +109,13 @@ const SaleModal = ({
       setButtonLoading(false);
       return;
     }
-
     try {
       createNFTMarketItemMutation.mutate({
         listingPrice: listingPrice.toString(),
         tokenId,
         price,
         itemId,
+        canDelete: auctionId ? true : false,
         callback: () => {
           updateFormInput((prevState) => ({
             ...prevState,
@@ -142,6 +143,7 @@ const SaleModal = ({
     onChange("durationType", currentDurationType);
   }, [currentDurationType]);
 
+  console.log(itemId, auctionId);
   return (
     <Modal
       isOpen={modalIsOpen}

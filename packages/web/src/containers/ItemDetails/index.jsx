@@ -16,8 +16,11 @@ const ItemDetailsContainer = () => {
   const sp = new URLSearchParams(search);
   const isAuctionDetail = sp.get("auction");
 
-  const { data: nftDetail } = useGetNFTDetailQuery(tokenId);
-  const { data: auctionDetail } = useGetAuctionDetailQuery(tokenId);
+  const { data: nftDetail } = useGetNFTDetailQuery(tokenId, isAuctionDetail);
+  const { data: auctionDetail } = useGetAuctionDetailQuery(
+    tokenId,
+    isAuctionDetail
+  );
 
   return (
     <>

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useEffect, useState } from "react";
 import clsx from "clsx";
 import { getUserInfo } from "../../queries/User";

@@ -849,6 +849,25 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "userAddress",
+        "type": "address"
+      }
+    ],
+    "name": "getBidedAuction",
+    "outputs": [
+      {
+        "internalType": "uint256[]",
+        "name": "",
+        "type": "uint256[]"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "auctionId",
         "type": "uint256"
@@ -1153,6 +1172,11 @@
         "internalType": "uint256",
         "name": "oldAuctionId",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "canDelete",
+        "type": "bool"
       }
     ],
     "name": "startAuction",
@@ -1175,6 +1199,25 @@
       }
     ],
     "name": "userAuctionCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "userBidedCount",
     "outputs": [
       {
         "internalType": "uint256",

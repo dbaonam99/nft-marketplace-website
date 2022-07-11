@@ -1,5 +1,4 @@
 import ItemTimeline from "./ItemTimeline";
-import timelineData from "../../../data/data-containers/data-Timeline.json";
 import useThemeMode from "../../../hooks/useThemeMode";
 import { useTranslation } from "react-i18next";
 
@@ -16,14 +15,17 @@ const TimelineBox = ({ data }) => {
               isLightMode ? "timelineHeader bt-bg-light" : "timelineHeader"
             }
           >
-            <h3 className={isLightMode ? "text-dark" : ""}>{t("activity.recentActivity")}</h3>
+            <h3 className={isLightMode ? "text-dark" : ""}>
+              {t("activity.recentActivity")}
+            </h3>
             <span className={isLightMode ? "text-dark" : ""}>
               {t("activity.businessHistory")}
             </span>
           </div>
           <div className="timelineBody">
             <ul className="timeline">
-              {data && data?.length > 0 &&
+              {data &&
+                data?.length > 0 &&
                 data.map((item) => (
                   <ItemTimeline
                     key={`${item.actionType} ${item.tokenId}`}

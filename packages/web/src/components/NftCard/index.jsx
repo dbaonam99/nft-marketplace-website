@@ -143,7 +143,7 @@ function NftCard(props) {
                     {t("common.price")}
                   </p>
                   <p className={isLightMode ? "b-text" : "w-text"}>
-                    {price} UIT
+                    {sold ? "..." : `${price} UIT`}
                   </p>
                 </div>
                 <div className="price-box">
@@ -151,7 +151,7 @@ function NftCard(props) {
                     {t("common.highestBid")}
                   </p>
                   <p className={isLightMode ? "b-text" : "w-text"}>
-                    {t("common.notForBid")}
+                    {sold ? "..." : t("common.notForBid")}
                   </p>
                 </div>
               </div>

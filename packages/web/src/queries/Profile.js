@@ -1,16 +1,13 @@
-import Web3Modal from "web3modal";
 import { ethers } from "ethers";
-import { useMutation, useQuery } from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
 
 import AUCTION_ABI from "../contracts/contracts/NFTAuction.sol/NFTAuction.json";
 import NFT_ABI from "../contracts/contracts/NFT.sol/NFT.json";
-import Token_ABI from "../contracts/contracts/Token.sol/Token.json";
 import NFTMarket_ABI from "../contracts/contracts/NFTMarket.sol/NFTMarket.json";
 
 import { AUCTION_ADDRESS } from "../contracts/Auction.address";
 import { NFT_ADDRESS } from "../contracts/NFT.address";
-import { TOKEN_ADDRESS } from "../contracts/Token.address";
 import { MARKET_ADDRESS } from "../contracts/NFTMarket.address";
 
 export const useGetOnSaleItemsQuery = (ethAddress) => {
@@ -162,6 +159,8 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
           return item;
         })
       );
+
+      console.log([...auctionItems, ...marketItems]);
 
       return (
         [...auctionItems, ...marketItems].filter((item) => !item.deleted) || []

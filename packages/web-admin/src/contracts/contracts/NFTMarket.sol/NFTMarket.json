@@ -161,6 +161,11 @@
         "internalType": "uint256",
         "name": "oldItemId",
         "type": "uint256"
+      },
+      {
+        "internalType": "bool",
+        "name": "canDelete",
+        "type": "bool"
       }
     ],
     "name": "createMarketItem",

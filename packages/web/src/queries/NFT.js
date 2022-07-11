@@ -34,36 +34,39 @@ export const useCreateNFTMutation = () => {
 };
 
 export const useCreateNFTMarketItemMutation = () => {
-  return useMutation(async ({ listingPrice, tokenId, price, itemId }) => {
-    const web3Modal = new Web3Modal();
-    const connection = await web3Modal.connect();
-    const provider = new ethers.providers.Web3Provider(connection);
-    const signer = provider.getSigner();
+  return useMutation(
+    async ({ listingPrice, tokenId, price, itemId, canDelete }) => {
+      const web3Modal = new Web3Modal();
+      const connection = await web3Modal.connect();
+      const provider = new ethers.providers.Web3Provider(connection);
+      const signer = provider.getSigner();
 
-    const marketContract = new ethers.Contract(
-      MARKET_ADDRESS,
-      NFTMarket_ABI,
-      signer
-    );
+      const marketContract = new ethers.Contract(
+        MARKET_ADDRESS,
+        NFTMarket_ABI,
+        signer
+      );
 
-    const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
-    await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
+      const nftContract = new ethers.Contract(NFT_ADDRESS, NFT_ABI, signer);
+      await nftContract.setApprovalForAll(MARKET_ADDRESS, true);
 
-    const _price = price * 10 ** 10;
+      const _price = price * 10 ** 10;
 
-    const transaction = await marketContract.createMarketItem(
-      NFT_ADDRESS,
-      AUCTION_ADDRESS,
-      tokenId,
-      _price,
-      itemId || 0,
-      {
-        value: listingPrice,
-      }
-    );
-    const result = await transaction.wait();
-    return result;
-  });
+      const transaction = await marketContract.createMarketItem(
+        NFT_ADDRESS,
+        AUCTION_ADDRESS,
+        tokenId,
+        _price,
+        itemId || 0,
+        canDelete || false,
+        {
+          value: listingPrice,
+        }
+      );
+      const result = await transaction.wait();
+      return result;
+    }
+  );
 };
 
 export const useBuyNFTMutation = () => {
@@ -153,11 +156,11 @@ export const useGetMarketItemsQuery = () => {
   );
 };
 
-export const useGetNFTDetailQuery = (tokenId) => {
+export const useGetNFTDetailQuery = (tokenId, isAuctionDetail) => {
   return useQuery(
     ["NFTDetail", tokenId],
     async () => {
-      if (!tokenId) return;
+      if (!tokenId || isAuctionDetail) return;
       const provider = new ethers.providers.JsonRpcProvider(
         "http://localhost:8545"
       );

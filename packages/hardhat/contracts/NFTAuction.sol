@@ -104,6 +104,8 @@ contract NFTAuction is ReentrancyGuard {
     mapping(address => uint256) public userAuctionCount;
     mapping(uint256 => UserCount) public sellCount;
     mapping(uint256 => UserCount) public boughtCount;
+    mapping(address => mapping(uint256 => uint256)) userToBidedAuction;
+    mapping(address => uint256) public userBidedCount;
 
     function createUserHistory(
         address userAddress, 
@@ -150,10 +152,16 @@ contract NFTAuction is ReentrancyGuard {
         uint256 startTime,
         uint256 duration,
         uint256 biddingStep,
-        uint256 oldAuctionId
+        uint256 oldAuctionId,
+        bool canDelete
     ) public payable nonReentrant returns (uint256) {
         require(biddingStep > 0, "Bidding step must be at least 1 wei");
         require(msg.value == listingPrice, "Price must be equal to listing price");
+
+        if (canDelete == true) {
+            NFTMarket(marketContract).deleteMarketItem(tokenId);
+            deleteAuctionItem(tokenId);
+        }
 
         uint256 auctionId;
         if (oldAuctionId == 0) {
@@ -239,8 +247,6 @@ contract NFTAuction is ReentrancyGuard {
             }
         }
 
-        NFTMarket(marketContract).deleteMarketItem(tokenId);
-        deleteAuctionItem(tokenId);
         ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
         createUserHistory(msg.sender, tokenId, block.timestamp, "startAuction");
@@ -282,6 +288,8 @@ contract NFTAuction is ReentrancyGuard {
                 true
             );
             bidHistoryCount[auctionId] += 1;
+            userBidedCount[msg.sender] += 1;
+            userToBidedAuction[msg.sender][userBidedCount[msg.sender]] = auctionId;
 
             createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "bid");
             emit AuctionBid(auctionId, msg.sender, price);
@@ -319,6 +327,8 @@ contract NFTAuction is ReentrancyGuard {
                 true
             );
             bidHistoryCount[auctionId] += 1;
+            userBidedCount[msg.sender] += 1;
+            userToBidedAuction[msg.sender][userBidedCount[msg.sender]] = auctionId;
 
             createUserHistory(msg.sender, idToAuction[auctionId].tokenId, block.timestamp, "bid");
             emit AuctionBid(auctionId, msg.sender, price);
@@ -517,5 +527,19 @@ contract NFTAuction is ReentrancyGuard {
         }
         return item;
     } 
+
+    function getBidedAuction(address userAddress) public view returns (uint256[] memory) {
+        uint _auctionCount = _auctionIds.current();
+        uint _userBidedCount = userBidedCount[userAddress];
+
+        uint256[] memory items = new uint256[](_userBidedCount);
+        for (uint i = 0; i < _auctionCount; i++) {
+            if (userToBidedAuction[userAddress][i + 1] == i + 1) {
+                uint256 currentItem = i + 1;
+                items[i] = currentItem;
+            }
+        }
+        return items;
+    }
 }
 

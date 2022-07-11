@@ -116,11 +116,18 @@ contract NFTMarket is ReentrancyGuard {
     address auctionContract,
     uint256 tokenId,
     uint256 price,
-    uint256 oldItemId
+    uint256 oldItemId,
+    bool canDelete
   ) public payable nonReentrant returns (uint256) {
     require(price > 0, "Price must be at least 1 UIT");
     require(msg.value == listingPrice, "Price must be equal to listing price");
 
+
+    if (canDelete == true) {
+      NFTAuction(auctionContract).deleteAuctionItem(tokenId);
+      deleteMarketItem(tokenId);
+    }
+    
     uint256 itemId;
     if (oldItemId == 0) {
       _itemIds.increment();
@@ -155,12 +162,11 @@ contract NFTMarket is ReentrancyGuard {
         false
       );
     } else {
-      itemId = _itemIds.current();
-      uint256 _tokenId = idToMarketItem[itemId].tokenId;
+      uint256 _tokenId = idToMarketItem[oldItemId].tokenId;
       address _creator = NFT(nftContract).getNFTCreator(tokenId);
 
-      idToMarketItem[itemId] = MarketItem(
-        itemId,
+      idToMarketItem[oldItemId] = MarketItem(
+        oldItemId,
         nftContract,
         _tokenId,
         payable(msg.sender),
@@ -174,7 +180,7 @@ contract NFTMarket is ReentrancyGuard {
       );
 
       emit MarketItemCreated(
-        itemId,
+        oldItemId,
         nftContract,
         tokenId,
         msg.sender,
@@ -189,8 +195,6 @@ contract NFTMarket is ReentrancyGuard {
     }
 
     ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
-    NFTAuction(auctionContract).deleteAuctionItem(tokenId);
-    deleteMarketItem(tokenId);
 
     createUserHistory(msg.sender, tokenId, block.timestamp, "createMarket");
     createTokenHistory(tokenId, msg.sender, block.timestamp, price,  "sell");

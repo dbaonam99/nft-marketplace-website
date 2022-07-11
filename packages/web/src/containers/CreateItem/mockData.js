@@ -38,7 +38,7 @@ export const auctionData = [
     url: "https://ipfs.infura.io/ipfs/QmQob1KVWi55iB3WSbmtkFy2yCXVLFUNe9493xc4dnXDqc",
     price: 100,
     biddingStep: 100,
-    duration: 3600,
+    duration: 300,
   },
   {
     url: "https://ipfs.infura.io/ipfs/QmTmZKyKyocwsKdFy236kAikE6aEDQpPq9pLgTtkf1MQae",
