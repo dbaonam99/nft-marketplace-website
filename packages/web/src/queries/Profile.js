@@ -160,8 +160,6 @@ export const useGetOwnedItemsQuery = (ethAddress) => {
         })
       );
 
-      console.log([...auctionItems, ...marketItems]);
-
       return (
         [...auctionItems, ...marketItems].filter((item) => !item.deleted) || []
       );

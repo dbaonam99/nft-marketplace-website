@@ -117,25 +117,27 @@ export const useGetAuctionItemsQuery = () => {
     const data = await auctionContract.fetchAuctionItems();
 
     const items = await Promise.all(
-      data.map(async (i) => {
-        const tokenUri = await tokenContract.tokenURI(i.tokenId);
-        const meta = await axios.get(tokenUri);
-        const item = {
-          auctionId: i.auctionId.toString(),
-          owner: i.owner,
-          tokenId: i.tokenId.toString(),
-          startingPrice: Number(i.startingPrice.toString()) / 10 ** 10,
-          startTime: i.startTime.toString(),
-          duration: i.duration.toString(),
-          biddingStep: i.biddingStep.toString(),
-          image: meta.data.image,
-          name: meta.data.name,
-          description: meta.data.description,
-          highestBidAmount: Number(i.highestBidAmount.toString()) / 10 ** 10,
-          itemId: i.tokenId.toNumber(),
-        };
-        return item;
-      })
+      data
+        .filter((item) => item.tokenId.toString() !== "0")
+        .map(async (i) => {
+          const tokenUri = await tokenContract.tokenURI(i.tokenId);
+          const meta = await axios.get(tokenUri);
+          const item = {
+            auctionId: i.auctionId.toString(),
+            owner: i.owner,
+            tokenId: i.tokenId.toString(),
+            startingPrice: Number(i.startingPrice.toString()) / 10 ** 10,
+            startTime: i.startTime.toString(),
+            duration: i.duration.toString(),
+            biddingStep: i.biddingStep.toString(),
+            image: meta.data.image,
+            name: meta.data.name,
+            description: meta.data.description,
+            highestBidAmount: Number(i.highestBidAmount.toString()) / 10 ** 10,
+            itemId: i.tokenId.toNumber(),
+          };
+          return item;
+        })
     );
 
     return items;
@@ -144,7 +146,7 @@ export const useGetAuctionItemsQuery = () => {
 
 export const useGetAuctionDetailQuery = (tokenId, isAuctionDetail) => {
   return useQuery(["AuctionDetail", tokenId], async () => {
-    if (!tokenId || !isAuctionDetail) return;
+    // if (!tokenId || !isAuctionDetail) return;
     const provider = new ethers.providers.JsonRpcProvider(
       "http://localhost:8545"
     );

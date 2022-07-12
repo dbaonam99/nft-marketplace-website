@@ -96,7 +96,7 @@ const MyProfileContainer = () => {
           </div>
         ) : (
           data?.map((item, index) => (
-            <NftCard {...item} key={index} seller={ethAddress} />
+            <NftCard {...item} key={index} seller={ethAddress} isNotAuth />
           ))
         )}
       </>

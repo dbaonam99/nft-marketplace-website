@@ -23,6 +23,7 @@ function NftCard(props) {
     sold,
     owner,
     ended,
+    isNotAuth,
   } = props;
   const isLightMode = useThemeMode();
 
@@ -61,7 +62,7 @@ function NftCard(props) {
               >
                 <img src={image} alt="" className="nft-img" />
               </NavLink>
-              {(ended || sold) && (
+              {!isNotAuth && (ended || sold) && (
                 <>
                   <div className="nft-img-overlay" />
                   <div className="cta admire">

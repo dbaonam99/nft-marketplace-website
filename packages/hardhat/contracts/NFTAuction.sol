@@ -423,9 +423,9 @@ contract NFTAuction is ReentrancyGuard {
         idToAuction[auctionId].status == FINISHED;
         idToAuction[auctionId].ended = true;
 
-        if (userAuctionCount[msg.sender] > 0) {
-            userAuctionCount[msg.sender] -= 1;
-        }
+        // if (userAuctionCount[msg.sender] > 0) {
+        //     userAuctionCount[msg.sender] -= 1;
+        // }
         userAuctionCount[idToAuction[auctionId].highestBidder] += 1;
 
         _auctionEnded.increment();

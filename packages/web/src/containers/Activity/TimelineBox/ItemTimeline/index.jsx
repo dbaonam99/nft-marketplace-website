@@ -24,6 +24,8 @@ function ItemTimeline({ date, time, actionType, tokenId }) {
   let data;
   let isLoading;
 
+  console.log(data);
+
   useEffect(() => {
     const getDataByTokenId = async (tokenId) => {
       try {
@@ -59,6 +61,7 @@ function ItemTimeline({ date, time, actionType, tokenId }) {
 
   if (actionType !== "createToken") {
     data = isAuction(actionType) ? auctionDetail : nftDetail;
+    console.log(auctionDetail, nftDetail);
     isLoading = isAuction(actionType) ? auctionDetailLoading : nftDetailLoading;
   } else {
     data = tokenData;
